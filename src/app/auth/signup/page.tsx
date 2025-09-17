@@ -1,7 +1,147 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
+import Link from 'next/link';
+import { signupSchema, type SignupFormData } from '@/lib/authSchema';
+import { useAuthStore } from '@/store/authStore';
+
 export default function SignUpPage() {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const router = useRouter();
+  const { signup, isLoading, error, clearError } = useAuthStore();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+    watch,
+  } = useForm<SignupFormData>({
+    resolver: zodResolver(signupSchema),
+    mode: 'onChange',
+  });
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+  };
+
+  const onSubmit = async (data: SignupFormData) => {
+    try {
+      await signup(data.email, data.password, data.nickname);
+      router.push('/');
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+    }
+  };
+
   return (
-    <div>
-      <h1>회원가입 페이지</h1>
+    <div className="min-h-screen bg-gray-0 flex items-center justify-center p-4">
+      <div className="w-full max-w-[400px]">
+        {/* 제목 섹션 */}
+        <div className="mb-8 text-center">
+          <h1 className="text-header1 font-bold text-[#181D27] mb-[10px]">
+            만나서 반갑습니다!
+          </h1>
+          <p className="text-body2 font-medium text-gray-500">
+            가입을 위해 정보를 입력해주세요
+          </p>
+        </div>
+
+        {/* 에러 메시지 */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-body3 text-red-600">{error}</p>
+            <button 
+              onClick={clearError}
+              className="text-caption1 text-red-500 underline mt-1"
+            >
+              닫기
+            </button>
+          </div>
+        )}
+
+        {/* 폼 섹션 */}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
+          <div>
+            <Input
+              type="email"
+              label="이메일"
+              placeholder="이메일을 입력해주세요"
+              {...register('email')}
+              error={errors.email?.message}
+            />
+          </div>
+          
+          <div>
+            <Input
+              type="text"
+              label="닉네임"
+              placeholder="닉네임을 입력해주세요"
+              {...register('nickname')}
+              error={errors.nickname?.message}
+            />
+          </div>
+          
+          <div>
+            <Input
+              type={isPasswordVisible ? "text" : "password"}
+              label="비밀번호"
+              placeholder="비밀번호를 입력해주세요"
+              showPasswordToggle={true}
+              onTogglePassword={togglePasswordVisibility}
+              isPasswordVisible={isPasswordVisible}
+              {...register('password')}
+              error={errors.password?.message}
+            />
+          </div>
+          
+          <div>
+            <Input
+              type={isConfirmPasswordVisible ? "text" : "password"}
+              label="비밀번호 확인"
+              placeholder="한 번 더 입력해주세요"
+              showPasswordToggle={true}
+              onTogglePassword={toggleConfirmPasswordVisibility}
+              isPasswordVisible={isConfirmPasswordVisible}
+              {...register('confirmPassword')}
+              error={errors.confirmPassword?.message}
+            />
+          </div>
+        </form>
+
+        {/* 가입하기 버튼 */}
+        <Button 
+          type="submit"
+          variant="primary" 
+          className="w-full mb-5"
+          disabled={isSubmitting || isLoading || !isValid}
+          onClick={handleSubmit(onSubmit)}
+        >
+          {isSubmitting || isLoading ? '가입 중...' : '가입하기'}
+        </Button>
+
+        {/* 로그인 링크 */}
+        <div className="flex items-center justify-center gap-1">
+          <span className="text-body3 font-medium text-gray-500">
+            계정이 있으신가요?
+          </span>
+          <Link 
+            href="/auth/login" 
+            className="text-body3 font-semibold text-gray-700 underline decoration-solid"
+          >
+            로그인
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
