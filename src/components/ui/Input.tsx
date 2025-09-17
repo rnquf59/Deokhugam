@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useState } from 'react';
+import { InputHTMLAttributes, forwardRef, useState, useEffect } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -8,49 +8,65 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   isPasswordVisible?: boolean;
 }
 
-export default function Input({ 
+const Input = forwardRef<HTMLInputElement, InputProps>(({ 
   label, 
   error, 
   showPasswordToggle = false, 
   onTogglePassword, 
   isPasswordVisible = false, 
   className = '', 
+  value,
+  onFocus,
+  onBlur,
+  onChange,
   ...props 
-}: InputProps) {
+}, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const [hasValue, setHasValue] = useState(false);
 
-  const handleFocus = () => {
+  // value가 변경될 때 hasValue 업데이트
+  useEffect(() => {
+    const hasValue = !!(value && typeof value === 'string' && value.length > 0);
+    setHasValue(hasValue);
+  }, [value]);
+
+  // 포커스 핸들러
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
+    onFocus?.(e);
   };
 
-  const handleBlur = () => {
+  // 블러 핸들러
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(false);
+    onBlur?.(e);
   };
 
+  // 변경 핸들러
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHasValue(e.target.value.length > 0);
-    props.onChange?.(e);
+    const hasValue = e.target.value.length > 0;
+    setHasValue(hasValue);
+    onChange?.(e);
   };
 
   // 상태별 스타일 결정
   const getInputStyles = () => {
-    // error prop이 있으면 error 상태
+    // 에러 상태
     if (error) {
       return 'bg-gray-100 border-[1.5px] border-red-500 text-gray-700';
     }
     
-    // 포커스 중이면 typing 상태
+    // 포커스 중이면 타이핑 상태
     if (isFocused) {
       return 'bg-gray-0 border-[1.5px] border-gray-400 text-gray-800 shadow-[0px_4px_8px_0px_rgba(24,24,24,0.05)]';
     }
     
-    // 값이 있으면 completed 상태
+    // 값이 있으면 완료 상태
     if (hasValue) {
       return 'bg-gray-100 text-gray-600';
     }
     
-    // default 상태
+    // 기본 상태
     return 'bg-gray-100 text-gray-800';
   };
 
@@ -68,10 +84,12 @@ export default function Input({
       )}
       <div className="relative">
         <input
+          ref={ref}
           className={`w-full ${getPaddingStyles()} py-[13.5px] rounded-[100px] text-body2 font-medium placeholder:text-gray-400 !outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200 ${getInputStyles()} ${className}`}
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={handleChange}
+          value={value}
           {...props}
         />
         {showPasswordToggle && (
@@ -93,4 +111,8 @@ export default function Input({
       )}
     </div>
   );
-}
+});
+
+Input.displayName = 'Input';
+
+export default Input;

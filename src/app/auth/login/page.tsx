@@ -1,23 +1,38 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+  } = useForm<LoginFormData>({
+    mode: 'onChange',
+  });
+
+  const emailValue = watch('email') || '';
+  const passwordValue = watch('password') || '';
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('로그인 시도:', { email, password });
+  const onSubmit = (data: LoginFormData) => {
+    console.log('로그인 시도:', data);
   };
 
   return (
@@ -45,14 +60,14 @@ export default function LoginPage() {
         </div>
 
         {/* 폼 섹션 */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 mb-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
           <div>
             <Input
               type="email"
               label="이메일"
               placeholder="이메일을 입력해주세요"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              {...register('email')}
+              error={errors.email?.message}
             />
           </div>
           
@@ -64,8 +79,8 @@ export default function LoginPage() {
               showPasswordToggle={true}
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register('password')}
+              error={errors.password?.message}
             />
           </div>
         </form>
@@ -75,9 +90,9 @@ export default function LoginPage() {
           type="submit"
           variant="primary" 
           className="w-full mb-5"
-          onClick={handleSubmit}
+          disabled={isSubmitting}
         >
-          로그인
+          {isSubmitting ? '로그인 중...' : '로그인'}
         </Button>
 
         {/* 회원가입 링크 */}
