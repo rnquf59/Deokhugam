@@ -2,3 +2,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 자동완성 스타일 오버라이드 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #F5F5F5 inset !important;
+  -webkit-text-fill-color: #54545E !important;
+  background-color: #F5F5F5 !important;
+}
