@@ -2,15 +2,12 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginFormData } from '@/lib/authSchema';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -18,9 +15,10 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
     watch,
   } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
     mode: 'onChange',
   });
 
@@ -66,7 +64,15 @@ export default function LoginPage() {
               type="email"
               label="이메일"
               placeholder="이메일을 입력해주세요"
-              {...register('email')}
+              value={emailValue}
+              onChange={(e) => {
+                register('email').onChange(e);
+              }}
+              onBlur={(e) => {
+                register('email').onBlur(e);
+              }}
+              name={register('email').name}
+              ref={register('email').ref}
               error={errors.email?.message}
             />
           </div>
@@ -79,7 +85,15 @@ export default function LoginPage() {
               showPasswordToggle={true}
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
-              {...register('password')}
+              value={passwordValue}
+              onChange={(e) => {
+                register('password').onChange(e);
+              }}
+              onBlur={(e) => {
+                register('password').onBlur(e);
+              }}
+              name={register('password').name}
+              ref={register('password').ref}
               error={errors.password?.message}
             />
           </div>
@@ -90,7 +104,7 @@ export default function LoginPage() {
           type="submit"
           variant="primary" 
           className="w-full mb-5"
-          disabled={isSubmitting}
+          disabled={!isValid || isSubmitting}
         >
           {isSubmitting ? '로그인 중...' : '로그인'}
         </Button>
