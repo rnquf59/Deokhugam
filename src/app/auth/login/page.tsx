@@ -1,41 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
-import { loginSchema, type LoginFormData } from '@/lib/authSchema';
-import { useAuthStore } from '@/store/authStore';
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const router = useRouter();
-  const { login, isLoading, error, clearError } = useAuthStore();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting, isValid },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    mode: 'onChange',
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(data.email, data.password);
-      router.push('/');
-    } catch (error) {
-      console.error('로그인 실패:', error);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('로그인 시도:', { email, password });
   };
 
   return (
@@ -58,32 +40,19 @@ export default function LoginPage() {
             만나서 반갑습니다!
           </h1>
           <p className="text-body2 font-medium text-gray-500">
-            가입을 위해 정보를 입력해주세요
+            로그인을 위해 정보를 입력해주세요
           </p>
         </div>
 
-        {/* 에러 메시지 */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-body3 text-red-600">{error}</p>
-            <button 
-              onClick={clearError}
-              className="text-caption1 text-red-500 underline mt-1"
-            >
-              닫기
-            </button>
-          </div>
-        )}
-
         {/* 폼 섹션 */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 mb-6">
           <div>
             <Input
               type="email"
               label="이메일"
               placeholder="이메일을 입력해주세요"
-              {...register('email')}
-              error={errors.email?.message}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           
@@ -95,8 +64,8 @@ export default function LoginPage() {
               showPasswordToggle={true}
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
-              {...register('password')}
-              error={errors.password?.message}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
         </form>
@@ -106,10 +75,9 @@ export default function LoginPage() {
           type="submit"
           variant="primary" 
           className="w-full mb-5"
-          disabled={isSubmitting || isLoading || !isValid}
-          onClick={handleSubmit(onSubmit)}
+          onClick={handleSubmit}
         >
-          {isSubmitting || isLoading ? '로그인 중...' : '로그인'}
+          로그인
         </Button>
 
         {/* 회원가입 링크 */}

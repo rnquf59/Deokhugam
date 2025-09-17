@@ -1,30 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
-import { signupSchema, type SignupFormData } from '@/lib/authSchema';
-import { useAuthStore } from '@/store/authStore';
 
 export default function SignUpPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
-  const router = useRouter();
-  const { signup, isLoading, error, clearError } = useAuthStore();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting, isValid },
-    watch,
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
-    mode: 'onChange',
-  });
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -34,13 +21,9 @@ export default function SignUpPage() {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
 
-  const onSubmit = async (data: SignupFormData) => {
-    try {
-      await signup(data.email, data.password, data.nickname);
-      router.push('/');
-    } catch (error) {
-      console.error('회원가입 실패:', error);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('회원가입 시도:', { email, nickname, password, confirmPassword });
   };
 
   return (
@@ -56,28 +39,15 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        {/* 에러 메시지 */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-body3 text-red-600">{error}</p>
-            <button 
-              onClick={clearError}
-              className="text-caption1 text-red-500 underline mt-1"
-            >
-              닫기
-            </button>
-          </div>
-        )}
-
         {/* 폼 섹션 */}
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 mb-6">
           <div>
             <Input
               type="email"
               label="이메일"
               placeholder="이메일을 입력해주세요"
-              {...register('email')}
-              error={errors.email?.message}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           
@@ -86,8 +56,8 @@ export default function SignUpPage() {
               type="text"
               label="닉네임"
               placeholder="닉네임을 입력해주세요"
-              {...register('nickname')}
-              error={errors.nickname?.message}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
             />
           </div>
           
@@ -99,8 +69,8 @@ export default function SignUpPage() {
               showPasswordToggle={true}
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
-              {...register('password')}
-              error={errors.password?.message}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           
@@ -112,8 +82,8 @@ export default function SignUpPage() {
               showPasswordToggle={true}
               onTogglePassword={toggleConfirmPasswordVisibility}
               isPasswordVisible={isConfirmPasswordVisible}
-              {...register('confirmPassword')}
-              error={errors.confirmPassword?.message}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
         </form>
@@ -123,10 +93,9 @@ export default function SignUpPage() {
           type="submit"
           variant="primary" 
           className="w-full mb-5"
-          disabled={isSubmitting || isLoading || !isValid}
-          onClick={handleSubmit(onSubmit)}
+          onClick={handleSubmit}
         >
-          {isSubmitting || isLoading ? '가입 중...' : '가입하기'}
+          가입하기
         </Button>
 
         {/* 로그인 링크 */}
