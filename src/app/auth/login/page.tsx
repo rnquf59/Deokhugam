@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginFormData } from '@/lib/authSchema';
+import { useAuthStore } from '@/store/authStore';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
@@ -11,6 +12,8 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  
+  const { login, isLoading, error, clearError } = useAuthStore();
   
   const {
     register,
@@ -29,8 +32,12 @@ export default function LoginPage() {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log('로그인 시도:', data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      await login(data.email, data.password);
+    } catch (error) {
+      console.error('로그인 실패:', error);
+    }
   };
 
   return (
@@ -104,10 +111,17 @@ export default function LoginPage() {
           type="submit"
           variant="primary" 
           className="w-full mb-5"
-          disabled={!isValid || isSubmitting}
+          disabled={!isValid || isSubmitting || isLoading}
         >
-          {isSubmitting ? '로그인 중...' : '로그인'}
+          {isSubmitting || isLoading ? '로그인 중...' : '로그인'}
         </Button>
+
+        {/* 에러 메시지 */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-body3 font-medium text-red-600 text-center">{error}</p>
+          </div>
+        )}
 
         {/* 회원가입 링크 */}
         <div className="flex items-center justify-center gap-1">

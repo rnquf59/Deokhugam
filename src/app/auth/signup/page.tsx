@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormData } from '@/lib/authSchema';
+import { useAuthStore } from '@/store/authStore';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
@@ -11,6 +12,8 @@ import Link from 'next/link';
 export default function SignUpPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  
+  const { signup, isLoading, error, clearError } = useAuthStore();
   
   const {
     register,
@@ -35,8 +38,12 @@ export default function SignUpPage() {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
   };
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log('회원가입 시도:', data);
+  const onSubmit = async (data: SignupFormData) => {
+    try {
+      await signup(data.email, data.nickname, data.password);
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+    }
   };
 
   return (
@@ -138,10 +145,17 @@ export default function SignUpPage() {
       type="submit"
       variant="primary" 
       className="w-full mb-5"
-      disabled={!isValid || isSubmitting}
+      disabled={!isValid || isSubmitting || isLoading}
     >
-      {isSubmitting ? '가입 중...' : '가입하기'}
+      {isSubmitting || isLoading ? '가입 중...' : '가입하기'}
     </Button>
+
+    {/* 에러 메시지 */}
+    {error && (
+      <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <p className="text-body3 font-medium text-red-600 text-center">{error}</p>
+      </div>
+    )}
 
         {/* 로그인 링크 */}
         <div className="flex items-center justify-center gap-1">
