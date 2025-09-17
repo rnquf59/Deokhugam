@@ -5,7 +5,7 @@ export const loginSchema = z.object({
   email: z
     .string()
     .min(1, '이메일을 입력해주세요')
-    .pipe(z.email('올바른 이메일 형식을 입력해주세요')),
+    .pipe(z.email('유효하지 않은 이메일입니다')),
   password: z
     .string()
     .min(1, '비밀번호를 입력해주세요')
@@ -17,7 +17,7 @@ export const signupSchema = z.object({
   email: z
     .string()
     .min(1, '이메일을 입력해주세요')
-    .pipe(z.email('올바른 이메일 형식을 입력해주세요')),
+    .pipe(z.email('유효하지 않은 이메일입니다')),
   nickname: z
     .string()
     .min(1, '닉네임을 입력해주세요')
