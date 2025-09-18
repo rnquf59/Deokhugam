@@ -1,10 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { authApi, type SignupRequest, type LoginRequest } from '@/api/auth';
 
 export interface User {
   id: string;
   email: string;
   nickname: string;
+  createdAt: string;
 }
 
 interface AuthState {
@@ -33,75 +35,61 @@ export const useAuthStore = create<AuthStore>()(
       isLoading: false,
       error: null,
 
-      // 액션들
-      login: async (email: string, password: string) => {
-        set({ isLoading: true, error: null });
-        
-        try {
-          // 실제 API 호출 대신 시뮬레이션
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // 로그인 성공 시뮬레이션
-          const user: User = {
-            id: '1',
-            email,
-            nickname: email.split('@')[0], // 이메일에서 닉네임 추출
-          };
-          
-          set({
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-        } catch (error) {
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: '로그인에 실패했습니다.',
-          });
-        }
-      },
+            // 액션들
+            login: async (email: string, password: string) => {
+              set({ isLoading: true, error: null });
 
-      signup: async (email: string, nickname: string, password: string) => {
-        set({ isLoading: true, error: null });
-        
-        try {
-          // 실제 API 호출 대신 시뮬레이션
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          
-          // 회원가입 성공 시뮬레이션
-          const user: User = {
-            id: '1',
-            email,
-            nickname,
-          };
-          
-          set({
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-            error: null,
-          });
-        } catch (error) {
-          set({
-            user: null,
-            isAuthenticated: false,
-            isLoading: false,
-            error: '회원가입에 실패했습니다.',
-          });
-        }
-      },
+              try {
+                const loginData: LoginRequest = { email, password };
+                const response = await authApi.login(loginData);
 
-      logout: () => {
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-          error: null,
-        });
-      },
+                set({
+                  user: response,
+                  isAuthenticated: true,
+                  isLoading: false,
+                  error: null,
+                });
+              } catch (error) {
+                set({
+                  user: null,
+                  isAuthenticated: false,
+                  isLoading: false,
+                  error: error instanceof Error ? error.message : '로그인에 실패했습니다.',
+                });
+              }
+            },
+
+            signup: async (email: string, nickname: string, password: string) => {
+              set({ isLoading: true, error: null });
+
+              try {
+                const signupData: SignupRequest = { email, nickname, password };
+                const response = await authApi.signup(signupData);
+
+                set({
+                  user: response,
+                  isAuthenticated: true,
+                  isLoading: false,
+                  error: null,
+                });
+              } catch (error) {
+                set({
+                  user: null,
+                  isAuthenticated: false,
+                  isLoading: false,
+                  error: error instanceof Error ? error.message : '회원가입에 실패했습니다.',
+                });
+              }
+            },
+
+            logout: () => {
+              set({
+                user: null,
+                isAuthenticated: false,
+                isLoading: false,
+                error: null,
+              });
+            },
 
       clearError: () => {
         set({ error: null });
