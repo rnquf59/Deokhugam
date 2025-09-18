@@ -1,41 +1,5 @@
 import { apiClient, API_ENDPOINTS } from './client';
-
-// 회원가입 요청 타입
-export interface SignupRequest {
-  email: string;
-  nickname: string;
-  password: string;
-}
-
-// 회원가입 응답 타입 (Swagger 기준)
-export interface SignupResponse {
-  id: string;
-  email: string;
-  nickname: string;
-  createdAt: string;
-}
-
-// 로그인 요청 타입
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-// 로그인 응답 타입
-export interface LoginResponse {
-  id: string;
-  email: string;
-  nickname: string;
-  createdAt: string;
-}
-
-// 사용자 타입
-export interface User {
-  id: string;
-  email: string;
-  nickname: string;
-  createdAt: string;
-}
+import type { SignupRequest, SignupResponse, LoginRequest, LoginResponse, User } from '@/types/auth';
 
 // 인증 API 함수들
 export const authApi = {
@@ -65,7 +29,7 @@ export const authApi = {
     }
   },
 
-  // 로그인 (추후 구현)
+  // 로그인
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     try {
       const response = await apiClient.post<LoginResponse>(

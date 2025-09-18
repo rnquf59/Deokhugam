@@ -1,5 +1,5 @@
 // API 기본 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL!;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 // API 클라이언트 클래스
 class ApiClient {
@@ -88,23 +88,23 @@ export const API_ENDPOINTS = {
   // 사용자 관련
   USERS: {
     SIGNUP: '/api/users',
-    LOGIN: '/api/auth/login',
-    PROFILE: '/api/users/profile',
+    LOGIN: '/api/users/login',
+    PROFILE: '/api/users/{userId}',
   },
   // 도서 관련
   BOOKS: {
     LIST: '/api/books',
-    DETAIL: '/api/books/:id',
+    DETAIL: '/api/books/{id}',
     CREATE: '/api/books',
-    UPDATE: '/api/books/:id',
-    DELETE: '/api/books/:id',
+    UPDATE: '/api/books/{id}',
+    DELETE: '/api/books/{id}',
   },
   // 리뷰 관련
   REVIEWS: {
     LIST: '/api/reviews',
-    DETAIL: '/api/reviews/:id',
+    DETAIL: '/api/reviews/{id}',
     CREATE: '/api/reviews',
-    UPDATE: '/api/reviews/:id',
-    DELETE: '/api/reviews/:id',
+    UPDATE: '/api/reviews/{id}',
+    DELETE: '/api/reviews/{id}',
   },
 } as const;

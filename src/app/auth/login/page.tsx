@@ -50,6 +50,7 @@ export default function LoginPage() {
             alt="로고"
             width={136}
             height={98}
+            priority
             className="mx-auto"
           />
         </div>
@@ -104,17 +105,17 @@ export default function LoginPage() {
               error={errors.password?.message}
             />
           </div>
-        </form>
 
-        {/* 로그인 버튼 */}
-        <Button 
-          type="submit"
-          variant="primary" 
-          className="w-full mb-5"
-          disabled={!isValid || isSubmitting || isLoading}
-        >
-          {isSubmitting || isLoading ? '로그인 중...' : '로그인'}
-        </Button>
+          {/* 로그인 버튼 */}
+          <Button 
+            type="submit"
+            variant="primary" 
+            className="w-full mt-1"
+            disabled={!isValid || isSubmitting || isLoading}
+          >
+            {isSubmitting || isLoading ? '로그인 중...' : '로그인'}
+          </Button>
+        </form>
 
         {/* 에러 메시지 */}
         {error && (
