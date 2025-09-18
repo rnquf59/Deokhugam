@@ -4,7 +4,6 @@ import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import NavMenu from "./NavMenu";
-import { useState } from "react";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 
 export default function NavBar() {
