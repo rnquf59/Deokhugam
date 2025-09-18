@@ -1,82 +1,72 @@
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
+
 // API 기본 설정
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
 
 // API 클라이언트 클래스
 class ApiClient {
-  private baseURL: string;
+  private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL;
+    this.axiosInstance = axios.create({
+      baseURL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 10000,
+    });
+
+    // 요청 인터셉터
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        console.log(`API 요청: ${config.method?.toUpperCase()} ${config.url}`);
+        return config;
+      },
+      (error) => {
+        console.error('API 요청 에러:', error);
+        return Promise.reject(error);
+      }
+    );
+
+    // 응답 인터셉터
+    this.axiosInstance.interceptors.response.use(
+      (response: AxiosResponse) => {
+        console.log(`API 응답: ${response.status} ${response.config.url}`);
+        return response;
+      },
+      (error) => {
+        console.error('API 응답 에러:', error);
+        if (error.response) {
+          // 서버에서 응답을 받았지만 에러 상태
+          const errorMessage = error.response.data?.message || `HTTP error! status: ${error.response.status}`;
+          throw new Error(errorMessage);
+        } else if (error.request) {
+          // 요청을 보냈지만 응답을 받지 못함
+          throw new Error('네트워크 에러: 서버에 연결할 수 없습니다.');
+        } else {
+          // 요청 설정 중 에러
+          throw new Error('요청 설정 에러: ' + error.message);
+        }
+      }
+    );
   }
 
   // GET 요청
   async get<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+    const response = await this.axiosInstance.get<T>(endpoint);
+    return response.data;
   }
 
   // POST 요청
-  async post<T>(endpoint: string, data: any): Promise<T> {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
-  }
-
-  // PUT 요청
-  async put<T>(endpoint: string, data: any): Promise<T> {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+  async post<T, D = unknown>(endpoint: string, data: D): Promise<T> {
+    const response = await this.axiosInstance.post<T>(endpoint, data);
+    return response.data;
   }
 
   // DELETE 요청
   async delete<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseURL}${endpoint}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
+    const response = await this.axiosInstance.delete<T>(endpoint);
+    return response.data;
   }
 }
 
@@ -96,7 +86,6 @@ export const API_ENDPOINTS = {
     LIST: '/api/books',
     DETAIL: '/api/books/{id}',
     CREATE: '/api/books',
-    UPDATE: '/api/books/{id}',
     DELETE: '/api/books/{id}',
   },
   // 리뷰 관련
@@ -104,7 +93,6 @@ export const API_ENDPOINTS = {
     LIST: '/api/reviews',
     DETAIL: '/api/reviews/{id}',
     CREATE: '/api/reviews',
-    UPDATE: '/api/reviews/{id}',
     DELETE: '/api/reviews/{id}',
   },
 } as const;
