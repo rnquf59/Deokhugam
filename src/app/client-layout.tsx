@@ -1,6 +1,7 @@
 "use client";
 
 import NavBar from "@/components/ui/NavBar";
+import clsx from "clsx";
 import { usePathname } from "next/navigation";
 
 export default function ClientLayout({
@@ -15,7 +16,7 @@ export default function ClientLayout({
   return (
     <>
       {!hideNavigation && <NavBar />}
-      {children}
+      <div className={clsx(!hideNavigation && "mt-[67px]")}>{children}</div>
     </>
   );
 }
