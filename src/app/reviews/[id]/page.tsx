@@ -1,10 +1,12 @@
 interface ReviewDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function ReviewDetailPage({ params }: ReviewDetailPageProps) {
+export default async function ReviewDetailPage({ params }: ReviewDetailPageProps) {
+  const { id } = await params;
+  
   return (
     <div className="min-h-screen bg-gray-0 p-8">
       <div className="max-w-4xl mx-auto">
@@ -12,7 +14,7 @@ export default function ReviewDetailPage({ params }: ReviewDetailPageProps) {
           상세 리뷰 페이지
         </h1>
         <p className="text-body2 text-gray-600 mb-4">
-          리뷰 ID: {params.id}
+          리뷰 ID: {id}
         </p>
         <p className="text-body2 text-gray-600">
           여기에 상세 리뷰 내용이 들어갑니다.
