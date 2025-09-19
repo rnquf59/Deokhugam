@@ -1,46 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import RadioButton from '@/components/ui/RadioButton';
+import { getPopularBooks, type PopularBook, type PopularBooksParams } from '@/api/books';
 
 export default function Home() {
   const [selectedFilter, setSelectedFilter] = useState('전체');
+  const [popularBooks, setPopularBooks] = useState<PopularBook[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const filterOptions = ['전체', '월간', '주간', '일간'];
 
-  // 임시 도서 데이터 (나중에 API로 교체)
-  const popularBooks = [
-    {
-      id: 1,
-      title: '도서 제목 1',
-      author: '저자명 1',
-      rating: 4.5,
-      image: '/logo/logo_symbol.png'
-    },
-    {
-      id: 2,
-      title: '도서 제목 2',
-      author: '저자명 2',
-      rating: 4.2,
-      image: '/logo/logo_symbol.png'
-    },
-    {
-      id: 3,
-      title: '도서 제목 3',
-      author: '저자명 3',
-      rating: 4.8,
-      image: '/logo/logo_symbol.png'
-    },
-    {
-      id: 4,
-      title: '도서 제목 4',
-      author: '저자명 4',
-      rating: 4.0,
-      image: '/logo/logo_symbol.png'
+  // 필터 옵션을 API 파라미터로 변환
+  const getPeriodFromFilter = (filter: string): PopularBooksParams['period'] => {
+    switch (filter) {
+      case '일간': return 'DAILY';
+      case '주간': return 'WEEKLY';
+      case '월간': return 'MONTHLY';
+      case '전체': return 'ALL_TIME';
+      default: return 'DAILY';
     }
-  ];
+  };
+
+  // 인기도서 데이터 가져오기
+  const fetchPopularBooks = async (period: PopularBooksParams['period'] = 'DAILY') => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await getPopularBooks({ 
+        period, 
+        direction: 'DESC',
+        limit: 4 
+      });
+      setPopularBooks(response.content);
+    } catch (err) {
+      console.error('인기도서 조회 실패:', err);
+      setError('인기도서를 불러오는데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 컴포넌트 마운트 시 데이터 로드
+  useEffect(() => {
+    fetchPopularBooks(getPeriodFromFilter(selectedFilter));
+  }, []);
+
+  // 필터 변경 시 데이터 다시 로드
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+    fetchPopularBooks(getPeriodFromFilter(filter));
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -68,7 +81,7 @@ export default function Home() {
                     <RadioButton
                       key={option}
                       variant={selectedFilter === option ? 'selected' : 'unselected'}
-                      onClick={() => setSelectedFilter(option)}
+                      onClick={() => handleFilterChange(option)}
                     >
                       {option}
                     </RadioButton>
@@ -76,55 +89,65 @@ export default function Home() {
                 </div>
 
                 {/* 도서 아이템들 */}
-                <div className="flex gap-[24px] mb-[30px]">
-                  {popularBooks.map((book) => (
-                    <div key={book.id} className="flex-1">
-                      {/* 도서 이미지 */}
-                      <div 
-                        className="w-[209px] h-[209px] rounded-[6px] mb-[12px]"
-                        style={{
-                          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)'
-                        }}
-                      >
-                        <Image
-                          src={book.image}
-                          alt={book.title}
-                          width={209}
-                          height={209}
-                          className="w-full h-full object-cover rounded-[6px]"
-                        />
-                      </div>
-
-                      {/* 도서 정보 */}
-                      <div className="mb-[8px]">
-                        <h3 className="text-body2 font-semibold text-gray-950 mb-[6px]">
-                          {book.title}
-                        </h3>
-                        <p className="text-body3 font-medium text-gray-500">
-                          {book.author}
-                        </p>
-                      </div>
-
-                      {/* 평점 */}
-                      <div className="flex items-center gap-[4px]">
-                        <div className="flex gap-[2px]">
-                          {[...Array(5)].map((_, index) => (
-                            <Image
-                              key={index}
-                              src="/icon/ic_star.png"
-                              alt="별점"
-                              width={16}
-                              height={16}
-                            />
-                          ))}
+                {loading ? (
+                  <div className="flex justify-center py-8">
+                    <p className="text-body2 text-gray-500">로딩 중...</p>
+                  </div>
+                ) : error ? (
+                  <div className="flex justify-center py-8">
+                    <p className="text-body2 text-red-500">{error}</p>
+                  </div>
+                ) : (
+                  <div className="flex gap-[24px] mb-[30px]">
+                    {popularBooks.map((book) => (
+                      <div key={book.id} className="flex-1">
+                        {/* 도서 이미지 */}
+                        <div 
+                          className="w-[209px] h-[209px] rounded-[6px] mb-[12px]"
+                          style={{
+                            background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)'
+                          }}
+                        >
+                          <Image
+                            src={book.thumbnailUrl || '/logo/logo_symbol.png'}
+                            alt={book.title}
+                            width={209}
+                            height={209}
+                            className="w-full h-full object-cover rounded-[6px]"
+                          />
                         </div>
-                        <span className="text-body4 font-medium text-gray-500">
-                          ({book.rating})
-                        </span>
+
+                        {/* 도서 정보 */}
+                        <div className="mb-[8px]">
+                          <h3 className="text-body2 font-semibold text-gray-950 mb-[6px]">
+                            {book.title}
+                          </h3>
+                          <p className="text-body3 font-medium text-gray-500">
+                            {book.author}
+                          </p>
+                        </div>
+
+                        {/* 평점 */}
+                        <div className="flex items-center gap-[4px]">
+                          <div className="flex gap-[2px]">
+                            {[...Array(5)].map((_, index) => (
+                              <Image
+                                key={index}
+                                src="/icon/ic_star.png"
+                                alt="별점"
+                                width={16}
+                                height={16}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-body4 font-medium text-gray-500">
+                            ({book.rating.toFixed(1)})
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
 
                 {/* 도서 더보기 버튼 */}
                 <div className="flex justify-center">
