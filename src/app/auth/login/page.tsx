@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginFormData } from '@/lib/authSchema';
@@ -9,11 +9,13 @@ import Image from 'next/image';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
-  const { login, isLoading, error, clearError } = useAuthStore();
+  const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+  const router = useRouter();
   
   const {
     register,
@@ -32,9 +34,17 @@ export default function LoginPage() {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
+  // 로그인 성공 시 메인 페이지로 이동
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      router.push('/');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
+      // 로그인 성공 시 메인 페이지로 이동은 useEffect에서 처리
     } catch (error) {
       console.error('로그인 실패:', error);
     }

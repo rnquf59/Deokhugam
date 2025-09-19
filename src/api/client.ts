@@ -1,7 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-// API 기본 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+// API 기본 설정 - 프록시를 통해 호출
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
+  : 'http://localhost:3000';
+
 
 // API 클라이언트 클래스
 class ApiClient {

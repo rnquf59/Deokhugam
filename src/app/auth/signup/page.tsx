@@ -13,7 +13,7 @@ export default function SignUpPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   
-  const { signup, isLoading, error, clearError } = useAuthStore();
+  const { signup, isLoading, error, clearError, redirectAfterSignup } = useAuthStore();
   
   const {
     register,
@@ -41,6 +41,8 @@ export default function SignUpPage() {
   const onSubmit = async (data: SignupFormData) => {
     try {
       await signup(data.email, data.nickname, data.password);
+      // 회원가입 성공 시 로그인 페이지로 이동
+      redirectAfterSignup();
     } catch (error) {
       console.error('회원가입 실패:', error);
     }
