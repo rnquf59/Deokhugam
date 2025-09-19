@@ -13,6 +13,7 @@ export interface PopularBook {
   reviewCount: number;
   rating: number;
   createdAt: string;
+  isEmpty?: boolean; // 빈 슬롯 표시용
 }
 
 export interface PopularBooksResponse {
