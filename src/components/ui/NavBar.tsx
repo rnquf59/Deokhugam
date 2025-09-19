@@ -5,10 +5,13 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import NavMenu from "./NavMenu";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
+import { useAuthStore } from "@/store/authStore";
 
 export default function NavBar() {
   const { open, setOpen, dropdownRef } = useClickOutside();
+
   const router = useRouter();
+  const userId = useAuthStore.getState().user?.id;
 
   return (
     <div
@@ -38,44 +41,53 @@ export default function NavBar() {
             </li>
           </ul>
         </div>
-        <div className="flex items-center gap-6">
-          <div className="relative">
-            <button className="h-4">
-              <Image
-                src="/images/nav/notification.svg"
-                alt="알림"
-                width={20}
-                height={20}
-              />
-              {/* 알림 배지 */}
-              <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
-            </button>
-          </div>
-          <div className="relative" ref={dropdownRef}>
-            <button
-              className="flex items-center gap-1 text-gray-600 font-medium"
-              onClick={() => setOpen((prev) => !prev)}
-            >
-              {/* 추후 데이터 처리 필요 */}
-              닉네임
-              <Image
-                src="/images/nav/arrow_down.svg"
-                alt="arrow"
-                width={18}
-                height={18}
-                className={clsx("duration-100", open && "rotate-180")}
-              />
-            </button>
-            <div
-              className={clsx(
-                "overflow-hidden transition-all duration-300 ease-in-out",
-                open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
-              )}
-            >
-              <NavMenu />
+        {userId ? (
+          <div className="flex items-center gap-6">
+            <div className="relative">
+              <button className="h-4">
+                <Image
+                  src="/images/nav/notification.svg"
+                  alt="알림"
+                  width={20}
+                  height={20}
+                />
+                {/* 알림 배지 */}
+                <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
+              </button>
+            </div>
+            <div className="relative" ref={dropdownRef}>
+              <button
+                className="flex items-center gap-1 text-gray-600 font-medium"
+                onClick={() => setOpen((prev) => !prev)}
+              >
+                {/* 추후 데이터 처리 필요 */}
+                닉네임
+                <Image
+                  src="/images/nav/arrow_down.svg"
+                  alt="arrow"
+                  width={18}
+                  height={18}
+                  className={clsx("duration-100", open && "rotate-180")}
+                />
+              </button>
+              <div
+                className={clsx(
+                  "overflow-hidden transition-all duration-300 ease-in-out",
+                  open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
+                )}
+              >
+                <NavMenu />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <button
+            className="border bg-gray-900 text-white rounded-md px-3 py-1.5 text-sm"
+            onClick={() => router.push("/auth/login")}
+          >
+            로그인
+          </button>
+        )}
       </div>
     </div>
   );
