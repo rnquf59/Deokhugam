@@ -6,6 +6,7 @@ import Modal from "./Modal";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { authApi, patchUserProfile } from "@/api/auth";
+import { useTooltipStore } from "@/store/tooltipStore";
 
 export default function NavMenu({
   userId,
@@ -23,6 +24,7 @@ export default function NavMenu({
 
   const { isOpen, open, close } = useDisclosure();
   const logout = useAuthStore((state) => state.logout);
+  const showTooltip = useTooltipStore((state) => state.showTooltip);
 
   const submitDisabled =
     nicknameValue.length === 0 || nicknameValue === userNickname;
@@ -41,6 +43,7 @@ export default function NavMenu({
 
       close();
       profileMenuController(false);
+      showTooltip("프로필 수정이 완료되었습니다!");
     } catch (error) {
       console.error("닉네임 변경 실패:", error);
     } finally {
