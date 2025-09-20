@@ -68,6 +68,12 @@ class ApiClient {
     return response.data;
   }
 
+  // PATCH 요청
+  async patch<T, D = unknown>(endpoint: string, data: D): Promise<T> {
+    const response = await this.axiosInstance.patch<T>(endpoint, data);
+    return response.data;
+  }
+
   // DELETE 요청
   async delete<T>(endpoint: string): Promise<T> {
     const response = await this.axiosInstance.delete<T>(endpoint);

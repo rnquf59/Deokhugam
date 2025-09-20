@@ -5,6 +5,7 @@ import type {
   LoginRequest,
   LoginResponse,
   User,
+  UserNicknameRequest,
 } from "@/types/auth";
 
 // 인증 API 함수들
@@ -76,6 +77,18 @@ export const authApi = {
   },
 };
 
-export const patchUserProfile = {
-
-}
+export const patchUserProfile = async (
+  userId: string,
+  data: string
+) => {
+  try {
+    const response = await apiClient.patch<UserNicknameRequest>(
+      API_ENDPOINTS.USERS.PROFILE(userId),
+      data
+    );
+    return response;
+  } catch (error) {
+    console.error("사용자 프로필 수정 API 에러:", error);
+    throw new Error("사용자 정보를 수정하는데 실패했습니다.");
+  }
+};

@@ -9,6 +9,7 @@ interface ModalProps {
   onClose: () => void;
   children: ReactNode;
   disabled: boolean;
+  action: () => void;
 }
 
 export default function Modal({
@@ -16,6 +17,7 @@ export default function Modal({
   onClose,
   children,
   disabled,
+  action,
 }: ModalProps) {
   return (
     <AnimatePresence>
@@ -48,6 +50,7 @@ export default function Modal({
                   "disabled:bg-gray-500"
                 )}
                 disabled={disabled}
+                onClick={action}
               >
                 저장
               </button>

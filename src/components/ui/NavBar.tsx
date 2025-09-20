@@ -92,7 +92,12 @@ export default function NavBar() {
                   open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
                 )}
               >
-                <NavMenu userNickname={userNickname} />
+                <NavMenu
+                  userId={userId}
+                  userNickname={userNickname}
+                  setUserNickname={setUserNickname}
+                  profileMenuController={setOpen}
+                />
               </div>
             </div>
           </div>
