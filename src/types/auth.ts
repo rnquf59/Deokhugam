@@ -5,7 +5,7 @@ export interface SignupRequest {
   password: string;
 }
 
-// 회원가입 응답 타입 
+// 회원가입 응답 타입
 export interface SignupResponse {
   id: string;
   email: string;
@@ -28,9 +28,13 @@ export interface LoginResponse {
 }
 
 // 사용자 타입 (공통)
-export interface User {
+export interface User extends UserNicknameRequest {
   id: string;
   email: string;
-  nickname: string;
   createdAt: string;
+}
+
+// 사용자 닉네임 수정
+export interface UserNicknameRequest {
+  nickname: string;
 }
