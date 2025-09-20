@@ -29,7 +29,7 @@ export default function Button({
     },
     // 3. Outline 버튼 (흰색 배경)
     outline: {
-      normal: 'bg-gray-0 text-gray-600 text-body2 font-medium',
+      normal: 'bg-gray-0 text-gray-600 text-body2 font-medium border border-gray-300',
       hover: 'hover:bg-gray-100 hover:text-gray-600',
       disabled: 'disabled:bg-gray-0 disabled:text-gray-300',
     },
@@ -42,9 +42,9 @@ export default function Button({
   };
   
   const sizeClasses = {
-    primary: 'px-[14px] py-[13.5px] rounded-[100px]',
-    secondary: 'px-[14px] py-[13.5px] rounded-[100px]',
-    outline: 'px-[14px] py-[13.5px] rounded-[100px]',
+    primary: 'px-[18px] py-[14px] rounded-[100px]',
+    secondary: 'px-[18px] py-[14px] rounded-[100px]',
+    outline: 'px-[18px] py-[14px] rounded-[100px]',
     icon: 'p-[14px] rounded-[100px] border border-white-a-10',
   };
   
