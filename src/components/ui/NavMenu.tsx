@@ -30,7 +30,7 @@ export default function NavMenu({
   } = useProfileActions(userId, setUserNickname, profileMenuController, close);
 
   const submitDisabled =
-    nicknameValue.length === 0 || nicknameValue === userNickname;
+    nicknameValue.length <= 1 || nicknameValue === userNickname;
 
   const showDeleteModal = async () => {
     setActionType("deleteUser");
@@ -106,11 +106,13 @@ export default function NavMenu({
               )}
               onChange={(e) => setNicknameValue(e.target.value)}
             />
-            {nicknameValue.length === 0 && (
-              <p className="text-sm mt-1 text-red-500 px-5 font-medium">
-                닉네임 입력은 필수입니다.
-              </p>
-            )}
+            <p className="text-sm mt-1 text-red-500 px-5 font-medium">
+              {nicknameValue.length === 0
+                ? "닉네임 입력은 필수입니다."
+                : nicknameValue.length <= 1
+                ? "닉네임은 2글자 이상으로 입력해 주세요."
+                : null}
+            </p>
           </>
         ) : (
           <p>회원 탈퇴를 진행하시겠습니까?</p>
