@@ -1,7 +1,10 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 
-// API 기본 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+// API 기본 설정 - 프록시를 통해 호출
+const API_BASE_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/"
+    : "http://localhost:3000/"; // 개발 환경에서는 프록시 사용
 
 // API 클라이언트 클래스
 class ApiClient {
@@ -11,7 +14,7 @@ class ApiClient {
     this.axiosInstance = axios.create({
       baseURL,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       timeout: 10000,
     });
@@ -23,7 +26,7 @@ class ApiClient {
         return config;
       },
       (error) => {
-        console.error('API 요청 에러:', error);
+        console.error("API 요청 에러:", error);
         return Promise.reject(error);
       }
     );
@@ -35,17 +38,19 @@ class ApiClient {
         return response;
       },
       (error) => {
-        console.error('API 응답 에러:', error);
+        console.error("API 응답 에러:", error);
         if (error.response) {
           // 서버에서 응답을 받았지만 에러 상태
-          const errorMessage = error.response.data?.message || `HTTP error! status: ${error.response.status}`;
+          const errorMessage =
+            error.response.data?.message ||
+            `HTTP error! status: ${error.response.status}`;
           throw new Error(errorMessage);
         } else if (error.request) {
           // 요청을 보냈지만 응답을 받지 못함
-          throw new Error('네트워크 에러: 서버에 연결할 수 없습니다.');
+          throw new Error("네트워크 에러: 서버에 연결할 수 없습니다.");
         } else {
           // 요청 설정 중 에러
-          throw new Error('요청 설정 에러: ' + error.message);
+          throw new Error("요청 설정 에러: " + error.message);
         }
       }
     );
@@ -77,22 +82,22 @@ export const apiClient = new ApiClient(API_BASE_URL);
 export const API_ENDPOINTS = {
   // 사용자 관련
   USERS: {
-    SIGNUP: '/api/users',
-    LOGIN: '/api/users/login',
-    PROFILE: '/api/users/{userId}',
+    SIGNUP: "/api/users",
+    LOGIN: "/api/users/login",
+    PROFILE: (userId: string) => `/api/users/${userId}`,
   },
   // 도서 관련
   BOOKS: {
-    LIST: '/api/books',
-    DETAIL: '/api/books/{id}',
-    CREATE: '/api/books',
-    DELETE: '/api/books/{id}',
+    LIST: "/api/books",
+    DETAIL: "/api/books/{id}",
+    CREATE: "/api/books",
+    DELETE: "/api/books/{id}",
   },
   // 리뷰 관련
   REVIEWS: {
-    LIST: '/api/reviews',
-    DETAIL: '/api/reviews/{id}',
-    CREATE: '/api/reviews',
-    DELETE: '/api/reviews/{id}',
+    LIST: "/api/reviews",
+    DETAIL: "/api/reviews/{id}",
+    CREATE: "/api/reviews",
+    DELETE: "/api/reviews/{id}",
   },
 } as const;

@@ -6,12 +6,29 @@ import { useRouter } from "next/navigation";
 import NavMenu from "./NavMenu";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
+import { useEffect, useState } from "react";
+import { authApi } from "@/api/auth";
 
 export default function NavBar() {
+  const [mounted, setMounted] = useState(false);
+  const [userNickname, setUserNickname] = useState("");
+
   const { open, setOpen, dropdownRef } = useClickOutside();
 
   const router = useRouter();
-  const userId = useAuthStore.getState().user?.id;
+  const userId = useAuthStore((state) => state.user?.id);
+
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (userId) {
+      const fetchProfile = async () => {
+        const profile = await authApi.getUserProfile(userId);
+        setUserNickname(profile.nickname);
+      };
+
+      fetchProfile();
+    }
+  }, [userId]);
 
   return (
     <div
@@ -41,7 +58,7 @@ export default function NavBar() {
             </li>
           </ul>
         </div>
-        {userId ? (
+        {!mounted ? null : userId ? (
           <div className="flex items-center gap-6">
             <div className="relative">
               <button className="h-4">
@@ -60,8 +77,7 @@ export default function NavBar() {
                 className="flex items-center gap-1 text-gray-600 font-medium"
                 onClick={() => setOpen((prev) => !prev)}
               >
-                {/* 추후 데이터 처리 필요 */}
-                닉네임
+                {userNickname}
                 <Image
                   src="/images/nav/arrow_down.svg"
                   alt="arrow"
@@ -76,7 +92,7 @@ export default function NavBar() {
                   open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
                 )}
               >
-                <NavMenu />
+                <NavMenu userNickname={userNickname} />
               </div>
             </div>
           </div>

@@ -3,14 +3,24 @@
 import { useDisclosure } from "@/hooks/common/useDisclosure";
 import clsx from "clsx";
 import Modal from "./Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/store/authStore";
 
-export default function NavMenu() {
-  const { isOpen, open, close } = useDisclosure();
-
+export default function NavMenu({ userNickname }: { userNickname: string }) {
   const [nickname, setNickname] = useState("");
 
-  const handleDisabled = nickname.length === 0;
+  const { isOpen, open, close } = useDisclosure();
+  const logout = useAuthStore((state) => state.logout);
+
+  const handleDisabled = nickname.length === 0 || nickname === userNickname;
+  const handleModalClose = () => {
+    setNickname(userNickname);
+    close();
+  };
+
+  useEffect(() => {
+    setNickname(userNickname);
+  }, [userNickname]);
 
   return (
     <>
@@ -29,6 +39,7 @@ export default function NavMenu() {
             "px-8 py-4 cursor-pointer duration-[0.2s]",
             "hover:bg-gray-50"
           )}
+          onClick={logout}
         >
           로그아웃
         </li>
@@ -41,10 +52,15 @@ export default function NavMenu() {
           탈퇴하기
         </li>
       </ul>
-      <Modal isOpen={isOpen} onClose={close} disabled={handleDisabled}>
+      <Modal
+        isOpen={isOpen}
+        onClose={handleModalClose}
+        disabled={handleDisabled}
+      >
         <h2 className="text-lg font-semibold mb-5">닉네임 변경</h2>
         <input
           type="text"
+          defaultValue={userNickname}
           placeholder="닉네임을 입력해주세요"
           className={clsx(
             "w-full h-[46px] bg-gray-100 px-5 rounded-full",
