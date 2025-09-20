@@ -77,10 +77,8 @@ export const authApi = {
   },
 };
 
-export const patchUserProfile = async (
-  userId: string,
-  data: string
-) => {
+// 프로필 수정
+export const patchUserProfile = async (userId: string, data: string) => {
   try {
     const response = await apiClient.patch<UserNicknameRequest>(
       API_ENDPOINTS.USERS.PROFILE(userId),
@@ -90,5 +88,15 @@ export const patchUserProfile = async (
   } catch (error) {
     console.error("사용자 프로필 수정 API 에러:", error);
     throw new Error("사용자 정보를 수정하는데 실패했습니다.");
+  }
+};
+
+// 회원 탈퇴
+export const deleteUser = async (userId: string) => {
+  try {
+    await apiClient.delete(API_ENDPOINTS.USERS.PROFILE(userId));
+  } catch (error) {
+    console.error("사용자 탈퇴 API 에러:", error);
+    throw new Error("사용자의 탈퇴를 실패했습니다.");
   }
 };

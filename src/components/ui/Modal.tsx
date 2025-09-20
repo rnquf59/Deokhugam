@@ -3,6 +3,7 @@
 import { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
+import { createPortal } from "react-dom";
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,7 +20,7 @@ export default function Modal({
   disabled,
   action,
 }: ModalProps) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -58,6 +59,8 @@ export default function Modal({
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+
+    document.body
   );
 }

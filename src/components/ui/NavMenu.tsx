@@ -3,10 +3,8 @@
 import { useDisclosure } from "@/hooks/common/useDisclosure";
 import clsx from "clsx";
 import Modal from "./Modal";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useAuthStore } from "@/store/authStore";
-import { authApi, patchUserProfile } from "@/api/auth";
-import { useTooltipStore } from "@/store/tooltipStore";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useProfileActions } from "@/hooks/profile/useProfileActions";
 
 export default function NavMenu({
   userId,
@@ -19,36 +17,29 @@ export default function NavMenu({
   setUserNickname: Dispatch<SetStateAction<string>>;
   profileMenuController: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [nicknameValue, setNicknameValue] = useState("");
-  const [submitLoading, setSubmitLoading] = useState(false);
-
   const { isOpen, open, close } = useDisclosure();
-  const logout = useAuthStore((state) => state.logout);
-  const showTooltip = useTooltipStore((state) => state.showTooltip);
+  const {
+    logout,
+    nicknameValue,
+    setNicknameValue,
+    actionType,
+    setActionType,
+    submitLoading,
+    handleUpdateProfile,
+    handleDeleteUser,
+  } = useProfileActions(userId, setUserNickname, profileMenuController, close);
 
   const submitDisabled =
     nicknameValue.length === 0 || nicknameValue === userNickname;
 
+  const showDeleteModal = async () => {
+    setActionType("deleteUser");
+    open();
+  };
+
   const handleModalClose = () => {
     setNicknameValue(userNickname);
     close();
-  };
-  const handleOnSubmit = async () => {
-    setSubmitLoading(true);
-    try {
-      await patchUserProfile(userId, nicknameValue);
-      const updatedProfile = await authApi.getUserProfile(userId);
-
-      setUserNickname(updatedProfile.nickname);
-
-      close();
-      profileMenuController(false);
-      showTooltip("프로필 수정이 완료되었습니다!");
-    } catch (error) {
-      console.error("닉네임 변경 실패:", error);
-    } finally {
-      setSubmitLoading(false);
-    }
   };
 
   useEffect(() => {
@@ -63,7 +54,10 @@ export default function NavMenu({
             "px-8 py-4 cursor-pointer duration-[0.2s]",
             "hover:bg-gray-50"
           )}
-          onClick={open}
+          onClick={() => {
+            open();
+            setActionType("updateProfile");
+          }}
         >
           닉네임 변경
         </li>
@@ -81,6 +75,7 @@ export default function NavMenu({
             "px-8 py-4 cursor-pointer duration-[0.2s]",
             "hover:bg-gray-50 text-red-500"
           )}
+          onClick={showDeleteModal}
         >
           탈퇴하기
         </li>
@@ -88,25 +83,37 @@ export default function NavMenu({
       <Modal
         isOpen={isOpen}
         onClose={handleModalClose}
-        disabled={submitDisabled || submitLoading}
-        action={handleOnSubmit}
+        disabled={
+          (actionType === "updateProfile" && submitDisabled) || submitLoading
+        }
+        action={
+          actionType === "updateProfile"
+            ? handleUpdateProfile
+            : handleDeleteUser
+        }
       >
-        <h2 className="text-lg font-semibold mb-5">닉네임 변경</h2>
-        <input
-          type="text"
-          defaultValue={userNickname}
-          placeholder="닉네임을 입력해주세요"
-          maxLength={15}
-          className={clsx(
-            "w-full h-[46px] bg-gray-100 px-5 rounded-full",
-            "placeholder:text-gray-400 placeholder:font-medium"
-          )}
-          onChange={(e) => setNicknameValue(e.target.value)}
-        />
-        {nicknameValue.length === 0 && (
-          <p className="text-sm mt-1 text-red-500 px-5 font-medium">
-            닉네임 입력은 필수입니다.
-          </p>
+        {actionType === "updateProfile" ? (
+          <>
+            <h2 className="text-lg font-semibold mb-5">닉네임 변경</h2>
+            <input
+              type="text"
+              defaultValue={userNickname}
+              placeholder="닉네임을 입력해주세요"
+              maxLength={15}
+              className={clsx(
+                "w-full h-[46px] bg-gray-100 px-5 rounded-full",
+                "placeholder:text-gray-400 placeholder:font-medium"
+              )}
+              onChange={(e) => setNicknameValue(e.target.value)}
+            />
+            {nicknameValue.length === 0 && (
+              <p className="text-sm mt-1 text-red-500 px-5 font-medium">
+                닉네임 입력은 필수입니다.
+              </p>
+            )}
+          </>
+        ) : (
+          <p>회원 탈퇴를 진행하시겠습니까?</p>
         )}
       </Modal>
     </>
