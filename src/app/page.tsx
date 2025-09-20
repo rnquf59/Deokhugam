@@ -1,31 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthGuard } from '@/hooks/auth/useAuthRedirect';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import PopularBooks from '@/components/sections/PopularBooks';
 
 export default function Home() {
-  const { isAuthenticated, isLoading } = useAuthStore();
-  const router = useRouter();
+  const { shouldShowContent } = useAuthGuard();
 
-  useEffect(() => {
-    // 로딩이 완료되고 인증되지 않은 경우 로그인 페이지로 리다이렉트
-    if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login');
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  // 로딩 중이거나 인증되지 않은 경우 로딩 화면 표시
-  if (isLoading || !isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-          <p className="text-body2 text-gray-500">로딩 중...</p>
-        </div>
-      </div>
-    );
+  if (!shouldShowContent) {
+    return <LoadingScreen />;
   }
   return (
     <div className="min-h-screen bg-white">

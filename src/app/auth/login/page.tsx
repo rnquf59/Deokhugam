@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
-  const { login, isLoading, error, clearError, isAuthenticated } = useAuthStore();
+  const { login, isLoading, error, clearError, user } = useAuthStore();
   const router = useRouter();
   
   const {
@@ -34,17 +34,15 @@ export default function LoginPage() {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  // 로그인 성공 시 메인 페이지로 이동
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
+    if (user?.id) {
       router.push('/');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [user?.id, router]);
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
-      // 로그인 성공 시 메인 페이지로 이동은 useEffect에서 처리
     } catch (error) {
       console.error('로그인 실패:', error);
     }

@@ -16,8 +16,6 @@ interface AuthActions {
   logout: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
-  redirectAfterLogin: () => void;
-  redirectAfterSignup: () => void;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -25,13 +23,11 @@ type AuthStore = AuthState & AuthActions;
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
-      // 초기 상태
       user: null,
       isAuthenticated: false,
       isLoading: false,
       error: null,
 
-            // 액션들
             login: async (email: string, password: string) => {
               set({ isLoading: true, error: null });
 
@@ -60,11 +56,11 @@ export const useAuthStore = create<AuthStore>()(
 
               try {
                 const signupData: SignupRequest = { email, nickname, password };
-                const response = await authApi.signup(signupData);
+                await authApi.signup(signupData);
 
                 set({
-                  user: response,
-                  isAuthenticated: true,
+                  user: null,
+                  isAuthenticated: false,
                   isLoading: false,
                   error: null,
                 });
@@ -85,7 +81,6 @@ export const useAuthStore = create<AuthStore>()(
           isLoading: false,
           error: null,
         });
-        // 로그아웃 후 로그인 페이지로 이동
         if (typeof window !== 'undefined') {
           window.location.href = '/auth/login';
         }
@@ -98,29 +93,13 @@ export const useAuthStore = create<AuthStore>()(
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
       },
-
-      redirectAfterLogin: () => {
-        // 로그인 성공 시 메인 페이지로 이동 (상태 업데이트 후)
-        if (typeof window !== 'undefined') {
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 100); // 100ms 지연으로 상태 업데이트 대기
-        }
-      },
-
-      redirectAfterSignup: () => {
-        // 회원가입 성공 시 로그인 페이지로 이동
-        if (typeof window !== 'undefined') {
-          window.location.href = '/auth/login';
-        }
-      },
     }),
     {
-      name: 'auth-storage', // localStorage 키
+      name: 'auth-storage',
       partialize: (state) => ({
         user: state.user,
         isAuthenticated: state.isAuthenticated,
-      }), // user와 isAuthenticated만 persist
+      }),
     }
   )
 );
