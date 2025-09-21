@@ -21,7 +21,6 @@ export default function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <>
-      {/* 제목 부분 */}
       <div className="mb-[20px] text-center">
         <h2 className="text-header1 font-bold text-gray-950 mb-[10px]">
           {title}
@@ -31,7 +30,6 @@ export default function SectionHeader({
         </p>
       </div>
 
-      {/* 필터 버튼들 */}
       {showFilters && (
         <FilterButtons 
           selectedFilter={selectedFilter}
