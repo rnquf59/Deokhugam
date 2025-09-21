@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import NavMenu from "./NavProfile";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
@@ -16,7 +16,10 @@ export default function NavBar() {
   const { open, setOpen, dropdownRef } = useClickOutside();
 
   const router = useRouter();
+  const pathname = usePathname();
   const userId = useAuthStore((state) => state.user?.id);
+
+  console.log(pathname);
 
   useEffect(() => setMounted(true), []);
   useEffect(() => {
@@ -51,13 +54,21 @@ export default function NavBar() {
           />
           <ul className="flex items-center gap-3">
             <li
-              className="px-3 cursor-pointer text-gray-500 font-medium"
+              className={clsx(
+                "px-3 cursor-pointer text-gray-500 font-bold duration-[.2s]",
+                "hover:text-black",
+                pathname === "/books" && "text-black"
+              )}
               onClick={() => router.push("/books")}
             >
               도서
             </li>
             <li
-              className="px-3 cursor-pointer text-gray-500 font-medium"
+              className={clsx(
+                "px-3 cursor-pointer text-gray-500 font-bold duration-[.2s]",
+                "hover:text-black",
+                pathname === "/reviews" && "text-black"
+              )}
               onClick={() => router.push("/reviews")}
             >
               리뷰
