@@ -91,6 +91,7 @@ export default function NavMenu({
             ? handleUpdateProfile
             : handleDeleteUser
         }
+        buttonText={actionType === "updateProfile" ? "저장" : "탈퇴"}
       >
         {actionType === "updateProfile" ? (
           <>
