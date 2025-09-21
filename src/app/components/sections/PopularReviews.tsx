@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Buttons/Button';
-import RadioButton from '@/components/ui/Buttons/RadioButton';
+import SectionHeader from '../ui/SectionHeader';
 
 // 임시 타입 정의 (API 연동 시 수정 필요)
 interface PopularReview {
@@ -27,7 +27,7 @@ const mockReviews: PopularReview[] = [
     id: '1',
     bookId: 'book1',
     bookTitle: '해리포터와 마법사의 돌',
-    bookThumbnailUrl: '/image/book default.png',
+    bookThumbnailUrl: '/images/book/book default.png',
     nickname: '마법사123',
     content: '정말 재미있는 책이었어요! 마법의 세계에 빠져들었습니다. 해리포터의 모험을 따라가면서 정말 신나고 즐거웠어요.',
     rating: 4.5,
@@ -39,7 +39,7 @@ const mockReviews: PopularReview[] = [
     id: '2',
     bookId: 'book2',
     bookTitle: '1984',
-    bookThumbnailUrl: '/image/book default.png',
+    bookThumbnailUrl: '/images/book/book default.png',
     nickname: '독서왕',
     content: '조지 오웰의 걸작! 현실과 너무 닮아서 무서웠습니다. 독재와 감시사회에 대한 경고가 담긴 소설이에요.',
     rating: 5.0,
@@ -51,7 +51,7 @@ const mockReviews: PopularReview[] = [
     id: '3',
     bookId: 'book3',
     bookTitle: '어린왕자',
-    bookThumbnailUrl: '/image/book default.png',
+    bookThumbnailUrl: '/images/book/book default.png',
     nickname: '별빛',
     content: '어른이 되어서 다시 읽어보니 더욱 감동적이었어요. 순수함과 진실에 대한 이야기가 마음에 와닿았습니다.',
     rating: 4.8,
@@ -67,7 +67,6 @@ export default function PopularReviews() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const filterOptions = ['전체', '월간', '주간', '일간'];
 
   // 필터 옵션을 API 파라미터로 변환
   const getPeriodFromFilter = (filter: string): PopularReview['period'] => {
@@ -152,28 +151,13 @@ export default function PopularReviews() {
 
   return (
     <div>
-      {/* 제목 부분 */}
-      <div className="mb-[20px] text-center">
-        <h2 className="text-header1 font-bold text-gray-950 mb-[10px]">
-          인기리뷰
-        </h2>
-        <p className="text-body2 font-medium text-gray-500">
-          가장 화제의 리뷰들은 뭐가 있을까?
-        </p>
-      </div>
-
-      {/* 필터 버튼들 */}
-      <div className="flex gap-[8px] mb-[30px] justify-center">
-        {filterOptions.map((option) => (
-          <RadioButton
-            key={option}
-            variant={selectedFilter === option ? 'selected' : 'unselected'}
-            onClick={() => handleFilterChange(option)}
-          >
-            {option}
-          </RadioButton>
-        ))}
-      </div>
+      {/* 섹션 헤더 */}
+      <SectionHeader
+        title="인기리뷰"
+        description="가장 화제의 리뷰들은 뭐가 있을까?"
+        selectedFilter={selectedFilter}
+        onFilterChange={handleFilterChange}
+      />
 
       {/* 리뷰 아이템들 */}
       {loading ? (
@@ -195,7 +179,7 @@ export default function PopularReviews() {
                     <div className="flex-shrink-0">
                       <Link href={`/books/${review.bookId}`}>
                         <Image
-                          src={review.bookThumbnailUrl || '/image/book default.png'}
+                          src={review.bookThumbnailUrl || '/images/book/book default.png'}
                           alt={review.bookTitle || '기본 도서 이미지'}
                           width={96.5}
                           height={144.75}
