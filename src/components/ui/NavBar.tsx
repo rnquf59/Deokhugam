@@ -50,10 +50,16 @@ export default function NavBar() {
             }}
           />
           <ul className="flex items-center gap-3">
-            <li className="px-3 cursor-pointer text-gray-500 font-medium">
+            <li
+              className="px-3 cursor-pointer text-gray-500 font-medium"
+              onClick={() => router.push("/books")}
+            >
               도서
             </li>
-            <li className="px-3 cursor-pointer text-gray-500 font-medium">
+            <li
+              className="px-3 cursor-pointer text-gray-500 font-medium"
+              onClick={() => router.push("/reviews")}
+            >
               리뷰
             </li>
           </ul>
