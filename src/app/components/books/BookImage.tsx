@@ -14,9 +14,6 @@ export default function BookImage({ thumbnailUrl, title, rank, isEmpty }: BookIm
     return (
       <div 
         className="w-[209px] h-[314px] rounded-[6px] mb-[12px] relative"
-        style={{
-          background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)'
-        }}
       >
         <Image
           src="/images/book/book default.png"
@@ -24,6 +21,13 @@ export default function BookImage({ thumbnailUrl, title, rank, isEmpty }: BookIm
           width={209}
           height={314}
           className="w-full h-full object-cover rounded-[6px]"
+        />
+        {/* 그라데이션 오버레이 */}
+        <div 
+          className="absolute inset-0 rounded-[6px]"
+          style={{
+            background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)'
+          }}
         />
       </div>
     );

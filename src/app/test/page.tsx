@@ -43,20 +43,32 @@ export default function TestPage() {
           
           {/* 정상 데이터 테스트 */}
           <div className="mb-[40px]">
-            <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">정상 데이터</h3>
-            <UserRanking />
+            <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">정상 데이터 (API)</h3>
+            <UserRanking period="DAILY" />
           </div>
 
           {/* 일부만 순위가 있는 경우 테스트 */}
           <div className="mb-[40px]">
             <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">일부만 순위 (hasPartialData)</h3>
-            <UserRanking hasPartialData={true} />
+            <UserRanking hasPartialData={true} period="WEEKLY" />
           </div>
 
           {/* 아예 순위가 없는 경우 테스트 */}
           <div className="mb-[40px]">
             <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">순위 없음 (isEmpty)</h3>
             <UserRanking isEmpty={true} />
+          </div>
+
+          {/* 주간 데이터 테스트 */}
+          <div className="mb-[40px]">
+            <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">주간 데이터</h3>
+            <UserRanking period="WEEKLY" />
+          </div>
+
+          {/* 월간 데이터 테스트 */}
+          <div className="mb-[40px]">
+            <h3 className="text-body2 font-semibold text-gray-800 mb-[16px]">월간 데이터</h3>
+            <UserRanking period="MONTHLY" />
           </div>
         </div>
       </div>
