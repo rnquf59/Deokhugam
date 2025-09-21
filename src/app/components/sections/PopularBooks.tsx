@@ -39,30 +39,14 @@ export default function PopularBooks() {
       
       const books = response.content;
       
-      // 전체 기준일 때만 데이터가 없으면 EmptyState 표시
-      if (period === 'ALL_TIME' && books.length === 0) {
+      if (books.length === 0) {
         setHasData(false);
         setPopularBooks([]);
       } else {
         setHasData(true);
         // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
         books.sort((a, b) => a.rank - b.rank);
-        const emptySlots = Array.from({ length: Math.max(0, 4 - books.length) }, (_, index) => ({
-          id: `empty-${index}`,
-          bookId: '',
-          title: ''     ,
-          author: '',
-          thumbnailUrl: '',
-          period: 'DAILY' as const,
-          rank: 0,
-          score: 0,
-          reviewCount: 0,
-          rating: 0,
-          createdAt: '',
-          isEmpty: true
-        }));
-        
-        setPopularBooks([...books, ...emptySlots]);
+        setPopularBooks(books);
       }
     } catch (err) {
       console.error('인기도서 조회 실패:', err);
@@ -83,17 +67,6 @@ export default function PopularBooks() {
     fetchPopularBooks(getPeriodFromFilter(filter));
   };
 
-  if (!loading && !error && !hasData && selectedFilter === '전체') {
-    return (
-      <EmptyState
-        title="인기 도서"
-        description="아직 등록된 도서가 없습니다."
-        iconSrc="/icon/ic_book2.svg"
-        iconAlt="도서 아이콘"
-      />
-    );
-  }
-
   return (
     <div>
       <SectionHeader
@@ -111,27 +84,36 @@ export default function PopularBooks() {
         <div className="flex justify-center py-8">
           <p className="text-body2 text-red-500">{error}</p>
         </div>
+      ) : !hasData ? (
+        <EmptyState
+          title=""
+          description="등록된 인기 도서가 없습니다."
+          iconSrc="/icon/ic_book2.svg"
+          iconAlt="도서 아이콘"
+        />
       ) : (
-        <div className="flex gap-[24px] mb-[30px]">
-          {popularBooks.map((book) => (
-            <BookCard key={book.id} book={book} />
-          ))}
-        </div>
+        <>
+          <div className="flex gap-[24px] mb-[30px]">
+            {popularBooks.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
+          </div>
+          
+          <div className="flex justify-center">
+            <Link href="/books">
+              <Button variant="outline">
+                도서 더보기
+                <Image
+                  src="/icon/ic_chevron-right.png"
+                  alt="더보기"
+                  width={16}
+                  height={16}
+                />
+              </Button>
+            </Link>
+          </div>
+        </>
       )}
-
-      <div className="flex justify-center">
-        <Link href="/books">
-          <Button variant="outline">
-            도서 더보기
-            <Image
-              src="/icon/ic_chevron-right.png"
-              alt="더보기"
-              width={16}
-              height={16}
-            />
-          </Button>
-        </Link>
-      </div>
     </div>
   );
 }

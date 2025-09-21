@@ -42,31 +42,12 @@ export default function PopularReviews() {
       
       const reviews = response.content;
       
-      if (period === 'ALL_TIME' && reviews.length === 0) {
+      if (reviews.length === 0) {
         setHasData(false);
         setPopularReviews([]);
       } else {
         setHasData(true);
-        const emptySlots = Array.from({ length: Math.max(0, 3 - reviews.length) }, (_, index) => ({
-          id: `empty-${index}`,
-          reviewId: '',
-          bookId: '',
-          bookTitle: '',
-          bookThumbnailUrl: '',
-          userId: '',
-          userNickname: '',
-          reviewContent: '',
-          reviewRating: 0,
-          period: 'DAILY' as const,
-          createdAt: '',
-          rank: 0,
-          score: 0,
-          likeCount: 0,
-          commentCount: 0,
-          isEmpty: true
-        }));
-        
-        setPopularReviews([...reviews, ...emptySlots]);
+        setPopularReviews(reviews);
       }
     } catch (err) {
       console.error('인기리뷰 조회 실패:', err);
@@ -107,32 +88,34 @@ export default function PopularReviews() {
         </div>
       ) : !hasData ? (
         <EmptyState
-          title="인기 리뷰"
-          description="아직 등록된 리뷰가 없습니다."
+          title=""
+          description="등록된 인기 리뷰가 없습니다."
           iconSrc="/icon/ic_comment-filled.svg"
           iconAlt="리뷰 아이콘"
         />
       ) : (
-        <div className="flex flex-col gap-[30px] mb-[30px]">
-          {popularReviews.map((review) => (
-            <ReviewCard key={review.id} review={review} />
-          ))}
-        </div>
+        <>
+          <div className="flex flex-col gap-[30px] mb-[30px]">
+            {popularReviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
+          
+          <div className="flex justify-center">
+            <Link href="/reviews">
+              <Button variant="outline">
+                리뷰 더보기
+                <Image
+                  src="/icon/ic_chevron-right.png"
+                  alt="더보기"
+                  width={16}
+                  height={16}
+                />
+              </Button>
+            </Link>
+          </div>
+        </>
       )}
-
-      <div className="flex justify-center">
-        <Link href="/reviews">
-          <Button variant="outline">
-            리뷰 더보기
-            <Image
-              src="/icon/ic_chevron-right.png"
-              alt="더보기"
-              width={16}
-              height={16}
-            />
-          </Button>
-        </Link>
-      </div>
     </div>
   );
 }
