@@ -33,7 +33,7 @@ export default function NavBar() {
   return (
     <div
       className={clsx(
-        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4",
+        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4 z-[10]",
         "max-[1172px]:px-4"
       )}
     >
