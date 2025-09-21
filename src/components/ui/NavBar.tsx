@@ -89,7 +89,9 @@ export default function NavBar() {
               <div
                 className={clsx(
                   "overflow-hidden transition-all duration-300 ease-in-out",
-                  open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
+                  open
+                    ? "max-h-[170px] opacity-100 pointer-events-auto"
+                    : "max-h-0 opacity-0 pointer-events-none"
                 )}
               >
                 <NavMenu

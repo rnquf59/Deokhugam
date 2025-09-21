@@ -19,6 +19,13 @@ export default function BookCard({ book }: BookCardProps) {
           rank={0}
           isEmpty={true}
         />
+        <BookInfo 
+          title=""
+          author=""
+          rating={0}
+          reviewCount={0}
+          isEmpty={true}
+        />
       </div>
     );
   }
