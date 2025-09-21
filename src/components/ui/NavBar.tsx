@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import NavMenu from "./NavMenu";
+import NavMenu from "./NavProfile";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
