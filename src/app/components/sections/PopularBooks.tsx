@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Buttons/Button';
 import SectionHeader from '../ui/SectionHeader';
+import EmptyState from '../ui/EmptyState';
 import { getPopularBooks, type PopularBook, type PopularBooksParams } from '@/api/books';
 import BookCard from '../books/BookCard';
 
@@ -89,6 +90,13 @@ export default function PopularBooks() {
         <div className="flex justify-center py-8">
           <p className="text-body2 text-red-500">{error}</p>
         </div>
+      ) : popularBooks.length === 0 ? (
+        <EmptyState
+          title="인기 도서"
+          description="아직 등록된 도서가 없습니다."
+          iconSrc="/icon/ic_book2.svg"
+          iconAlt="도서 아이콘"
+        />
       ) : (
         <div className="flex gap-[24px] mb-[30px]">
           {popularBooks.map((book) => (
