@@ -3,6 +3,7 @@
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import PopularBooks from "@/components/sections/PopularBooks";
+import PopularReviews from "@/components/sections/PopularReviews";
 
 export default function Home() {
   const { shouldShowContent } = useAuthGuard();
@@ -13,7 +14,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* 메인 컨테이너 */}
-      <div>
         <div className="flex gap-[32px]">
           {/* 인기도서 + 인기리뷰 섹션 */}
           <div className="flex-1">
@@ -21,15 +21,11 @@ export default function Home() {
               {/* 인기도서 섹션 */}
               <PopularBooks />
 
-              {/* 인기리뷰 섹션 (나중에 구현) */}
-              <div>
-                <h2 className="text-header1 font-bold text-gray-950 mb-[10px] text-center">
-                  인기리뷰
-                </h2>
-                <p className="text-body2 font-medium text-gray-500 text-center">
-                  사용자들이 가장 많이 본 리뷰
-                </p>
-              </div>
+              {/* 구분선 */}
+              <div className="border-t border-gray-100"></div>
+
+              {/* 인기리뷰 섹션 */}
+              <PopularReviews />
             </div>
           </div>
 
@@ -43,7 +39,6 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </div>
     </div>
   );
 }

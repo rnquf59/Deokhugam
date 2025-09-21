@@ -45,7 +45,7 @@ export default function PopularBooks() {
       const emptySlots = Array.from({ length: Math.max(0, 4 - books.length) }, (_, index) => ({
         id: `empty-${index}`,
         bookId: '',
-        title: '',
+        title: ''     ,
         author: '',
         thumbnailUrl: '',
         period: 'DAILY' as const,
@@ -166,7 +166,7 @@ export default function PopularBooks() {
 
                   {/* 평점 */}
                   <div className="flex items-center gap-[4px]">
-                    <div className="flex gap-[2px]">
+                    <div className="flex">
                       {[...Array(5)].map((_, index) => {
                         const starIndex = index + 1;
                         const rating = book.rating;
@@ -208,7 +208,7 @@ export default function PopularBooks() {
                       })}
                     </div>
                     <span className="text-body4 font-medium text-gray-500">
-                      ({book.rating.toFixed(1)})
+                      ({book.reviewCount})
                     </span>
                   </div>
                 </Link>
