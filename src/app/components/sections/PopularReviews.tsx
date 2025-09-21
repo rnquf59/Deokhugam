@@ -16,6 +16,7 @@ export default function PopularReviews() {
   const [popularReviews, setPopularReviews] = useState<PopularReview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasData, setHasData] = useState(false);
 
 
   const getPeriodFromFilter = (filter: string): PopularReviewsParams['period'] => {
@@ -39,10 +40,39 @@ export default function PopularReviews() {
         limit: 3 
       });
       
-      setPopularReviews(response.content);
+      const reviews = response.content;
+      
+      if (period === 'ALL_TIME' && reviews.length === 0) {
+        setHasData(false);
+        setPopularReviews([]);
+      } else {
+        setHasData(true);
+        const emptySlots = Array.from({ length: Math.max(0, 3 - reviews.length) }, (_, index) => ({
+          id: `empty-${index}`,
+          reviewId: '',
+          bookId: '',
+          bookTitle: '',
+          bookThumbnailUrl: '',
+          userId: '',
+          userNickname: '',
+          reviewContent: '',
+          reviewRating: 0,
+          period: 'DAILY' as const,
+          createdAt: '',
+          rank: 0,
+          score: 0,
+          likeCount: 0,
+          commentCount: 0,
+          isEmpty: true
+        }));
+        
+        setPopularReviews([...reviews, ...emptySlots]);
+      }
     } catch (err) {
       console.error('인기리뷰 조회 실패:', err);
       setError('인기리뷰를 불러오는데 실패했습니다.');
+      setHasData(false);
+      setPopularReviews([]);
     } finally {
       setLoading(false);
     }
@@ -60,7 +90,6 @@ export default function PopularReviews() {
 
   return (
     <div>
-      {/* 섹션 헤더 */}
       <SectionHeader
         title="인기 리뷰"
         description="가장 화제의 리뷰들은 뭐가 있을까?"
@@ -68,7 +97,6 @@ export default function PopularReviews() {
         onFilterChange={handleFilterChange}
       />
 
-      {/* 리뷰 아이템들 */}
       {loading ? (
         <div className="flex justify-center py-8">
           <p className="text-body2 text-gray-500">로딩 중...</p>
@@ -77,7 +105,7 @@ export default function PopularReviews() {
         <div className="flex justify-center py-8">
           <p className="text-body2 text-red-500">{error}</p>
         </div>
-      ) : popularReviews.length === 0 ? (
+      ) : !hasData ? (
         <EmptyState
           title="인기 리뷰"
           description="아직 등록된 리뷰가 없습니다."
@@ -92,7 +120,6 @@ export default function PopularReviews() {
         </div>
       )}
 
-      {/* 리뷰 더보기 버튼 */}
       <div className="flex justify-center">
         <Link href="/reviews">
           <Button variant="outline">

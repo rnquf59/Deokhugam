@@ -10,6 +10,32 @@ interface ReviewCardProps {
 }
 
 export default function ReviewCard({ review }: ReviewCardProps) {
+  if (review.isEmpty) {
+    return (
+      <div className="flex-1">
+        <div className="py-[24px] px-[30px] rounded-[16px] bg-gray-0 border-[1.5px] border-gray-200">
+          <div className="flex gap-[20px]">
+            <ReviewImage 
+              bookThumbnailUrl=""
+              bookTitle=""
+              isEmpty={true}
+            />
+            <ReviewContent 
+              userNickname=""
+              bookTitle=""
+              reviewRating={0}
+              reviewContent=""
+              likeCount={0}
+              commentCount={0}
+              createdAt=""
+              isEmpty={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1">
       <Link href={`/reviews/${review.reviewId}`} className="block">

@@ -10,6 +10,7 @@ interface ReviewContentProps {
   likeCount: number;
   commentCount: number;
   createdAt: string;
+  isEmpty?: boolean;
 }
 
 export default function ReviewContent({ 
@@ -19,7 +20,8 @@ export default function ReviewContent({
   reviewContent, 
   likeCount, 
   commentCount, 
-  createdAt 
+  createdAt,
+  isEmpty = false
 }: ReviewContentProps) {
   // 별점 렌더링 함수
   const renderStars = (rating: number) => {
@@ -82,17 +84,30 @@ export default function ReviewContent({
       <div className="flex items-center justify-between mt-[8px] mb-[8px]">
         <div className="flex items-center gap-[6px] flex-1 min-w-0">
           <span className="text-body1 font-semibold text-gray-950 flex-shrink-0">
-            {userNickname || '익명'}
+            {isEmpty ? '--' : (userNickname || '익명')}
           </span>
           <span 
             className="text-body2 font-medium text-gray-500 truncate"
             style={{ maxWidth: '580px' }}
           >
-            {bookTitle || '제목 없음'}
+            {isEmpty ? '--' : (bookTitle || '제목 없음')}
           </span>
         </div>
         <div className="flex flex-shrink-0 ml-2">
-          {renderStars(reviewRating || 0)}
+          {isEmpty ? (
+            // 빈 상태일 때는 빈 별 5개 표시
+            [...Array(5)].map((_, index) => (
+              <Image
+                key={index}
+                src="/icon/ic_star_failled.png"
+                alt="빈별점"
+                width={18}
+                height={18}
+              />
+            ))
+          ) : (
+            renderStars(reviewRating || 0)
+          )}
         </div>
       </div>
 
@@ -108,7 +123,7 @@ export default function ReviewContent({
             maxHeight: 'calc(1.4em * 3)'
           }}
         >
-          {reviewContent || '리뷰 내용이 없습니다.'}
+          {isEmpty ? '--' : (reviewContent || '리뷰 내용이 없습니다.')}
         </p>
       </div>
 
@@ -123,7 +138,7 @@ export default function ReviewContent({
               height={16}
               className="mr-[2px]"
             />
-            {likeCount || 0}
+            {isEmpty ? '--' : (likeCount || 0)}
           </div>
           <div className="flex items-center text-body3 font-medium text-gray-500">
             <Image
@@ -133,11 +148,11 @@ export default function ReviewContent({
               height={16}
               className="mr-[2px]"
             />
-            {commentCount || 0}
+            {isEmpty ? '--' : (commentCount || 0)}
           </div>
         </div>
         <div className="text-body3 font-medium text-gray-500">
-          {formatDate(createdAt)}
+          {isEmpty ? '--' : formatDate(createdAt)}
         </div>
       </div>
     </div>
