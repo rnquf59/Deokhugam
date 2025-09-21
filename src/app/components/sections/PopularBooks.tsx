@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
-import RadioButton from '@/components/ui/RadioButton';
+import Button from '@/components/ui/Buttons/Button';
+import RadioButton from '@/components/ui/Buttons/RadioButton';
 import { getPopularBooks, type PopularBook, type PopularBooksParams } from '@/api/books';
 
 export default function PopularBooks() {
@@ -15,7 +15,6 @@ export default function PopularBooks() {
 
   const filterOptions = ['전체', '월간', '주간', '일간'];
 
-  // 필터 옵션을 API 파라미터로 변환
   const getPeriodFromFilter = (filter: string): PopularBooksParams['period'] => {
     switch (filter) {
       case '일간': return 'DAILY';
@@ -26,7 +25,6 @@ export default function PopularBooks() {
     }
   };
 
-  // 인기도서 데이터 가져오기
   const fetchPopularBooks = async (period: PopularBooksParams['period'] = 'DAILY') => {
     try {
       setLoading(true);
@@ -37,7 +35,6 @@ export default function PopularBooks() {
         limit: 4 
       });
       
-      // 4개 도서를 보장하기 위해 빈 슬롯 추가
       const books = response.content;
       
       // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
@@ -66,12 +63,10 @@ export default function PopularBooks() {
     }
   };
 
-  // 컴포넌트 마운트 시 데이터 로드
   useEffect(() => {
     fetchPopularBooks(getPeriodFromFilter(selectedFilter));
   }, []);
 
-  // 필터 변경 시 데이터 다시 로드
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
     fetchPopularBooks(getPeriodFromFilter(filter));
@@ -172,7 +167,6 @@ export default function PopularBooks() {
                         const rating = book.rating;
                         
                         if (starIndex <= Math.floor(rating)) {
-                          // 완전한 별 (노란색)
                           return (
                             <Image
                               key={index}
@@ -183,7 +177,6 @@ export default function PopularBooks() {
                             />
                           );
                         } else if (starIndex === Math.ceil(rating) && rating % 1 >= 0.5) {
-                          // 반별 (노란색 반)
                           return (
                             <Image
                               key={index}
@@ -194,7 +187,6 @@ export default function PopularBooks() {
                             />
                           );
                         } else {
-                          // 빈 별 (회색)
                           return (
                             <Image
                               key={index}
@@ -213,7 +205,6 @@ export default function PopularBooks() {
                   </div>
                 </Link>
               ) : (
-                // 빈 슬롯
                 <>
                   <div 
                     className="w-[209px] h-[314px] rounded-[6px] mb-[12px] relative"
@@ -236,7 +227,6 @@ export default function PopularBooks() {
         </div>
       )}
 
-      {/* 도서 더보기 버튼 */}
       <div className="flex justify-center">
         <Link href="/books">
           <Button variant="outline">
