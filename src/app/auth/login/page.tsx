@@ -7,7 +7,7 @@ import { loginSchema, type LoginFormData } from '@/lib/authSchema';
 import { useAuthStore } from '@/store/authStore';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Buttons/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 

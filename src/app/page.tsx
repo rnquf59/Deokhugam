@@ -2,8 +2,8 @@
 
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
-import PopularBooks from "@/components/sections/PopularBooks";
-import PopularReviews from "@/components/sections/PopularReviews";
+import PopularBooks from "./components/sections/PopularBooks";
+import PopularReviews from "./components/sections/PopularReviews";
 
 export default function Home() {
   const { shouldShowContent } = useAuthGuard();

@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Button from '@/components/ui/Button';
-import RadioButton from '@/components/ui/RadioButton';
+import Button from '@/components/ui/Buttons/Button';
+import RadioButton from '@/components/ui/Buttons/RadioButton';
 
 // 임시 타입 정의 (API 연동 시 수정 필요)
 interface PopularReview {
