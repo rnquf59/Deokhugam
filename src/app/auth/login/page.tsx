@@ -7,9 +7,9 @@ import { loginSchema, type LoginFormData } from '@/lib/authSchema';
 import { useAuthStore } from '@/store/authStore';
 import Image from 'next/image';
 import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Buttons/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/Buttons/Button';
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -115,7 +115,7 @@ export default function LoginPage() {
           </div>
 
           {/* 로그인 버튼 */}
-          <Button 
+          <Button
             type="submit"
             variant="primary" 
             className="w-full mt-1"
