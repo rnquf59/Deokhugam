@@ -4,6 +4,7 @@ import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import PopularBooks from "./components/sections/PopularBooks";
 import PopularReviews from "./components/sections/PopularReviews";
+import UserRanking from "./components/sections/UserRanking";
 
 export default function Home() {
   const { shouldShowContent } = useAuthGuard();
@@ -29,14 +30,9 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 유저 활동 순위 섹션 (나중에 구현) */}
+          {/* 유저 활동 순위 섹션 */}
           <div className="w-[300px]">
-            <h2 className="text-header1 font-bold text-gray-950 mb-[10px]">
-              유저들의 활동 순위
-            </h2>
-            <p className="text-body2 font-medium text-gray-500">
-              활발한 사용자들을 확인해보세요
-            </p>
+            <UserRanking />
           </div>
         </div>
     </div>
