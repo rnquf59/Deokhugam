@@ -18,18 +18,12 @@ export default function BooksPage() {
   const [booksData, setBooksData] = useState<Book[]>([]);
   const limit = 10;
 
-  const {
-    isLoading,
-    hasMore,
-    setCursor,
-    setAfter,
-    setHasMore,
-    resetInfiniteScroll,
-  } = useInfiniteScroll<Book, BooksParams>({
-    initialParams: { orderBy, direction, keyword, limit },
-    fetcher: getBooks,
-    setData: setBooksData,
-  });
+  const { isLoading, setCursor, setAfter, resetInfiniteScroll } =
+    useInfiniteScroll<Book, BooksParams>({
+      initialParams: { orderBy, direction, keyword, limit },
+      fetcher: getBooks,
+      setData: setBooksData,
+    });
 
   const fetchBook = async () => {
     try {
@@ -64,7 +58,9 @@ export default function BooksPage() {
         setDirection={setDirection}
         setKeyword={setKeyword}
       />
-      {booksData && <ContentsList booksData={booksData} />}
+      {booksData && (
+        <ContentsList booksData={booksData} isLoading={isLoading} />
+      )}
     </div>
   );
 }

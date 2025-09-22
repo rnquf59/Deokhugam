@@ -71,10 +71,10 @@ export const useInfiniteScroll = <
   }, [cursor, after, hasMore, isLoading, fetcher, setData, initialParams]);
 
   const resetInfiniteScroll = () => {
-  setCursor(undefined);
-  setAfter(undefined);
-  setHasMore(true);
-};
+    setCursor(undefined);
+    setAfter(undefined);
+    setHasMore(true);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,13 +95,10 @@ export const useInfiniteScroll = <
   }, [fetchMore]);
 
   return {
-    cursor,
-    after,
-    hasMore,
     isLoading,
     setCursor,
     setAfter,
     setHasMore,
-    resetInfiniteScroll
+    resetInfiniteScroll,
   };
 };
