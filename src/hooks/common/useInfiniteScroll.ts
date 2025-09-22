@@ -1,3 +1,4 @@
+import { BooksParams } from "@/api/books";
 import { useCallback, useEffect, useState } from "react";
 
 export interface CursorItem {
@@ -18,7 +19,7 @@ export interface UseInfiniteScrollOptions<T, P> {
 
 export const useInfiniteScroll = <
   T extends CursorItem,
-  P extends Record<string, any>
+  P extends Record<string, unknown>
 >({
   initialParams,
   fetcher,
@@ -95,6 +96,9 @@ export const useInfiniteScroll = <
   }, [fetchMore]);
 
   return {
+    cursor,
+    after,
+    hasMore,
     isLoading,
     setCursor,
     setAfter,

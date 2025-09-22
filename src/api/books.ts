@@ -36,6 +36,7 @@ export interface PopularBooksParams {
 export interface BooksParams extends PopularBooksParams {
   keyword?: string;
   orderBy?: string;
+  [key: string]: unknown;
 }
 
 // 도서 목록 조회
