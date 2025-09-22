@@ -25,22 +25,22 @@ export default function BooksPage() {
       setData: setBooksData,
     });
 
-  const fetchBook = async () => {
-    try {
-      const response = await getBooks({ orderBy, direction, keyword, limit });
-      setBooksData(response.content);
-      setCursor(response.nextCursor);
-      setAfter(response.nextAfter);
-    } catch (err) {
-      console.error("도서 조회 실패:", err);
-    }
-  };
-
   useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const response = await getBooks({ orderBy, direction, keyword, limit });
+        setBooksData(response.content);
+        setCursor(response.nextCursor);
+        setAfter(response.nextAfter);
+      } catch (err) {
+        console.error("도서 조회 실패:", err);
+      }
+    };
+
     resetInfiniteScroll();
     setBooksData([]);
     fetchBook();
-  }, [orderBy, direction, keyword]);
+  }, [orderBy, direction, keyword, resetInfiniteScroll, setAfter, setCursor]);
 
   const { shouldShowContent } = useAuthGuard();
 

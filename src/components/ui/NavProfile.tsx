@@ -46,7 +46,7 @@ export default function NavProfile({
 
   useEffect(() => {
     setNicknameValue(userNickname);
-  }, [userNickname]);
+  }, [userNickname, setNicknameValue]);
 
   return (
     <>

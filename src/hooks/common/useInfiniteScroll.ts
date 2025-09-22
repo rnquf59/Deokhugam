@@ -1,4 +1,3 @@
-import { BooksParams } from "@/api/books";
 import { useCallback, useEffect, useState } from "react";
 
 export interface CursorItem {
