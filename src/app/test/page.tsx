@@ -30,8 +30,10 @@ export default function TestPage() {
           <div className="mb-[40px]">
             <UserRanking period="MONTHLY" />
           </div>
+
+          
         </div>
       </div>
-
-  );
-}
+ 
+    );
+  }
