@@ -1,4 +1,5 @@
 import { Book } from "@/api/books";
+import StarRating from "@/app/components/ui/StarRating";
 import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import Image from "next/image";
@@ -51,9 +52,15 @@ export default function ContentsList({
               <p className="mt-4 font-bold text-gray-950 line-clamp-2">
                 {book.title}
               </p>
-              <p className="text-gray-500 font-medium line-clamp-1">
+              <p className="text-gray-500 font-medium line-clamp-1 mb-3">
                 {book.author}
               </p>
+              <div className="flex items-center gap-1">
+                <StarRating rating={book.rating} />
+                <span className="text-body4 font-medium text-gray-500">
+                  ({book.reviewCount})
+                </span>
+              </div>
             </div>
           );
         })}
