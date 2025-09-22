@@ -16,13 +16,12 @@ export default function BookImage({ thumbnailUrl, title, rank, isEmpty }: BookIm
         className="w-[209px] h-[314px] rounded-[6px] mb-[12px] relative"
       >
         <Image
-          src="/images/book/book default.png"
+          src="/images/books/imgError.png"
           alt="기본 도서 이미지"
           width={209}
           height={314}
           className="w-full h-full object-cover rounded-[6px]"
         />
-        {/* 그라데이션 오버레이 */}
         <div 
           className="absolute inset-0 rounded-[6px]"
           style={{
@@ -41,7 +40,7 @@ export default function BookImage({ thumbnailUrl, title, rank, isEmpty }: BookIm
       }}
     >
       <Image
-        src={thumbnailUrl || '/images/book/book default.png'}
+        src={thumbnailUrl || '/images/books/imgError.png'}
         alt={title || '기본 도서 이미지'}
         width={209}
         height={314}

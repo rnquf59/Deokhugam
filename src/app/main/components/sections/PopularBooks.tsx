@@ -60,7 +60,7 @@ export default function PopularBooks() {
 
   useEffect(() => {
     fetchPopularBooks(getPeriodFromFilter(selectedFilter));
-  }, []);
+  }, [selectedFilter]);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -88,7 +88,7 @@ export default function PopularBooks() {
         <EmptyState
           title=""
           description="등록된 인기 도서가 없습니다."
-          iconSrc="/icon/ic_book2.svg"
+          iconSrc="images/icon/ic_book2.svg"
           iconAlt="도서 아이콘"
         />
       ) : (
@@ -104,7 +104,7 @@ export default function PopularBooks() {
               <Button variant="outline">
                 도서 더보기
                 <Image
-                  src="/icon/ic_chevron-right.png"
+                  src="/images/icon/ic_chevron-right.svg"
                   alt="더보기"
                   width={16}
                   height={16}

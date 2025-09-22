@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getPowerUsers, type PowerUser, type PowerUsersParams } from '@/api/users';
 
 interface UserRankingItem {
@@ -24,7 +24,7 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
   const [isPartialData, setIsPartialData] = useState(false);
 
 
-  const fetchPowerUsers = async () => {
+  const fetchPowerUsers = useCallback(async () => {
     if (isEmpty) {
       setLoading(false);
       return;
@@ -59,11 +59,11 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
     } finally {
       setLoading(false);
     }
-  };
+  }, [period, isEmpty]);
 
   useEffect(() => {
     fetchPowerUsers();
-  }, [period, isEmpty]);
+  }, [period, isEmpty, fetchPowerUsers]);
 
   const convertPowerUsers = (powerUsers: PowerUser[]): UserRankingItem[] => {
     return powerUsers.map(user => ({
@@ -195,12 +195,12 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
                   {isEmpty ? '-' : user.rank}
                 </span>
                 <span className="text-body2 font-semibold text-gray-900">
-                  {user.name || '--'}
+                  {user.name}
                 </span>
               </div>
               
-              <span className={`${!user.name ? 'text-body4 font-medium text-gray-500' : 'text-body3 font-semibold text-gray-600'}`}>
-                {user.name ? `${user.score}점` : '--'}
+              <span className="text-body3 font-semibold text-gray-600">
+                {user.name ? `${user.score}점` : ''}
               </span>
             </div>
           ))}

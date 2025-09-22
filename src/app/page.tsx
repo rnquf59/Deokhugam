@@ -2,9 +2,9 @@
 
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
-import PopularBooks from "./components/sections/PopularBooks";
-import PopularReviews from "./components/sections/PopularReviews";
-import UserRanking from "./components/sections/UserRanking";
+import PopularBooks from "./main/components/sections/PopularBooks";
+import PopularReviews from "./main/components/sections/PopularReviews";
+import UserRanking from "./main/components/sections/UserRanking";
 
 export default function Home() {
   const { shouldShowContent } = useAuthGuard();
@@ -13,7 +13,7 @@ export default function Home() {
     return <LoadingScreen />;
   }
   return (
-    <div className="min-h-screen bg-white">
+    <div className="pt-[50px] pb-[80px]">
       {/* 메인 컨테이너 */}
         <div className="flex gap-[32px]">
           {/* 인기도서 + 인기리뷰 섹션 */}

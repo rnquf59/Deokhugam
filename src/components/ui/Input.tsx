@@ -100,9 +100,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
             className="absolute right-[20px] top-1/2 transform -translate-y-1/2"
           >
             {isPasswordVisible ? (
-              <Image src="/icon/ic_eye_open.png" alt="비밀번호 보기" width={24} height={24} />
+              <Image src="/images/icon/ic_eye_open.svg" alt="비밀번호 보기" width={24} height={24} />
             ) : (
-              <Image src="/icon/ic_eye-close.png" alt="비밀번호 가리기" width={24} height={24} />
+              <Image src="/images/icon/ic_eye_close.svg" alt="비밀번호 가리기" width={24} height={24} />
             )}
           </button>
         )}
