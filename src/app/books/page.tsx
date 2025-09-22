@@ -40,7 +40,8 @@ export default function BooksPage() {
     resetInfiniteScroll();
     setBooksData([]);
     fetchBook();
-  }, [orderBy, direction, keyword, resetInfiniteScroll, setAfter, setCursor]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderBy, direction, keyword]);
 
   const { shouldShowContent } = useAuthGuard();
 
