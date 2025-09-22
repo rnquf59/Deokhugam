@@ -5,8 +5,9 @@ import clsx from "clsx";
 import Modal from "./Modal";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useProfileActions } from "@/hooks/profile/useProfileActions";
+import { useTooltipStore } from "@/store/tooltipStore";
 
-export default function NavMenu({
+export default function NavProfile({
   userId,
   userNickname,
   setUserNickname,
@@ -18,6 +19,7 @@ export default function NavMenu({
   profileMenuController: Dispatch<SetStateAction<boolean>>;
 }) {
   const { isOpen, open, close } = useDisclosure();
+  const { hideTooltip } = useTooltipStore();
   const {
     logout,
     nicknameValue,
@@ -44,11 +46,11 @@ export default function NavMenu({
 
   useEffect(() => {
     setNicknameValue(userNickname);
-  }, [userNickname]);
+  }, [userNickname, setNicknameValue]);
 
   return (
     <>
-      <ul className="absolute top-10 right-0 rounded-[12px] border border-solid border-gray-200 bg-white min-w-max text-center overflow-hidden text-gray-600 font-medium">
+      <ul className="absolute top-10 right-0 rounded-[12px] border border-solid border-gray-200 bg-white min-w-max text-center overflow-hidden text-gray-600 font-medium z-50">
         <li
           className={clsx(
             "px-8 py-4 cursor-pointer duration-[0.2s]",
@@ -66,7 +68,10 @@ export default function NavMenu({
             "px-8 py-4 cursor-pointer duration-[0.2s]",
             "hover:bg-gray-50"
           )}
-          onClick={logout}
+          onClick={() => {
+            logout();
+            hideTooltip();
+          }}
         >
           로그아웃
         </li>
@@ -91,6 +96,7 @@ export default function NavMenu({
             ? handleUpdateProfile
             : handleDeleteUser
         }
+        buttonText={actionType === "updateProfile" ? "저장" : "탈퇴"}
       >
         {actionType === "updateProfile" ? (
           <>

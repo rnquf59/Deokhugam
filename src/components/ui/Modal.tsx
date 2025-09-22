@@ -11,6 +11,7 @@ interface ModalProps {
   children: ReactNode;
   disabled: boolean;
   action: () => void;
+  buttonText: string;
 }
 
 export default function Modal({
@@ -19,6 +20,7 @@ export default function Modal({
   children,
   disabled,
   action,
+  buttonText,
 }: ModalProps) {
   return createPortal(
     <AnimatePresence>
@@ -53,7 +55,7 @@ export default function Modal({
                 disabled={disabled}
                 onClick={action}
               >
-                저장
+                {buttonText}
               </button>
             </div>
           </motion.div>
