@@ -1,8 +1,13 @@
 "use client";
 
-import NavBar from "@/components/ui/NavBar";
+import dynamic from "next/dynamic";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
+
+const NavBar = dynamic(() => import("@/components/ui/NavBar"), { ssr: false });
+const Tooltip = dynamic(() => import("@/components/ui/Tooltip"), {
+  ssr: false,
+});
 
 export default function ClientLayout({
   children,
@@ -18,11 +23,12 @@ export default function ClientLayout({
       {!hideNavigation && <NavBar />}
       <div
         className={clsx(
-          !hideNavigation && "mt-[67px] px-[4px] max-w-[1200px] mx-auto"
+          !hideNavigation && "mt-[67px] px-4 max-w-[1200px] mx-auto"
         )}
       >
         {children}
       </div>
+      <Tooltip />
     </>
   );
 }

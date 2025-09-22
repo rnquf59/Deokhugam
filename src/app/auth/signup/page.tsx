@@ -6,9 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signupSchema, type SignupFormData } from '@/lib/authSchema';
 import { useAuthStore } from '@/store/authStore';
 import Input from '@/components/ui/Input';
-import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Button from '@/components/ui/Buttons/Button';
 
 export default function SignUpPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

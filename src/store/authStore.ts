@@ -7,6 +7,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 }
 
@@ -16,6 +17,7 @@ interface AuthActions {
   logout: () => void;
   clearError: () => void;
   setLoading: (loading: boolean) => void;
+  setInitialized: (initialized: boolean) => void; 
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -26,6 +28,7 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isInitialized: false, // 초기값 false
       error: null,
 
             login: async (email: string, password: string) => {
@@ -93,6 +96,10 @@ export const useAuthStore = create<AuthStore>()(
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
       },
+
+      setInitialized: (initialized: boolean) => {
+        set({ isInitialized: initialized });
+      },
     }),
     {
       name: 'auth-storage',
@@ -100,6 +107,11 @@ export const useAuthStore = create<AuthStore>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.setInitialized(true);
+        }
+      },
     }
   )
 );

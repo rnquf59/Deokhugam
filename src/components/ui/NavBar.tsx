@@ -33,7 +33,7 @@ export default function NavBar() {
   return (
     <div
       className={clsx(
-        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4",
+        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4 z-[10]",
         "max-[1172px]:px-4"
       )}
     >
@@ -89,7 +89,9 @@ export default function NavBar() {
               <div
                 className={clsx(
                   "overflow-hidden transition-all duration-300 ease-in-out",
-                  open ? "max-h-[170px] opacity-100" : "max-h-0 opacity-0"
+                  open
+                    ? "max-h-[170px] opacity-100 pointer-events-auto"
+                    : "max-h-0 opacity-0 pointer-events-none"
                 )}
               >
                 <NavMenu
