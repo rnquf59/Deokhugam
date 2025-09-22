@@ -168,7 +168,7 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
   };
 
   return (
-    <div className="p-[30px] bg-gray-0 border-[1.5px] border-gray-200 rounded-[16px]">
+    <div className="sticky  top-[67px] p-[30px] bg-gray-0 border-[1.5px] border-gray-200 rounded-[16px] shadow-sm">
       <div className="mb-[16px]">
         <h3 className="text-body2 font-bold text-gray-800">
           유저들의 활동 순위
