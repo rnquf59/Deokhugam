@@ -19,8 +19,6 @@ export default function NavBar() {
   const pathname = usePathname();
   const userId = useAuthStore((state) => state.user?.id);
 
-  console.log(pathname);
-
   useEffect(() => setMounted(true), []);
   useEffect(() => {
     if (userId) {
