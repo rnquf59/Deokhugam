@@ -23,7 +23,8 @@ export default function ClientLayout({
       {!hideNavigation && <NavBar />}
       <div
         className={clsx(
-          !hideNavigation && "mt-[67px] px-4 max-w-[1200px] mx-auto"
+          !hideNavigation &&
+            "min-h-[calc(100vh-67px)] mt-[67px] px-4 max-w-[1200px] mx-auto"
         )}
       >
         {children}

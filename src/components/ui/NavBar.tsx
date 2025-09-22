@@ -2,12 +2,12 @@
 
 import clsx from "clsx";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import NavMenu from "./NavMenu";
+import { usePathname, useRouter } from "next/navigation";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
+import NavProfile from "./NavProfile";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
@@ -16,6 +16,7 @@ export default function NavBar() {
   const { open, setOpen, dropdownRef } = useClickOutside();
 
   const router = useRouter();
+  const pathname = usePathname();
   const userId = useAuthStore((state) => state.user?.id);
 
   useEffect(() => setMounted(true), []);
@@ -50,10 +51,24 @@ export default function NavBar() {
             }}
           />
           <ul className="flex items-center gap-3">
-            <li className="px-3 cursor-pointer text-gray-500 font-medium">
+            <li
+              className={clsx(
+                "px-3 cursor-pointer font-bold duration-[.2s]",
+                "hover:text-black",
+                pathname.startsWith("/books") ? "text-black" : "text-gray-500"
+              )}
+              onClick={() => router.push("/books")}
+            >
               도서
             </li>
-            <li className="px-3 cursor-pointer text-gray-500 font-medium">
+            <li
+              className={clsx(
+                "px-3 cursor-pointer font-bold duration-[.2s]",
+                "hover:text-black",
+                pathname.startsWith("/reviews") ? "text-black" : "text-gray-500"
+              )}
+              onClick={() => router.push("/reviews")}
+            >
               리뷰
             </li>
           </ul>
@@ -94,7 +109,7 @@ export default function NavBar() {
                     : "max-h-0 opacity-0 pointer-events-none"
                 )}
               >
-                <NavMenu
+                <NavProfile
                   userId={userId}
                   userNickname={userNickname}
                   setUserNickname={setUserNickname}
