@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useProfileActions } from "@/hooks/profile/useProfileActions";
 import { useTooltipStore } from "@/store/tooltipStore";
 
-export default function NavMenu({
+export default function NavProfile({
   userId,
   userNickname,
   setUserNickname,

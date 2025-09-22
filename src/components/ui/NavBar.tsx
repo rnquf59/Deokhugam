@@ -3,11 +3,11 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import NavMenu from "./NavProfile";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
+import NavProfile from "./NavProfile";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
@@ -34,11 +34,11 @@ export default function NavBar() {
   return (
     <div
       className={clsx(
-        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4",
-        "max-[1432px]:px-4"
+        "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4 z-[10]",
+        "max-[1172px]:px-4"
       )}
     >
-      <div className="flex items-center justify-between max-w-[1400px] mx-auto">
+      <div className="flex items-center justify-between max-w-[1140px] mx-auto">
         <div className="flex items-center gap-10">
           <Image
             src="/images/nav/deokhugam.svg"
@@ -53,9 +53,9 @@ export default function NavBar() {
           <ul className="flex items-center gap-3">
             <li
               className={clsx(
-                "px-3 cursor-pointer text-gray-500 font-bold duration-[.2s]",
+                "px-3 cursor-pointer font-bold duration-[.2s]",
                 "hover:text-black",
-                pathname === "/books" && "text-black"
+                pathname.startsWith("/books") ? "text-black" : "text-gray-500"
               )}
               onClick={() => router.push("/books")}
             >
@@ -63,9 +63,9 @@ export default function NavBar() {
             </li>
             <li
               className={clsx(
-                "px-3 cursor-pointer text-gray-500 font-bold duration-[.2s]",
+                "px-3 cursor-pointer font-bold duration-[.2s]",
                 "hover:text-black",
-                pathname === "/reviews" && "text-black"
+                pathname.startsWith("/reviews") ? "text-black" : "text-gray-500"
               )}
               onClick={() => router.push("/reviews")}
             >
@@ -109,7 +109,7 @@ export default function NavBar() {
                     : "max-h-0 opacity-0 pointer-events-none"
                 )}
               >
-                <NavMenu
+                <NavProfile
                   userId={userId}
                   userNickname={userNickname}
                   setUserNickname={setUserNickname}
