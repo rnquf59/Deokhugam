@@ -102,6 +102,7 @@ export const useInfiniteScroll = <
     setCursor,
     setAfter,
     setHasMore,
+    setIsLoading,
     resetInfiniteScroll,
   };
 };
