@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { useAuthStore } from "@/store/authStore";
 
 // API 기본 설정 - 프록시를 통해 호출
 const API_BASE_URL =
@@ -23,12 +24,21 @@ class ApiClient {
     this.axiosInstance.interceptors.request.use(
       (config) => {
         console.log(`API 요청: ${config.method?.toUpperCase()} ${config.url}`);
+
+        // 인증된 사용자의 ID를 헤더에 추가
+        if (typeof window !== "undefined") {
+          const authState = useAuthStore.getState();
+          if (authState.user?.id) {
+            config.headers["Deokhugam-Request-User-ID"] = authState.user.id;
+          }
+        }
+
         return config;
       },
       (error) => {
         console.error("API 요청 에러:", error);
         return Promise.reject(error);
-      },
+      }
     );
 
     // 응답 인터셉터
@@ -52,7 +62,7 @@ class ApiClient {
           // 요청 설정 중 에러
           throw new Error("요청 설정 에러: " + error.message);
         }
-      },
+      }
     );
   }
 

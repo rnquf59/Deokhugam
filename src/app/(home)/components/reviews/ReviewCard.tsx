@@ -4,14 +4,51 @@ import { memo } from "react";
 import Link from "next/link";
 import ReviewImage from "./ReviewImage";
 import ReviewContent from "./ReviewContent";
-import type { PopularReview } from "@/types/reviews";
+import type { PopularReview, Review } from "@/types/reviews";
 
 interface ReviewCardProps {
-  review: PopularReview;
+  review: PopularReview | Review;
+  maxTitleWidth?: number; // 제목 최대 너비 (px)
 }
 
-const ReviewCard = memo(function ReviewCard({ review }: ReviewCardProps) {
-  if (review.isEmpty) {
+const ReviewCard = memo(function ReviewCard({
+  review,
+  maxTitleWidth,
+}: ReviewCardProps) {
+  const getReviewData = (review: PopularReview | Review) => {
+    if ("reviewContent" in review) {
+      return {
+        id: review.id,
+        reviewId: review.reviewId,
+        content: review.reviewContent,
+        rating: review.reviewRating,
+        bookTitle: review.bookTitle,
+        bookThumbnailUrl: review.bookThumbnailUrl,
+        userNickname: review.userNickname,
+        likeCount: review.likeCount,
+        commentCount: review.commentCount,
+        createdAt: review.createdAt,
+      };
+    } else {
+      // Review 타입
+      return {
+        id: review.id,
+        reviewId: review.id,
+        content: review.content,
+        rating: review.rating,
+        bookTitle: review.bookTitle,
+        bookThumbnailUrl: review.bookThumbnailUrl,
+        userNickname: review.userNickname,
+        likeCount: review.likeCount,
+        commentCount: review.commentCount,
+        createdAt: review.createdAt,
+      };
+    }
+  };
+
+  const reviewData = getReviewData(review);
+
+  if ("isEmpty" in review && review.isEmpty) {
     return (
       <div className="flex-1">
         <div className="py-[24px] px-[30px] rounded-[16px] bg-gray-0 border-[1.5px] border-gray-200">
@@ -35,21 +72,22 @@ const ReviewCard = memo(function ReviewCard({ review }: ReviewCardProps) {
 
   return (
     <div className="flex-1">
-      <Link href={`/reviews/${review.reviewId}`} className="block">
+      <Link href={`/reviews/${reviewData.reviewId}`} className="block">
         <div className="py-[24px] px-[30px] rounded-[16px] bg-gray-0 border-[1.5px] border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer">
           <div className="flex gap-[20px]">
             <ReviewImage
-              bookThumbnailUrl={review.bookThumbnailUrl}
-              bookTitle={review.bookTitle}
+              bookThumbnailUrl={reviewData.bookThumbnailUrl}
+              bookTitle={reviewData.bookTitle}
             />
             <ReviewContent
-              userNickname={review.userNickname}
-              bookTitle={review.bookTitle}
-              reviewRating={review.reviewRating}
-              reviewContent={review.reviewContent}
-              likeCount={review.likeCount}
-              commentCount={review.commentCount}
-              createdAt={review.createdAt}
+              userNickname={reviewData.userNickname}
+              bookTitle={reviewData.bookTitle}
+              reviewRating={reviewData.rating}
+              reviewContent={reviewData.content}
+              likeCount={reviewData.likeCount}
+              commentCount={reviewData.commentCount}
+              createdAt={reviewData.createdAt}
+              maxTitleWidth={maxTitleWidth}
             />
           </div>
         </div>

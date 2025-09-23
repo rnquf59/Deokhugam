@@ -11,6 +11,7 @@ interface ReviewContentProps {
   commentCount: number;
   createdAt: string;
   isEmpty?: boolean;
+  maxTitleWidth?: number;
 }
 
 export default function ReviewContent({
@@ -22,6 +23,7 @@ export default function ReviewContent({
   commentCount,
   createdAt,
   isEmpty = false,
+  maxTitleWidth,
 }: ReviewContentProps) {
   // 별점 렌더링 함수
   const renderStars = (rating: number) => {
@@ -88,7 +90,7 @@ export default function ReviewContent({
           </span>
           <span
             className="text-body2 font-medium text-gray-500 truncate"
-            style={{ maxWidth: "580px" }}
+            style={maxTitleWidth ? { maxWidth: `${maxTitleWidth}px` } : {}}
           >
             {isEmpty ? "" : bookTitle || "제목 없음"}
           </span>
