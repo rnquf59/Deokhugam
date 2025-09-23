@@ -120,50 +120,23 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
 
   const userList = getDisplayData();
 
-  const getRankStyle = (rank: number, isEmpty: boolean) => {
+  const getRankClasses = (rank: number, isEmpty: boolean) => {
+    const baseClasses = "w-[22px] h-[22px] flex items-center justify-center text-body3 font-semibold";
+    
     if (isEmpty) {
-      return {
-        color: '#54545E',
-        fontSize: '14px',
-        fontWeight: '600',
-        width: '22px',
-        height: '22px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      };
+      return `${baseClasses} text-gray-500`;
     }
     
     if (rank <= 3) {
-      const bgColors = {
-        1: '#FFB310',
-        2: '#9D9D9D', 
-        3: '#846548'
+      const bgClasses = {
+        1: 'bg-[#FFB310]',
+        2: 'bg-[#9D9D9D]', 
+        3: 'bg-[#846548]'
       };
       
-      return {
-        backgroundColor: bgColors[rank as keyof typeof bgColors],
-        color: '#FFFFFF',
-        width: '22px',
-        height: '22px',
-        borderRadius: '50%',
-        fontSize: '14px',
-        fontWeight: '600',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      };
+      return `${baseClasses} ${bgClasses[rank as keyof typeof bgClasses]} text-white rounded-full`;
     } else {
-      return {
-        color: '#54545E',
-        fontSize: '14px',
-        fontWeight: '600',
-        width: '22px',
-        height: '22px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      };
+      return `${baseClasses} text-gray-600`;
     }
   };
 
@@ -189,18 +162,17 @@ export default function UserRanking({ users, hasPartialData = false, isEmpty = f
             <div key={user.id} className="flex items-center justify-between">
               <div className="flex items-center gap-[8px]">
                 <span 
-                  className="text-body3 font-semibold"
-                  style={getRankStyle(user.rank, isEmpty)}
+                  className={getRankClasses(user.rank, !user.name)}
                 >
-                  {isEmpty ? '-' : user.rank}
+                  {!user.name ? '-' : user.rank}
                 </span>
-                <span className="text-body2 font-semibold text-gray-900">
-                  {user.name}
+                <span className={user.name ? "text-body2 font-semibold text-gray-900" : "text-body2 font-medium text-gray-800"}>
+                  {user.name || '--'}
                 </span>
               </div>
               
-              <span className="text-body3 font-semibold text-gray-600">
-                {user.name ? `${user.score}점` : ''}
+              <span className={user.name ? "text-body3 font-semibold text-gray-600" : "text-body4 font-medium text-gray-500"}>
+                {user.name ? `${user.score}점` : '--'}
               </span>
             </div>
           ))}
