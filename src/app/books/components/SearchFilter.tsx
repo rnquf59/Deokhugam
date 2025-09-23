@@ -45,7 +45,7 @@ export default function SearchFilter({
           maxLength={40}
           className={clsx(
             "bg-gray-100 w-full font-medium",
-            "placeholder:font-medium"
+            "placeholder:font-medium",
           )}
         />
         {keyword && (
@@ -68,7 +68,7 @@ export default function SearchFilter({
           value={orderBy}
           onChange={(v) =>
             setOrderBy(
-              v as "title" | "publishedDate" | "rating" | "reviewCount"
+              v as "title" | "publishedDate" | "rating" | "reviewCount",
             )
           }
         />

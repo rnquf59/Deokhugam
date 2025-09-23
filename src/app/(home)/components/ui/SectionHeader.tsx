@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import FilterButtons from './FilterButtons';
+import FilterButtons from "./FilterButtons";
 
 interface SectionHeaderProps {
   title: string;
@@ -11,13 +11,13 @@ interface SectionHeaderProps {
   showFilters?: boolean;
 }
 
-export default function SectionHeader({ 
-  title, 
-  description, 
-  selectedFilter, 
-  onFilterChange, 
-  filterOptions = ['전체', '월간', '주간', '일간'],
-  showFilters = true
+export default function SectionHeader({
+  title,
+  description,
+  selectedFilter,
+  onFilterChange,
+  filterOptions = ["전체", "월간", "주간", "일간"],
+  showFilters = true,
 }: SectionHeaderProps) {
   return (
     <>
@@ -25,13 +25,11 @@ export default function SectionHeader({
         <h2 className="text-header1 font-bold text-gray-950 mb-[10px]">
           {title}
         </h2>
-        <p className="text-body2 font-medium text-gray-500">
-          {description}
-        </p>
+        <p className="text-body2 font-medium text-gray-500">{description}</p>
       </div>
 
       {showFilters && (
-        <FilterButtons 
+        <FilterButtons
           selectedFilter={selectedFilter}
           onFilterChange={onFilterChange}
           filterOptions={filterOptions}

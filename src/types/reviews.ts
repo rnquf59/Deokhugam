@@ -10,7 +10,7 @@ export interface PopularReview {
   userNickname: string;
   reviewContent: string;
   reviewRating: number;
-  period: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ALL_TIME';
+  period: "DAILY" | "WEEKLY" | "MONTHLY" | "ALL_TIME";
   createdAt: string;
   rank: number;
   score: number;
@@ -29,8 +29,8 @@ export interface PopularReviewsResponse {
 }
 
 export interface PopularReviewsParams {
-  period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ALL_TIME';
-  direction?: 'ASC' | 'DESC';
+  period?: "DAILY" | "WEEKLY" | "MONTHLY" | "ALL_TIME";
+  direction?: "ASC" | "DESC";
   cursor?: string;
   after?: string;
   limit?: number;

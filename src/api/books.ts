@@ -12,7 +12,7 @@ export interface PopularBook {
   reviewCount: number;
   rating: number;
   createdAt: string;
-  isEmpty?: boolean; 
+  isEmpty?: boolean;
 }
 
 export interface PopularBooksResponse {
@@ -39,26 +39,28 @@ export interface BooksParams extends PopularBooksParams {
 }
 
 // 인기도서 목록 조회
-export const getPopularBooks = async (params: PopularBooksParams = {}): Promise<PopularBooksResponse> => {
+export const getPopularBooks = async (
+  params: PopularBooksParams = {},
+): Promise<PopularBooksResponse> => {
   const {
-    period = 'DAILY',
-    direction = 'ASC',
+    period = "DAILY",
+    direction = "ASC",
     cursor,
     after,
-    limit = 4
+    limit = 4,
   } = params;
 
   const queryParams = new URLSearchParams();
-  
-  queryParams.append('period', period);
-  queryParams.append('direction', direction);
-  queryParams.append('limit', limit.toString());
-  
-  if (cursor) queryParams.append('cursor', cursor);
-  if (after) queryParams.append('after', after);
+
+  queryParams.append("period", period);
+  queryParams.append("direction", direction);
+  queryParams.append("limit", limit.toString());
+
+  if (cursor) queryParams.append("cursor", cursor);
+  if (after) queryParams.append("after", after);
 
   const response = await apiClient.get<PopularBooksResponse>(
-    `/api/books/popular?${queryParams.toString()}`
+    `/api/books/popular?${queryParams.toString()}`,
   );
   return response;
 };
@@ -88,10 +90,9 @@ export interface BooksResponse {
   hasNext: boolean;
 }
 
-
 // 도서 목록 조회
 export const getBooks = async (
-  params: BooksParams = {}
+  params: BooksParams = {},
 ): Promise<BooksResponse> => {
   const queryParams = new URLSearchParams();
 
@@ -103,7 +104,7 @@ export const getBooks = async (
   if (params.limit) queryParams.append("limit", params.limit.toString());
 
   const response = await apiClient.get<BooksResponse>(
-    `/api/books?${queryParams.toString()}`
+    `/api/books?${queryParams.toString()}`,
   );
   return response;
 };

@@ -116,6 +116,6 @@ export const useAuthStore = create<AuthStore>()(
           state.setInitialized(true);
         }
       },
-    }
-  )
+    },
+  ),
 );

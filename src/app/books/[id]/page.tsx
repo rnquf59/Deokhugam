@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useAuthGuard } from '@/hooks/auth/useAuthRedirect';
-import LoadingScreen from '@/components/common/LoadingScreen';
+import { useEffect, useState } from "react";
+import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
 interface BookDetailPageProps {
   params: Promise<{
@@ -11,7 +11,7 @@ interface BookDetailPageProps {
 }
 
 export default function BookDetailPage({ params }: BookDetailPageProps) {
-  const [id, setId] = useState<string>('');
+  const [id, setId] = useState<string>("");
   const { shouldShowContent } = useAuthGuard();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function BookDetailPage({ params }: BookDetailPageProps) {
   if (!shouldShowContent) {
     return <LoadingScreen />;
   }
-  
+
   return (
     <div>
       <h1>도서 상세 페이지</h1>

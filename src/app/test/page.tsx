@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import EmptyState from '../(home)/components/ui/EmptyState';
-import UserRanking from '../(home)/components/sections/UserRanking';
+import EmptyState from "../(home)/components/ui/EmptyState";
+import UserRanking from "../(home)/components/sections/UserRanking";
 
 export default function TestPage() {
   return (
@@ -27,13 +27,10 @@ export default function TestPage() {
           </div>
         </div>
 
-          <div className="mb-[40px]">
-            <UserRanking period="MONTHLY" />
-          </div>
-
-          
+        <div className="mb-[40px]">
+          <UserRanking period="MONTHLY" />
         </div>
       </div>
- 
-    );
-  }
+    </div>
+  );
+}

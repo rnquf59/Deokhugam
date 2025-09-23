@@ -66,7 +66,7 @@ export default function BooksPage() {
         setKeyword={setKeyword}
       />
       {booksData.length === 0 && !isLoading ? (
-        <EmptyList keyword={keyword}/>
+        <EmptyList keyword={keyword} />
       ) : (
         <ContentsList booksData={booksData} isLoading={isLoading} />
       )}

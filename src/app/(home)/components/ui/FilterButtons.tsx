@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import RadioButton from '@/components/ui/Buttons/RadioButton';
+import RadioButton from "@/components/ui/Buttons/RadioButton";
 
 interface FilterButtonsProps {
   selectedFilter: string;
@@ -8,17 +8,17 @@ interface FilterButtonsProps {
   filterOptions?: string[];
 }
 
-export default function FilterButtons({ 
-  selectedFilter, 
-  onFilterChange, 
-  filterOptions = ['전체', '월간', '주간', '일간'] 
+export default function FilterButtons({
+  selectedFilter,
+  onFilterChange,
+  filterOptions = ["전체", "월간", "주간", "일간"],
 }: FilterButtonsProps) {
   return (
     <div className="flex gap-[8px] mb-[30px] justify-center">
       {filterOptions.map((option) => (
         <RadioButton
           key={option}
-          variant={selectedFilter === option ? 'selected' : 'unselected'}
+          variant={selectedFilter === option ? "selected" : "unselected"}
           onClick={() => onFilterChange(option)}
         >
           {option}

@@ -27,6 +27,6 @@ export const useTooltipStore = create<TooltipState>()(
     {
       name: "tooltip-storage",
       partialize: (state) => ({ isVisible: state.isVisible }),
-    }
-  )
+    },
+  ),
 );

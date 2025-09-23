@@ -20,7 +20,7 @@ export default function Selectbox<T extends string>({
   onChange,
 }: SelectBoxProps<T>) {
   const [buttonValue, setButtonValue] = useState(
-    options.find((o) => o.value === value)?.label || options[0].label
+    options.find((o) => o.value === value)?.label || options[0].label,
   );
 
   const { open, setOpen, dropdownRef } = useClickOutside();
@@ -57,7 +57,7 @@ export default function Selectbox<T extends string>({
               }}
               className={clsx(
                 "px-3 py-4 cursor-pointer duration-[.2s]",
-                "hover:bg-gray-100"
+                "hover:bg-gray-100",
               )}
             >
               {opt.label}

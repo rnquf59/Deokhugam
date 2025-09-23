@@ -54,7 +54,7 @@ export default function NavProfile({
         <li
           className={clsx(
             "px-8 py-4 cursor-pointer duration-[0.2s]",
-            "hover:bg-gray-50"
+            "hover:bg-gray-50",
           )}
           onClick={() => {
             open();
@@ -66,7 +66,7 @@ export default function NavProfile({
         <li
           className={clsx(
             "px-8 py-4 cursor-pointer duration-[0.2s]",
-            "hover:bg-gray-50"
+            "hover:bg-gray-50",
           )}
           onClick={() => {
             logout();
@@ -78,7 +78,7 @@ export default function NavProfile({
         <li
           className={clsx(
             "px-8 py-4 cursor-pointer duration-[0.2s]",
-            "hover:bg-gray-50 text-red-500"
+            "hover:bg-gray-50 text-red-500",
           )}
           onClick={showDeleteModal}
         >
@@ -108,7 +108,7 @@ export default function NavProfile({
               maxLength={15}
               className={clsx(
                 "w-full h-[46px] bg-gray-100 px-5 rounded-full",
-                "placeholder:text-gray-400 placeholder:font-medium"
+                "placeholder:text-gray-400 placeholder:font-medium",
               )}
               onChange={(e) => setNicknameValue(e.target.value)}
             />
@@ -116,8 +116,8 @@ export default function NavProfile({
               {nicknameValue.length === 0
                 ? "닉네임 입력은 필수입니다."
                 : nicknameValue.length <= 1
-                ? "닉네임은 2글자 이상으로 입력해 주세요."
-                : null}
+                  ? "닉네임은 2글자 이상으로 입력해 주세요."
+                  : null}
             </p>
           </>
         ) : (

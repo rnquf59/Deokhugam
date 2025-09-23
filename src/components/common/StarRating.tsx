@@ -1,5 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
+import React from "react";
+import Image from "next/image";
 
 interface StarRatingProps {
   rating: number;
@@ -8,11 +8,16 @@ interface StarRatingProps {
   size?: number;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ rating, children, className = '', size = 18 }) => {
+const StarRating: React.FC<StarRatingProps> = ({
+  rating,
+  children,
+  className = "",
+  size = 18,
+}) => {
   const renderStars = () => {
     return [...Array(5)].map((_, index) => {
       const starIndex = index + 1;
-      
+
       if (starIndex <= Math.floor(rating)) {
         return (
           <Image
@@ -49,9 +54,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, children, className = '
 
   return (
     <div className={`flex items-center gap-[4px] ${className}`}>
-      <div className="flex">
-        {renderStars()}
-      </div>
+      <div className="flex">{renderStars()}</div>
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
+import Image from "next/image";
 
 interface ReviewContentProps {
   userNickname?: string;
@@ -13,27 +13,27 @@ interface ReviewContentProps {
   isEmpty?: boolean;
 }
 
-export default function ReviewContent({ 
-  userNickname, 
-  bookTitle, 
-  reviewRating, 
-  reviewContent, 
-  likeCount, 
-  commentCount, 
+export default function ReviewContent({
+  userNickname,
+  bookTitle,
+  reviewRating,
+  reviewContent,
+  likeCount,
+  commentCount,
   createdAt,
-  isEmpty = false
+  isEmpty = false,
 }: ReviewContentProps) {
   // 별점 렌더링 함수
   const renderStars = (rating: number) => {
     return [...Array(5)].map((_, index) => {
       const starIndex = index + 1;
-      
+
       if (starIndex <= Math.floor(rating)) {
         // 완전한 별 (노란색)
         return (
           <Image
             key={index}
-              src="/images/icon/ic_star.svg"
+            src="/images/icon/ic_star.svg"
             alt="별점"
             width={18}
             height={18}
@@ -44,7 +44,7 @@ export default function ReviewContent({
         return (
           <Image
             key={index}
-              src="/images/icon/ic_star_half.svg"
+            src="/images/icon/ic_star_half.svg"
             alt="반별점"
             width={18}
             height={18}
@@ -70,8 +70,8 @@ export default function ReviewContent({
     try {
       const date = new Date(dateString);
       const year = date.getFullYear().toString().slice(-2); // 뒤 2자리만
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
       return `${year}.${month}.${day}`;
     } catch {
       return dateString;
@@ -84,46 +84,44 @@ export default function ReviewContent({
       <div className="flex items-center justify-between mt-[8px] mb-[8px]">
         <div className="flex items-center gap-[6px] flex-1 min-w-0">
           <span className="text-body1 font-semibold text-gray-950 flex-shrink-0">
-            {isEmpty ? '' : (userNickname || '익명')}
+            {isEmpty ? "" : userNickname || "익명"}
           </span>
-          <span 
+          <span
             className="text-body2 font-medium text-gray-500 truncate"
-            style={{ maxWidth: '580px' }}
+            style={{ maxWidth: "580px" }}
           >
-            {isEmpty ? '' : (bookTitle || '제목 없음')}
+            {isEmpty ? "" : bookTitle || "제목 없음"}
           </span>
         </div>
         <div className="flex flex-shrink-0 ml-2">
-          {isEmpty ? (
-            // 빈 상태일 때는 빈 별 5개 표시
-            [...Array(5)].map((_, index) => (
-              <Image
-                key={index}
-                src="/images/icon/ic_star_failled.svg"
-                alt="빈별점"
-                width={18}
-                height={18}
-              />
-            ))
-          ) : (
-            renderStars(reviewRating || 0)
-          )}
+          {isEmpty
+            ? // 빈 상태일 때는 빈 별 5개 표시
+              [...Array(5)].map((_, index) => (
+                <Image
+                  key={index}
+                  src="/images/icon/ic_star_failled.svg"
+                  alt="빈별점"
+                  width={18}
+                  height={18}
+                />
+              ))
+            : renderStars(reviewRating || 0)}
         </div>
       </div>
 
       {/* 리뷰 내용 */}
       <div className="flex-1 mb-[12.75px]">
-        <p 
+        <p
           className="text-body2 font-medium text-gray-800 overflow-hidden"
           style={{
-            display: '-webkit-box',
+            display: "-webkit-box",
             WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            lineHeight: '1.4',
-            maxHeight: 'calc(1.4em * 3)'
+            WebkitBoxOrient: "vertical",
+            lineHeight: "1.4",
+            maxHeight: "calc(1.4em * 3)",
           }}
         >
-          {isEmpty ? '' : (reviewContent || '리뷰 내용이 없습니다.')}
+          {isEmpty ? "" : reviewContent || "리뷰 내용이 없습니다."}
         </p>
       </div>
 
@@ -138,7 +136,7 @@ export default function ReviewContent({
               height={16}
               className="mr-[2px]"
             />
-            {isEmpty ? '' : (likeCount || 0)}
+            {isEmpty ? "" : likeCount || 0}
           </div>
           <div className="flex items-center text-body3 font-medium text-gray-500">
             <Image
@@ -148,11 +146,11 @@ export default function ReviewContent({
               height={16}
               className="mr-[2px]"
             />
-            {isEmpty ? '' : (commentCount || 0)}
+            {isEmpty ? "" : commentCount || 0}
           </div>
         </div>
         <div className="text-body3 font-medium text-gray-500">
-          {isEmpty ? '' : formatDate(createdAt)}
+          {isEmpty ? "" : formatDate(createdAt)}
         </div>
       </div>
     </div>

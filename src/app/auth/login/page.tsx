@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, type LoginFormData } from '@/lib/authSchema';
-import { useAuthStore } from '@/store/authStore';
-import Image from 'next/image';
-import Input from '@/components/ui/Input';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import Button from '@/components/ui/Buttons/Button';
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "@/lib/authSchema";
+import { useAuthStore } from "@/store/authStore";
+import Image from "next/image";
+import Input from "@/components/ui/Input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Buttons/Button";
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  
+
   const { login, isLoading, error, user } = useAuthStore();
   const router = useRouter();
-  
+
   const {
     register,
     handleSubmit,
@@ -24,11 +24,11 @@ export default function LoginPage() {
     watch,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: 'onChange',
+    mode: "onChange",
   });
 
-  const emailValue = watch('email') || '';
-  const passwordValue = watch('password') || '';
+  const emailValue = watch("email") || "";
+  const passwordValue = watch("password") || "";
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -36,7 +36,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user?.id) {
-      router.push('/');
+      router.push("/");
     }
   }, [user?.id, router]);
 
@@ -44,7 +44,7 @@ export default function LoginPage() {
     try {
       await login(data.email, data.password);
     } catch (error) {
-      console.error('로그인 실패:', error);
+      console.error("로그인 실패:", error);
     }
   };
 
@@ -71,7 +71,10 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-5 mb-6"
+        >
           <div>
             <Input
               type="email"
@@ -79,17 +82,17 @@ export default function LoginPage() {
               placeholder="이메일을 입력해주세요"
               value={emailValue}
               onChange={(e) => {
-                register('email').onChange(e);
+                register("email").onChange(e);
               }}
               onBlur={(e) => {
-                register('email').onBlur(e);
+                register("email").onBlur(e);
               }}
-              name={register('email').name}
-              ref={register('email').ref}
+              name={register("email").name}
+              ref={register("email").ref}
               error={errors.email?.message}
             />
           </div>
-          
+
           <div>
             <Input
               type={isPasswordVisible ? "text" : "password"}
@@ -100,30 +103,32 @@ export default function LoginPage() {
               isPasswordVisible={isPasswordVisible}
               value={passwordValue}
               onChange={(e) => {
-                register('password').onChange(e);
+                register("password").onChange(e);
               }}
               onBlur={(e) => {
-                register('password').onBlur(e);
+                register("password").onBlur(e);
               }}
-              name={register('password').name}
-              ref={register('password').ref}
+              name={register("password").name}
+              ref={register("password").ref}
               error={errors.password?.message}
             />
           </div>
 
           <Button
             type="submit"
-            variant="primary" 
+            variant="primary"
             className="w-full mt-1"
             disabled={!isValid || isSubmitting || isLoading}
           >
-            {isSubmitting || isLoading ? '로그인 중...' : '로그인'}
+            {isSubmitting || isLoading ? "로그인 중..." : "로그인"}
           </Button>
         </form>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-body3 font-medium text-red-600 text-center">{error}</p>
+            <p className="text-body3 font-medium text-red-600 text-center">
+              {error}
+            </p>
           </div>
         )}
 
@@ -131,8 +136,8 @@ export default function LoginPage() {
           <span className="text-body3 font-medium text-gray-500">
             계정이 없으신가요?
           </span>
-          <Link 
-            href="/auth/signup" 
+          <Link
+            href="/auth/signup"
             className="text-body3 font-semibold text-gray-700 underline decoration-solid"
           >
             회원가입

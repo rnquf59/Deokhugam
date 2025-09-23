@@ -18,7 +18,7 @@ export default function PopularReviews() {
   const [hasData, setHasData] = useState(false);
 
   const getPeriodFromFilter = (
-    filter: string
+    filter: string,
   ): PopularReviewsParams["period"] => {
     switch (filter) {
       case "일간":
@@ -35,7 +35,7 @@ export default function PopularReviews() {
   };
 
   const fetchPopularReviews = async (
-    period: PopularReviewsParams["period"] = "DAILY"
+    period: PopularReviewsParams["period"] = "DAILY",
   ) => {
     try {
       setLoading(true);

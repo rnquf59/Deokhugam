@@ -28,7 +28,7 @@ class ApiClient {
       (error) => {
         console.error("API 요청 에러:", error);
         return Promise.reject(error);
-      }
+      },
     );
 
     // 응답 인터셉터
@@ -52,7 +52,7 @@ class ApiClient {
           // 요청 설정 중 에러
           throw new Error("요청 설정 에러: " + error.message);
         }
-      }
+      },
     );
   }
 

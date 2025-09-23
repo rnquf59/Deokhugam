@@ -18,7 +18,7 @@ export interface UseInfiniteScrollOptions<T, P> {
 
 export const useInfiniteScroll = <
   T extends CursorItem,
-  P extends Record<string, unknown>
+  P extends Record<string, unknown>,
 >({
   initialParams,
   fetcher,
@@ -56,7 +56,7 @@ export const useInfiniteScroll = <
       setData((prev) => {
         const combined = [...(prev || []), ...response.content];
         const unique = Array.from(
-          new Map(combined.map((item) => [item.id, item])).values()
+          new Map(combined.map((item) => [item.id, item])).values(),
         );
         return unique;
       });
@@ -82,7 +82,7 @@ export const useInfiniteScroll = <
       const windowHeight = window.innerHeight;
       const docHeight = Math.max(
         document.body.scrollHeight,
-        document.documentElement.scrollHeight
+        document.documentElement.scrollHeight,
       );
 
       if (scrollTop + windowHeight >= docHeight - 100) {

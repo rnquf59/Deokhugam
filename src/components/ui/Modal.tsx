@@ -50,7 +50,7 @@ export default function Modal({
               <button
                 className={clsx(
                   "h-[46px] px-[18px] rounded-full bg-gray-900 text-white",
-                  "disabled:bg-gray-500"
+                  "disabled:bg-gray-500",
                 )}
                 disabled={disabled}
                 onClick={action}
@@ -63,6 +63,6 @@ export default function Modal({
       )}
     </AnimatePresence>,
 
-    document.body
+    document.body,
   );
 }

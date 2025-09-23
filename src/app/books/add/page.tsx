@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useAuthGuard } from '@/hooks/auth/useAuthRedirect';
-import LoadingScreen from '@/components/common/LoadingScreen';
+import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
+import LoadingScreen from "@/components/common/LoadingScreen";
 
 export default function AddBookPage() {
   const { shouldShowContent } = useAuthGuard();

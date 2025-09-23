@@ -15,7 +15,7 @@ export const authApi = {
     try {
       const response = await apiClient.post<SignupResponse>(
         API_ENDPOINTS.USERS.SIGNUP,
-        userData
+        userData,
       );
       return response;
     } catch (error) {
@@ -29,7 +29,7 @@ export const authApi = {
           throw new Error("입력값을 확인해주세요.");
         } else if (error.message.includes("500")) {
           throw new Error(
-            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
           );
         }
       }
@@ -43,7 +43,7 @@ export const authApi = {
     try {
       const response = await apiClient.post<LoginResponse>(
         API_ENDPOINTS.USERS.LOGIN,
-        credentials
+        credentials,
       );
       return response;
     } catch (error) {
@@ -54,7 +54,7 @@ export const authApi = {
           throw new Error("이메일 또는 비밀번호를 확인해주세요.");
         } else if (error.message.includes("500")) {
           throw new Error(
-            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
           );
         }
       }
@@ -67,7 +67,7 @@ export const authApi = {
   async getUserProfile(userId: string): Promise<User> {
     try {
       const response = await apiClient.get<User>(
-        API_ENDPOINTS.USERS.PROFILE(userId)
+        API_ENDPOINTS.USERS.PROFILE(userId),
       );
       return response;
     } catch (error) {
@@ -82,7 +82,7 @@ export const patchUserProfile = async (userId: string, data: string) => {
   try {
     const response = await apiClient.patch<UserNicknameRequest>(
       API_ENDPOINTS.USERS.PROFILE(userId),
-      data
+      data,
     );
     return response;
   } catch (error) {

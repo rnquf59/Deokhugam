@@ -8,7 +8,7 @@ export const useProfileActions = (
   userId: string,
   setUserNickname: Dispatch<SetStateAction<string>>,
   profileMenuController: Dispatch<SetStateAction<boolean>>,
-  close: () => void
+  close: () => void,
 ) => {
   const [nicknameValue, setNicknameValue] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
