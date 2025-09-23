@@ -39,12 +39,12 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(({
   };
 
   // 포커스 핸들러
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = () => {
     setIsFocused(true);
   };
 
   // 블러 핸들러
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = () => {
     setIsFocused(false);
   };
 
