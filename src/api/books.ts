@@ -1,6 +1,5 @@
 import { apiClient } from "./client";
 
-// 인기도서 목록 조회 API 타입 정의
 export interface PopularBook {
   id: string;
   bookId: string;
@@ -13,7 +12,7 @@ export interface PopularBook {
   reviewCount: number;
   rating: number;
   createdAt: string;
-  isEmpty?: boolean; // 빈 슬롯 표시용
+  isEmpty?: boolean; 
 }
 
 export interface PopularBooksResponse {
@@ -38,6 +37,31 @@ export interface BooksParams extends PopularBooksParams {
   orderBy?: string;
   [key: string]: unknown;
 }
+
+// 인기도서 목록 조회
+export const getPopularBooks = async (params: PopularBooksParams = {}): Promise<PopularBooksResponse> => {
+  const {
+    period = 'DAILY',
+    direction = 'ASC',
+    cursor,
+    after,
+    limit = 4
+  } = params;
+
+  const queryParams = new URLSearchParams();
+  
+  queryParams.append('period', period);
+  queryParams.append('direction', direction);
+  queryParams.append('limit', limit.toString());
+  
+  if (cursor) queryParams.append('cursor', cursor);
+  if (after) queryParams.append('after', after);
+
+  const response = await apiClient.get<PopularBooksResponse>(
+    `/api/books/popular?${queryParams.toString()}`
+  );
+  return response;
+};
 
 // 도서 목록 조회
 export interface Book {
@@ -64,23 +88,6 @@ export interface BooksResponse {
   hasNext: boolean;
 }
 
-// 인기도서 목록 조회
-export const getPopularBooks = async (
-  params: PopularBooksParams = {}
-): Promise<PopularBooksResponse> => {
-  const queryParams = new URLSearchParams();
-
-  if (params.period) queryParams.append("period", params.period);
-  if (params.direction) queryParams.append("direction", params.direction);
-  if (params.cursor) queryParams.append("cursor", params.cursor);
-  if (params.after) queryParams.append("after", params.after);
-  if (params.limit) queryParams.append("limit", params.limit.toString());
-
-  const response = await apiClient.get<PopularBooksResponse>(
-    `/api/books/popular?${queryParams.toString()}`
-  );
-  return response;
-};
 
 // 도서 목록 조회
 export const getBooks = async (

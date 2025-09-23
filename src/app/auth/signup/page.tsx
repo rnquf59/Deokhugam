@@ -14,7 +14,7 @@ export default function SignUpPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   
-  const { signup, isLoading, error, clearError } = useAuthStore();
+  const { signup, isLoading, error } = useAuthStore();
   const router = useRouter();
   
   const {

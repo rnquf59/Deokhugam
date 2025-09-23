@@ -1,5 +1,5 @@
 import { Book } from "@/api/books";
-import StarRating from "@/app/components/ui/StarRating";
+import StarRating from "@/components/common/StarRating";
 import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import Image from "next/image";
@@ -36,6 +36,7 @@ export default function ContentsList({
                     src={book.thumbnailUrl}
                     alt={book.title || "thumbnail"}
                     fill
+                    unoptimized
                     onError={() =>
                       setImgErrors((prev) => ({ ...prev, [book.id]: true }))
                     }

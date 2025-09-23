@@ -9,6 +9,7 @@ export default function LoadingScreen() {
           alt="Loading..."
           width={100}
           height={100}
+          unoptimized
         />
         <p className="text-body2 text-gray-500">Loading...</p>
       </div>

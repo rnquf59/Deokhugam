@@ -14,7 +14,7 @@ import Button from '@/components/ui/Buttons/Button';
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
-  const { login, isLoading, error, clearError, user } = useAuthStore();
+  const { login, isLoading, error, user } = useAuthStore();
   const router = useRouter();
   
   const {
@@ -51,10 +51,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-0 flex items-center justify-center p-4">
       <div className="w-full max-w-[400px]">
-        {/* 로고 */}
         <div className="mb-[14px] text-center">
           <Image
-            src="/logo/logo_symbol.png"
+            src="/images/logo/logo_symbol.svg"
             alt="로고"
             width={136}
             height={98}
@@ -63,7 +62,6 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* 제목 섹션 */}
         <div className="mb-8 text-center">
           <h1 className="text-header1 font-bold text-[#181D27] mb-[10px]">
             만나서 반갑습니다!
@@ -73,7 +71,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* 폼 섹션 */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 mb-6">
           <div>
             <Input
@@ -114,7 +111,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* 로그인 버튼 */}
           <Button
             type="submit"
             variant="primary" 
@@ -125,14 +121,12 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        {/* 에러 메시지 */}
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-body3 font-medium text-red-600 text-center">{error}</p>
           </div>
         )}
 
-        {/* 회원가입 링크 */}
         <div className="flex items-center justify-center gap-1">
           <span className="text-body3 font-medium text-gray-500">
             계정이 없으신가요?

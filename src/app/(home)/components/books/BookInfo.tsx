@@ -13,32 +13,28 @@ interface BookInfoProps {
 export default function BookInfo({ title, author, rating, reviewCount, isEmpty = false }: BookInfoProps) {
   return (
     <>
-      {/* 도서 정보 */}
       <div className="mb-[8px]">
         <h3 className="text-body2 font-semibold text-gray-950 mb-[6px] hover:text-gray-700 transition-colors line-clamp-1 overflow-hidden text-ellipsis">
-          {isEmpty ? '--' : title}
+          {isEmpty ? '' : title}
         </h3>
         <p className="text-body3 font-medium text-gray-500">
-          {isEmpty ? '--' : (author || '저자 정보 없음')}
+          {isEmpty ? '' : (author || '저자 정보 없음')}
         </p>
       </div>
 
-      {/* 평점 */}
       <div className="flex items-center gap-[4px]">
         <div className="flex">
           {isEmpty ? (
-            // 빈 상태일 때는 빈 별 5개 표시
             [...Array(5)].map((_, index) => (
               <Image
                 key={index}
-                src="/icon/ic_star_failled.png"
+                src="/images/icon/ic_star_failled.svg"
                 alt="빈별점"
                 width={16}
                 height={16}
               />
             ))
           ) : (
-            // 정상 상태일 때는 평점에 따라 별 표시
             [...Array(5)].map((_, index) => {
               const starIndex = index + 1;
               
@@ -46,7 +42,7 @@ export default function BookInfo({ title, author, rating, reviewCount, isEmpty =
                 return (
                   <Image
                     key={index}
-                    src="/icon/ic_star.png"
+                    src="/images/icon/ic_star.svg"
                     alt="별점"
                     width={16}
                     height={16}
@@ -56,7 +52,7 @@ export default function BookInfo({ title, author, rating, reviewCount, isEmpty =
                 return (
                   <Image
                     key={index}
-                    src="/icon/ic_star_half.png"
+                    src="/images/icon/ic_star_half.svg"
                     alt="반별점"
                     width={16}
                     height={16}
@@ -66,7 +62,7 @@ export default function BookInfo({ title, author, rating, reviewCount, isEmpty =
                 return (
                   <Image
                     key={index}
-                    src="/icon/ic_star_failled.png"
+                    src="/images/icon/ic_star_failled.svg"
                     alt="빈별점"
                     width={16}
                     height={16}
@@ -77,7 +73,7 @@ export default function BookInfo({ title, author, rating, reviewCount, isEmpty =
           )}
         </div>
         <span className="text-body4 font-medium text-gray-500">
-          {isEmpty ? '(--)' : `(${reviewCount})`}
+          {isEmpty ? '' : `(${reviewCount})`}
         </span>
       </div>
     </>

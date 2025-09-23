@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 interface EmptyStateProps {
-  title: string;
+  title?: string;
   description: string;
   iconSrc: string;
   iconAlt: string;
@@ -25,6 +25,12 @@ export default function EmptyState({ title, description, iconSrc, iconAlt }: Emp
           height={24}
         />
       </div>
+      
+      {title && (
+        <h3 className="text-h3 font-semibold text-gray-900 text-center">
+          {title}
+        </h3>
+      )}
       
       <p className="text-body2 font-medium text-gray-500 text-center">
         {description}

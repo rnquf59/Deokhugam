@@ -8,6 +8,7 @@ const NavBar = dynamic(() => import("@/components/ui/NavBar"), { ssr: false });
 const Tooltip = dynamic(() => import("@/components/ui/Tooltip"), {
   ssr: false,
 });
+const Footer = dynamic(() => import("@/components/ui/Footer"), { ssr: false });
 
 export default function ClientLayout({
   children,
@@ -17,6 +18,13 @@ export default function ClientLayout({
   const pathname = usePathname();
   const hideNavigation =
     pathname === "/auth/login" || pathname === "/auth/signup";
+  
+  const hideFooter = 
+    pathname === "/auth/login" || 
+    pathname === "/auth/signup" ||
+    pathname.startsWith("/books/add") || 
+    pathname.startsWith("/books/[id]") || 
+    pathname.startsWith("/reviews/[id]"); 
 
   return (
     <>
@@ -29,6 +37,7 @@ export default function ClientLayout({
       >
         {children}
       </div>
+      {!hideFooter && <Footer />}
       <Tooltip />
     </>
   );

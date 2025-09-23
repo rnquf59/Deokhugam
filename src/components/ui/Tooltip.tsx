@@ -17,7 +17,7 @@ export default function Tooltip() {
         bottom: `calc(40px + env(safe-area-inset-bottom))`,
       }}
     >
-      <Image src="/icon/ic_check.svg" alt="Check" width={20} height={20} />
+      <Image src="/images/icon/ic_check.svg" alt="Check" width={20} height={20} />
       {content}
     </div>
   );

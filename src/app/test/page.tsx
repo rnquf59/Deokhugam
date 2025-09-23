@@ -1,7 +1,7 @@
 'use client';
 
-import EmptyState from '../components/ui/EmptyState';
-import UserRanking from '../components/sections/UserRanking';
+import EmptyState from '../(home)/components/ui/EmptyState';
+import UserRanking from '../(home)/components/sections/UserRanking';
 
 export default function TestPage() {
   return (
@@ -12,7 +12,7 @@ export default function TestPage() {
             <EmptyState
               title="인기 도서"
               description="아직 등록된 도서가 없습니다."
-              iconSrc="/icon/ic_book2.svg"
+              iconSrc="images/icon/ic_book2.svg"
               iconAlt="도서 아이콘"
             />
 
@@ -21,7 +21,7 @@ export default function TestPage() {
             <EmptyState
               title="인기 리뷰"
               description="아직 등록된 리뷰가 없습니다."
-              iconSrc="/icon/ic_comment-filled.svg"
+              iconSrc="images/icon/ic_comment-filled.svg"
               iconAlt="리뷰 아이콘"
             />
           </div>
@@ -30,8 +30,10 @@ export default function TestPage() {
           <div className="mb-[40px]">
             <UserRanking period="MONTHLY" />
           </div>
+
+          
         </div>
       </div>
-
-  );
-}
+ 
+    );
+  }

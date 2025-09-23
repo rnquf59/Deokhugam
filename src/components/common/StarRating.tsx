@@ -17,7 +17,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, children, className = '
         return (
           <Image
             key={index}
-            src="/icon/ic_star.png"
+            src="/images/icon/ic_star.svg"
             alt="별점"
             width={size}
             height={size}
@@ -27,7 +27,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, children, className = '
         return (
           <Image
             key={index}
-            src="/icon/ic_star_half.png"
+            src="/images/icon/ic_star_half.svg"
             alt="반별점"
             width={size}
             height={size}
@@ -37,7 +37,7 @@ const StarRating: React.FC<StarRatingProps> = ({ rating, children, className = '
         return (
           <Image
             key={index}
-            src="/icon/ic_star_failled.png"
+            src="/images/icon/ic_star_failled.svg"
             alt="빈별점"
             width={size}
             height={size}
