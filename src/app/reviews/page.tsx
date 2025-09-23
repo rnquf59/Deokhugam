@@ -300,7 +300,7 @@ export default function ReviewsPage() {
           review.reviewContent
             .toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          review.userNickname.toLowerCase().includes(searchQuery.toLowerCase()),
+          review.userNickname.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -330,7 +330,7 @@ export default function ReviewsPage() {
       {/* 검색 및 필터 섹션 */}
       <div className="flex justify-between items-center mb-[30px]">
         {/* 검색 입력 */}
-        <div className="flex-1 max-w-md">
+        <div>
           <SearchBar
             placeholder="내가 찾는 책 이름을 검색해보세요"
             value={searchQuery}

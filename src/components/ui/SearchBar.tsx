@@ -22,7 +22,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
       value,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState(value || "");
@@ -69,52 +69,60 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     };
 
     // 엔터키 핸들러
-    const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Enter") {
         handleSearch();
       }
     };
 
-    // 상태별 스타일
-    const getInputStyles = () => {
+    // 상태별 컨테이너 스타일
+    const getContainerStyles = () => {
       switch (searchState) {
         case "typing":
-          return "bg-gray-0 border-[1.5px] border-gray-400 text-gray-800 shadow-[0px_4px_8px_0px_rgba(24,24,24,0.05)]";
+          return "bg-white border-[1.5px] border-gray-400 shadow-[0px_4px_8px_0px_rgba(24,24,24,0.05)]";
         case "completed":
-          return "bg-gray-100 border border-gray-300 text-gray-600";
+          return "bg-gray-100 border-[1.5px] border-transparent";
         default:
-          return "bg-gray-100 border border-gray-300 text-gray-800";
+          return "bg-gray-100 border-[1.5px] border-transparent";
+      }
+    };
+
+    // 상태별 텍스트 스타일
+    const getTextStyles = () => {
+      switch (searchState) {
+        case "typing":
+          return "text-gray-800";
+        case "completed":
+          return "text-gray-600";
+        default:
+          return "text-gray-400";
       }
     };
 
     return (
       <div className={`relative ${className}`}>
-        {/* 검색 아이콘 */}
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        <div className="absolute left-[22px] top-1/2 transform -translate-y-1/2 z-10">
           <Image
             src="/images/icon/ic_search.svg"
             alt="검색"
             width={20}
             height={20}
-            className="text-gray-400"
           />
         </div>
 
-        {/* 입력 필드 */}
         <input
           ref={ref}
           type="text"
-          placeholder={placeholder}
+          placeholder={searchState === "typing" ? "" : placeholder}
           value={inputValue}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          onKeyPress={handleKeyPress}
-          className={`w-full pl-10 pr-12 py-3 rounded-lg text-body2 font-medium placeholder:text-gray-400 !outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200 ${getInputStyles()}`}
+          onKeyDown={handleKeyDown}
+          className={`w-full py-[13px] pl-[50px] pr-[50px] rounded-full text-body2 font-medium placeholder:text-gray-400 !outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200 ${getContainerStyles()} ${getTextStyles()}`}
           {...props}
         />
 
-        {/* 지우기 버튼 (타이핑 상태이거나 완료 상태일 때만 표시) */}
         {(searchState === "typing" ||
           (searchState === "completed" &&
             typeof inputValue === "string" &&
@@ -122,30 +130,19 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
           <button
             type="button"
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-200 rounded-full p-1 transition-colors"
+            className="absolute right-[22px] top-1/2 transform -translate-y-1/2 w-[20px] h-[20px] flex items-center justify-center hover:opacity-70 transition-opacity z-10"
           >
-            <div className="w-5 h-5 bg-gray-400 rounded-full flex items-center justify-center">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                className="text-white"
-              >
-                <path
-                  d="M9 3L3 9M3 3L9 9"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+            <Image
+              src="/images/icon/ic_xbox.svg"
+              alt="지우기"
+              width={20}
+              height={20}
+            />
           </button>
         )}
       </div>
     );
-  },
+  }
 );
 
 SearchBar.displayName = "SearchBar";
