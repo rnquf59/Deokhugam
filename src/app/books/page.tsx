@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ContentsList from "./components/ContentsList";
 import { Book, BooksParams, getBooks } from "@/api/books";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
+import EmptyList from "@/components/common/EmptyList";
 
 export default function BooksPage() {
   const [orderBy, setOrderBy] = useState<
@@ -18,7 +19,7 @@ export default function BooksPage() {
   const [booksData, setBooksData] = useState<Book[]>([]);
   const limit = 10;
 
-  const { isLoading, setCursor, setAfter, resetInfiniteScroll } =
+  const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
     useInfiniteScroll<Book, BooksParams>({
       initialParams: { orderBy, direction, keyword, limit },
       fetcher: getBooks,
@@ -27,6 +28,8 @@ export default function BooksPage() {
 
   useEffect(() => {
     const fetchBook = async () => {
+      setIsLoading(true);
+
       try {
         const response = await getBooks({ orderBy, direction, keyword, limit });
         setBooksData(response.content);
@@ -34,6 +37,8 @@ export default function BooksPage() {
         setAfter(response.nextAfter);
       } catch (err) {
         console.error("도서 조회 실패:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -50,16 +55,19 @@ export default function BooksPage() {
   }
 
   return (
-    <div className="pt-[50px] pb-[80px]">
+    <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex flex-col">
       <PageHead />
       <SearchFilter
         orderBy={orderBy}
         direction={direction}
+        keyword={keyword}
         setOrderBy={setOrderBy}
         setDirection={setDirection}
         setKeyword={setKeyword}
       />
-      {booksData && (
+      {booksData.length === 0 && !isLoading ? (
+        <EmptyList keyword={keyword}/>
+      ) : (
         <ContentsList booksData={booksData} isLoading={isLoading} />
       )}
     </div>
