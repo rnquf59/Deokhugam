@@ -1,7 +1,7 @@
 'use client';
 
-import EmptyState from '../main/components/ui/EmptyState';
-import UserRanking from '../main/components/sections/UserRanking';
+import EmptyState from '../(home)/components/ui/EmptyState';
+import UserRanking from '../(home)/components/sections/UserRanking';
 
 export default function TestPage() {
   return (

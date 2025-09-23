@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import ReviewCard from '../main/components/reviews/ReviewCard';
+import ReviewCard from '../(home)/components/reviews/ReviewCard';
 import RadioButton from '@/components/ui/Buttons/RadioButton';
 import SearchBar from '@/components/ui/SearchBar';
 import type { PopularReview } from '@/types/reviews';
