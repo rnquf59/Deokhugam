@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import ReviewImage from './ReviewImage';
 import ReviewContent from './ReviewContent';
@@ -9,7 +10,7 @@ interface ReviewCardProps {
   review: PopularReview;
 }
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+const ReviewCard = memo(function ReviewCard({ review }: ReviewCardProps) {
   if (review.isEmpty) {
     return (
       <div className="flex-1">
@@ -59,4 +60,6 @@ export default function ReviewCard({ review }: ReviewCardProps) {
       </Link>
     </div>
   );
-}
+});
+
+export default ReviewCard;

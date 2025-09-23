@@ -36,6 +36,7 @@ export default function ContentsList({
                     src={book.thumbnailUrl}
                     alt={book.title || "thumbnail"}
                     fill
+                    unoptimized
                     onError={() =>
                       setImgErrors((prev) => ({ ...prev, [book.id]: true }))
                     }

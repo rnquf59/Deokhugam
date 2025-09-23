@@ -45,6 +45,7 @@ export default function BookImage({ thumbnailUrl, title, rank, isEmpty }: BookIm
         width={209}
         height={314}
         className="w-full h-full object-cover rounded-[6px]"
+        unoptimized
       />
       {/* 그라데이션 오버레이 */}
       <div 

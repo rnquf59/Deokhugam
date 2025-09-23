@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import ReviewCard from '../main/components/reviews/ReviewCard';
 import RadioButton from '@/components/ui/Buttons/RadioButton';
+import SearchBar from '@/components/ui/SearchBar';
 import type { PopularReview } from '@/types/reviews';
 
 // 임시 더미 데이터 (14개)
@@ -252,12 +253,60 @@ export default function ReviewsPage() {
   const [sortBy, setSortBy] = useState<'time' | 'rating'>('time');
   const [orderBy, setOrderBy] = useState<'asc' | 'desc'>('desc');
 
+  // 검색 핸들러 메모이제이션
+  const handleSearch = useCallback((value: string) => {
+    console.log('검색:', value);
+    // 실제 검색 로직 구현
+  }, []);
+
+  // 지우기 핸들러 메모이제이션
+  const handleClear = useCallback(() => {
+    setSearchQuery('');
+    // 검색 결과 초기화 로직 구현
+  }, []);
+
+  // 정렬 핸들러들 메모이제이션
+  const handleSortByChange = useCallback((newSortBy: 'time' | 'rating') => {
+    setSortBy(newSortBy);
+  }, []);
+
+  const handleOrderByChange = useCallback(() => {
+    setOrderBy(prev => prev === 'desc' ? 'asc' : 'desc');
+  }, []);
+
+  // 필터링된 리뷰 데이터 메모이제이션
+  const filteredReviews = useMemo(() => {
+    let filtered = [...dummyReviews];
+    
+    // 검색어 필터링
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(review => 
+        review.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        review.reviewContent.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        review.userNickname.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // 정렬
+    filtered.sort((a, b) => {
+      if (sortBy === 'time') {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return orderBy === 'desc' ? dateB - dateA : dateA - dateB;
+      } else {
+        return orderBy === 'desc' ? b.reviewRating - a.reviewRating : a.reviewRating - b.reviewRating;
+      }
+    });
+    
+    return filtered;
+  }, [searchQuery, sortBy, orderBy]);
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="pt-[50px] pb-[80px]">
+
         {/* 페이지 제목 */}
         <div 
-          className="text-center mb-5"
+          className="flex mb-5"
           style={{
             fontFamily: 'Pretendard',
             fontSize: '32px',
@@ -274,43 +323,26 @@ export default function ReviewsPage() {
         <div className="flex justify-between items-center mb-[30px]">
           {/* 검색 입력 */}
           <div className="flex-1 max-w-md">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg 
-                  className="h-5 w-5 text-gray-400" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" 
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="내가 찾는 책 이름을 검색해보세요"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            <SearchBar
+              placeholder="내가 찾는 책 이름을 검색해보세요"
+              value={searchQuery}
+              onChange={setSearchQuery}
+              onSearch={handleSearch}
+              onClear={handleClear}
+            />
           </div>
 
           {/* 정렬 옵션 */}
           <div className="flex gap-2">
             <RadioButton
               variant={sortBy === 'time' ? 'selected' : 'unselected'}
-              onClick={() => setSortBy('time')}
+              onClick={() => handleSortByChange('time')}
             >
               시간순
             </RadioButton>
             <RadioButton
               variant={orderBy === 'desc' ? 'selected' : 'unselected'}
-              onClick={() => setOrderBy(orderBy === 'desc' ? 'asc' : 'desc')}
+              onClick={handleOrderByChange}
             >
               {orderBy === 'desc' ? '내림차순' : '오름차순'}
             </RadioButton>
@@ -319,11 +351,11 @@ export default function ReviewsPage() {
 
         {/* 리뷰 목록 그리드 */}
         <div className="grid grid-cols-2 gap-[30px]">
-          {dummyReviews.map((review) => (
+          {filteredReviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
         </div>
-      </div>
+
     </div>
   );
 }
