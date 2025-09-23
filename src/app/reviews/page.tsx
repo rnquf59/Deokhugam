@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback } from "react";
 import ReviewCard from "../(home)/components/reviews/ReviewCard";
-import RadioButton from "@/components/ui/Buttons/RadioButton";
+import Selectbox from "@/components/ui/Selectbox";
 import SearchBar from "@/components/ui/SearchBar";
 import type { PopularReview } from "@/types/reviews";
 
@@ -284,8 +284,8 @@ export default function ReviewsPage() {
     setSortBy(newSortBy);
   }, []);
 
-  const handleOrderByChange = useCallback(() => {
-    setOrderBy((prev) => (prev === "desc" ? "asc" : "desc"));
+  const handleOrderByChange = useCallback((newOrderBy: "asc" | "desc") => {
+    setOrderBy(newOrderBy);
   }, []);
 
   // 필터링된 리뷰 데이터 메모이제이션
@@ -342,18 +342,22 @@ export default function ReviewsPage() {
 
         {/* 정렬 옵션 */}
         <div className="flex gap-2">
-          <RadioButton
-            variant={sortBy === "time" ? "selected" : "unselected"}
-            onClick={() => handleSortByChange("time")}
-          >
-            시간순
-          </RadioButton>
-          <RadioButton
-            variant={orderBy === "desc" ? "selected" : "unselected"}
-            onClick={handleOrderByChange}
-          >
-            {orderBy === "desc" ? "내림차순" : "오름차순"}
-          </RadioButton>
+          <Selectbox
+            options={[
+              { value: "time", label: "시간순" },
+              { value: "rating", label: "평점순" },
+            ]}
+            value={sortBy}
+            onChange={handleSortByChange}
+          />
+          <Selectbox
+            options={[
+              { value: "desc", label: "내림차순" },
+              { value: "asc", label: "오름차순" },
+            ]}
+            value={orderBy}
+            onChange={handleOrderByChange}
+          />
         </div>
       </div>
 
