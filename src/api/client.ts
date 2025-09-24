@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 
 // API 기본 설정 - 프록시를 통해 호출
 const API_BASE_URL =
@@ -28,7 +28,7 @@ class ApiClient {
       (error) => {
         console.error("API 요청 에러:", error);
         return Promise.reject(error);
-      },
+      }
     );
 
     // 응답 인터셉터
@@ -52,7 +52,7 @@ class ApiClient {
           // 요청 설정 중 에러
           throw new Error("요청 설정 에러: " + error.message);
         }
-      },
+      }
     );
   }
 
@@ -63,8 +63,12 @@ class ApiClient {
   }
 
   // POST 요청
-  async post<T, D = unknown>(endpoint: string, data: D): Promise<T> {
-    const response = await this.axiosInstance.post<T>(endpoint, data);
+  async post<T, D = unknown>(
+    endpoint: string,
+    data: D,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await this.axiosInstance.post<T>(endpoint, data, config);
     return response.data;
   }
 

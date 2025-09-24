@@ -2,6 +2,9 @@
 
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
+import PageHead from "./components/PageHead";
+import FormContainer from "./components/FormContainer";
+import FormFields from "./components/FormFields";
 
 export default function AddBookPage() {
   const { shouldShowContent } = useAuthGuard();
@@ -11,8 +14,11 @@ export default function AddBookPage() {
   }
 
   return (
-    <div>
-      <h1>도서 등록 페이지</h1>
+    <div className="pt-[50px]">
+      <PageHead />
+      <FormContainer>
+        <FormFields />
+      </FormContainer>
     </div>
   );
 }
