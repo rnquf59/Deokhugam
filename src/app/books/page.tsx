@@ -3,7 +3,7 @@
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import PageHead from "./components/PageHead";
-import SearchFilter from "./components/SearchFilter";
+import BookSearchSection from "./components/BookSearchSection";
 import { useEffect, useState } from "react";
 import ContentsList from "./components/ContentsList";
 import { Book, BooksParams, getBooks } from "@/api/books";
@@ -57,13 +57,12 @@ export default function BooksPage() {
   return (
     <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex flex-col">
       <PageHead />
-      <SearchFilter
+      <BookSearchSection
         orderBy={orderBy}
         direction={direction}
-        keyword={keyword}
-        setOrderBy={setOrderBy}
-        setDirection={setDirection}
-        setKeyword={setKeyword}
+        onSearch={setKeyword}
+        onOrderByChange={setOrderBy}
+        onDirectionChange={setDirection}
       />
       {booksData.length === 0 && !isLoading ? (
         <EmptyList keyword={keyword} />
