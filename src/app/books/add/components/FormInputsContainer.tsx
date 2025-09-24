@@ -90,7 +90,7 @@ export default function FormInputsContainer({
             className={clsx(
               inputContainer,
               "text-gray-400 font-medium flex-[1] cursor-pointer border-[1.5px] border-gray-100",
-              focusDisabled && "bg-gray-200 cursor-default",
+              focusDisabled && "!cursor-default",
               errors.isbn && "border-red-500"
             )}
             onClick={focusDisabled || isSubmitting ? undefined : handleClick}
