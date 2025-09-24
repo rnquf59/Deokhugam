@@ -6,6 +6,7 @@ import { AddBookFormValues } from "@/schemas/addBookSchema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { postBook } from "@/api/books";
+import { useTooltipStore } from "@/store/tooltipStore";
 
 export default function FormFields() {
   const {
@@ -32,6 +33,7 @@ export default function FormFields() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fetchIsbnLoading, setFetchIsbnLoading] = useState(false);
 
+  const showTooltip = useTooltipStore((state) => state.showTooltip);
   const { isValid, isSubmitting } = formState;
   const focusDisabled = fetchIsbnLoading || isSubmitting;
   const submitDisabled = fetchIsbnLoading || !isValid || isSubmitting;
@@ -60,6 +62,7 @@ export default function FormFields() {
 
     try {
       await postBook(formData);
+      showTooltip("도서 등록이 완료되었습니다!");
       router.push("/books");
     } catch (error) {
       setError("isbn", {
