@@ -3,13 +3,11 @@
 import { useState, useCallback, useEffect } from "react";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import ReviewSearchSection from "./components/ReviewSearchSection";
-import ReviewCard from "@/app/(home)/components/reviews/ReviewCard";
 import { getReviews } from "@/api/reviews";
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
-import DelayedLoader from "@/components/common/DelayedLoader";
-import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import EmptyList from "@/components/common/EmptyList";
+import ReviewList from "./components/ReviewList";
 import type { Review } from "@/types/reviews";
 
 export default function ReviewsPage() {
@@ -97,17 +95,7 @@ export default function ReviewsPage() {
       {reviews.length === 0 && !isLoading ? (
         <EmptyList keyword={searchKeyword} />
       ) : (
-        <>
-          <DelayedLoader isLoading={isLoading} delay={1000}>
-            <InfiniteScrollLoader />
-          </DelayedLoader>
-
-          <div className="grid grid-cols-2 gap-[30px]">
-            {reviews.map((review) => (
-              <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
-            ))}
-          </div>
-        </>
+        <ReviewList reviews={reviews} isLoading={isLoading} />
       )}
     </div>
   );
