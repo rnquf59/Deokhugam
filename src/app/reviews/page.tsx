@@ -9,6 +9,7 @@ import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
 import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
+import EmptyList from "@/components/common/EmptyList";
 import type { Review } from "@/types/reviews";
 
 export default function ReviewsPage() {
@@ -93,17 +94,21 @@ export default function ReviewsPage() {
         onOrderByChange={handleOrderByChange}
       />
 
-      <>
-        <DelayedLoader isLoading={isLoading} delay={1000}>
-          <InfiniteScrollLoader />
-        </DelayedLoader>
+      {reviews.length === 0 && !isLoading ? (
+        <EmptyList keyword={searchKeyword} />
+      ) : (
+        <>
+          <DelayedLoader isLoading={isLoading} delay={1000}>
+            <InfiniteScrollLoader />
+          </DelayedLoader>
 
-        <div className="grid grid-cols-2 gap-[30px]">
-          {reviews.map((review) => (
-            <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
-          ))}
-        </div>
-      </>
+          <div className="grid grid-cols-2 gap-[30px]">
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
