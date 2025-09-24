@@ -4,6 +4,7 @@ import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import Image from "next/image";
 import StarRating from "@/components/common/StarRating";
+import Textarea from "@/components/ui/Textarea";
 
 export default function ReviewDetailPage() {
   const { shouldShowContent } = useAuthGuard();
@@ -93,17 +94,15 @@ export default function ReviewDetailPage() {
       </div>
 
       <div>
-        <div className="mt-[34px]">
-          <h2 className="text-body1 font-semibold text-gray-900 mb-[15px]">
-            댓글
-          </h2>
-          <textarea
+        <div className="mt-[34px] flex flex-col gap-[15px]">
+          <h2 className="text-body1 font-semibold text-gray-900">댓글</h2>
+          <Textarea
             placeholder="댓글을 입력해주세요..."
-            className="w-full h-[100px] p-4 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="h-[120px]"
           />
         </div>
 
-        <div className="pt-[40px] pb-[79px]">
+        <div className="pt-10 pb-[79px]">
           <p className="text-body1 font-semibold text-gray-400 text-center">
             등록된 댓글이 없습니다.
           </p>
