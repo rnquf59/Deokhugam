@@ -35,3 +35,38 @@ export interface PopularReviewsParams {
   after?: string;
   limit?: number;
 }
+
+// 리뷰 목록 관련 타입 정의
+export interface Review {
+  id: string;
+  bookId: string;
+  bookTitle: string;
+  bookThumbnailUrl: string;
+  userId: string;
+  userNickname: string;
+  content: string;
+  rating: number;
+  likeCount: number;
+  commentCount: number;
+  likedByMe: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ReviewsResponse {
+  content: Review[];
+  nextCursor: string | null;
+  nextAfter: string | null;
+  size: number;
+  totalElements: number;
+  hasNext: boolean;
+}
+
+export interface ReviewsParams {
+  sortBy?: "time" | "rating";
+  orderBy?: "asc" | "desc";
+  cursor?: string;
+  after?: string;
+  limit?: number;
+  search?: string;
+}
