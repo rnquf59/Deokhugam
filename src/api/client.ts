@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useAuthStore } from "@/store/authStore";
 
 // API 기본 설정 - 프록시를 통해 호출
@@ -73,8 +73,12 @@ class ApiClient {
   }
 
   // POST 요청
-  async post<T, D = unknown>(endpoint: string, data: D): Promise<T> {
-    const response = await this.axiosInstance.post<T>(endpoint, data);
+  async post<T, D = unknown>(
+    endpoint: string,
+    data: D,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await this.axiosInstance.post<T>(endpoint, data, config);
     return response.data;
   }
 

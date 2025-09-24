@@ -40,7 +40,7 @@ export interface BooksParams extends PopularBooksParams {
 
 // 인기도서 목록 조회
 export const getPopularBooks = async (
-  params: PopularBooksParams = {},
+  params: PopularBooksParams = {}
 ): Promise<PopularBooksResponse> => {
   const {
     period = "DAILY",
@@ -60,7 +60,7 @@ export const getPopularBooks = async (
   if (after) queryParams.append("after", after);
 
   const response = await apiClient.get<PopularBooksResponse>(
-    `/api/books/popular?${queryParams.toString()}`,
+    `/api/books/popular?${queryParams.toString()}`
   );
   return response;
 };
@@ -90,9 +90,29 @@ export interface BooksResponse {
   hasNext: boolean;
 }
 
+export interface AddBookResponse {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  publisher: string;
+  publisheddate: string;
+  isbn: string;
+  thumbnailUrl: string;
+  reviewCount: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PostBookPayload = {
+  formData: FormData;
+  thumbnailImage?: string;
+};
+
 // 도서 목록 조회
 export const getBooks = async (
-  params: BooksParams = {},
+  params: BooksParams = {}
 ): Promise<BooksResponse> => {
   const queryParams = new URLSearchParams();
 
@@ -104,7 +124,31 @@ export const getBooks = async (
   if (params.limit) queryParams.append("limit", params.limit.toString());
 
   const response = await apiClient.get<BooksResponse>(
-    `/api/books?${queryParams.toString()}`,
+    `/api/books?${queryParams.toString()}`
   );
+  return response;
+};
+
+// 이미지 기반 ISBN 인식
+export const getOcr = async (formData: FormData) => {
+  const response = await apiClient.post<string>(
+    `/api/books/isbn/ocr`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return response;
+};
+
+// 도서 등록
+export const postBook = async (formData: FormData) => {
+  const response = await apiClient.post<AddBookResponse>(
+    "/api/books",
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+
   return response;
 };
