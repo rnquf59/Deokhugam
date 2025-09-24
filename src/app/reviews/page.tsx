@@ -6,41 +6,66 @@ import ReviewSearchSection from "./components/ReviewSearchSection";
 import ReviewCard from "@/app/(home)/components/reviews/ReviewCard";
 import { getReviews } from "@/api/reviews";
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
-import type { Review, ReviewsParams } from "@/types/reviews";
+import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
+import DelayedLoader from "@/components/common/DelayedLoader";
+import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
+import type { Review } from "@/types/reviews";
 
 export default function ReviewsPage() {
   const [sortBy, setSortBy] = useState<"time" | "rating">("time");
   const [orderBy, setOrderBy] = useState<"asc" | "desc">("desc");
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
 
   const { shouldShowContent } = useAuthGuard();
 
-  const fetchReviews = useCallback(
-    async (params: ReviewsParams = {}) => {
+  const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
+    useInfiniteScroll<Review, Record<string, unknown>>({
+      initialParams: {
+        sortBy,
+        orderBy,
+        search: searchKeyword || undefined,
+        limit: 6,
+      },
+      fetcher: getReviews as (params: Record<string, unknown>) => Promise<{
+        content: Review[];
+        nextCursor: string;
+        nextAfter: string;
+        hasNext: boolean;
+      }>,
+      setData: setReviews,
+    });
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setIsLoading(true);
+
       try {
         const response = await getReviews({
           sortBy,
           orderBy,
-          ...params,
+          search: searchKeyword || undefined,
+          limit: 6,
         });
         setReviews(response.content);
+        setCursor(response.nextCursor || undefined);
+        setAfter(response.nextAfter || undefined);
       } catch (err) {
         console.error("리뷰 조회 실패:", err);
+      } finally {
+        setIsLoading(false);
       }
-    },
-    [sortBy, orderBy]
-  );
+    };
 
-  useEffect(() => {
-    fetchReviews();
-  }, [sortBy, orderBy, fetchReviews]);
+    resetInfiniteScroll();
+    setReviews([]);
+    fetchInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy, orderBy, searchKeyword]);
 
-  const handleSearch = useCallback(
-    (value: string) => {
-      fetchReviews({ search: value || undefined });
-    },
-    [fetchReviews]
-  );
+  const handleSearch = useCallback((value: string) => {
+    setSearchKeyword(value);
+  }, []);
 
   const handleSortByChange = useCallback((newSortBy: "time" | "rating") => {
     setSortBy(newSortBy);
@@ -68,11 +93,17 @@ export default function ReviewsPage() {
         onOrderByChange={handleOrderByChange}
       />
 
-      <div className="grid grid-cols-2 gap-[30px]">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
-        ))}
-      </div>
+      <>
+        <DelayedLoader isLoading={isLoading} delay={1000}>
+          <InfiniteScrollLoader />
+        </DelayedLoader>
+
+        <div className="grid grid-cols-2 gap-[30px]">
+          {reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
+          ))}
+        </div>
+      </>
     </div>
   );
 }
