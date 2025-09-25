@@ -7,7 +7,7 @@ interface CommentItemProps {
 
 export default function CommentItem({ comment }: CommentItemProps) {
   return (
-    <div className="py-[24px]">
+    <div className="py-[24px] border-b border-gray-100">
       <div className="flex flex-col gap-[10px]">
         {/* 첫 번째 요소: 닉네임, 작성일, 더보기 아이콘 */}
         <div className="flex items-center justify-between">

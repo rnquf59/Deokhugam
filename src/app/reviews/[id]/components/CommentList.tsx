@@ -8,7 +8,7 @@ interface CommentListProps {
 export default function CommentList({ comments }: CommentListProps) {
   if (comments.length === 0) {
     return (
-      <div className="pt-10 pb-[79px]">
+      <div>
         <p className="text-body1 font-semibold text-gray-400 text-center">
           등록된 댓글이 없습니다.
         </p>
@@ -17,7 +17,7 @@ export default function CommentList({ comments }: CommentListProps) {
   }
 
   return (
-    <div className="pt-10 pb-[79px]">
+    <div>
       {comments.map(comment => (
         <CommentItem key={comment.id} comment={comment} />
       ))}

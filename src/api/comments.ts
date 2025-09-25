@@ -1,5 +1,10 @@
 import { apiClient } from "./client";
-import type { CommentsResponse, CommentsParams } from "@/types/reviews";
+import { useAuthStore } from "@/store/authStore";
+import type {
+  CommentsResponse,
+  CommentsParams,
+  Comment
+} from "@/types/reviews";
 
 export const getComments = async (
   params: CommentsParams
@@ -24,4 +29,23 @@ export const getComments = async (
   return await apiClient.get<CommentsResponse>(
     `/api/comments?${queryParams.toString()}`
   );
+};
+
+export const createComment = async (data: {
+  reviewId: string;
+  content: string;
+}): Promise<Comment> => {
+  // 현재 로그인한 사용자의 ID 가져오기
+  const authState = useAuthStore.getState();
+  if (!authState.user?.id) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const requestData = {
+    reviewId: data.reviewId,
+    userId: authState.user.id,
+    content: data.content
+  };
+
+  return await apiClient.post<Comment>("/api/comments", requestData);
 };
