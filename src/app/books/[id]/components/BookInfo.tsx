@@ -4,6 +4,7 @@ import StarRating from "@/components/common/StarRating";
 import { BOOK_DETAIL_FIELDS } from "@/constants/bookDetailInfo";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Book = {
   publisher: string;
@@ -11,8 +12,17 @@ type Book = {
   isbn: string;
 };
 
-export default function BookInfo({ data }: { data: BookResponse | null }) {
+export default function BookInfo({
+  id,
+  data,
+}: {
+  id: string;
+  data: BookResponse | null;
+}) {
   const { open, setOpen, dropdownRef } = useClickOutside();
+  const router = useRouter();
+
+  const handleDeleteBook = (id: string) => {};
 
   if (!data) return;
   return (
@@ -35,7 +45,12 @@ export default function BookInfo({ data }: { data: BookResponse | null }) {
                 height={24}
               />
             </button>
-            {open && <ActionMenu />}
+            {open && (
+              <ActionMenu
+                onEdit={() => router.push(`/books/${id}/edit`)}
+                onDelete={() => handleDeleteBook(id)}
+              />
+            )}
           </div>
         </div>
         <p className="py-1 text-gray-900 font-medium">{data.author}</p>
