@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Label from "@/components/ui/Buttons/Label";
+import { useAuthStore } from "@/store/authStore";
 import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
@@ -6,15 +8,20 @@ interface CommentItemProps {
 }
 
 export default function CommentItem({ comment }: CommentItemProps) {
+  const { user } = useAuthStore();
+  const isMyComment = user?.id === comment.userId;
   return (
     <div className="py-[24px] border-b border-gray-100">
       <div className="flex flex-col gap-[10px]">
         {/* 첫 번째 요소: 닉네임, 작성일, 더보기 아이콘 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[6px]">
-            <span className="my-[3.5px] text-body3 font-semibold text-gray-600">
-              {comment.userNickname}
-            </span>
+            <div className="flex items-center gap-[4px]">
+              <span className="my-[3.5px] text-body3 font-semibold text-gray-600">
+                {comment.userNickname}
+              </span>
+              {isMyComment && <Label>내 댓글</Label>}
+            </div>
             <span className="my-[3.5px] text-body3 font-medium text-gray-400">
               {new Date(comment.createdAt).toLocaleDateString()}
             </span>

@@ -1,16 +1,87 @@
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import StarRating from "@/components/common/StarRating";
+import LoadingScreen from "@/components/common/LoadingScreen";
+import { getReviewDetail, toggleReviewLike } from "@/api/reviews";
 import type { Review } from "@/types/reviews";
 
 interface ReviewHeaderProps {
-  review: Review;
-  onLikeToggle: () => void;
+  reviewId: string;
+  commentCount?: number;
 }
 
 export default function ReviewHeader({
-  review,
-  onLikeToggle
+  reviewId,
+  commentCount
 }: ReviewHeaderProps) {
+  const [review, setReview] = useState<Review | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchReview = async () => {
+      if (!reviewId) return;
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const reviewData = await getReviewDetail(reviewId);
+        setReview(reviewData);
+      } catch (error) {
+        console.error("리뷰 조회 실패:", error);
+        setError("리뷰를 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReview();
+  }, [reviewId]);
+
+  const toggleLike = async () => {
+    if (!review) return;
+
+    try {
+      const result = await toggleReviewLike(reviewId);
+
+      setReview(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          likedByMe: result.liked,
+          likeCount: result.liked ? prev.likeCount + 1 : prev.likeCount - 1
+        };
+      });
+    } catch (error) {
+      console.error("좋아요 토글 실패:", error);
+      alert("좋아요 처리에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (error) {
+    return (
+      <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex items-center justify-center">
+        <p className="text-body1 font-semibold text-red-500 text-center">
+          {error}
+        </p>
+      </div>
+    );
+  }
+
+  if (!review) {
+    return (
+      <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex items-center justify-center">
+        <p className="text-body1 font-semibold text-gray-400 text-center">
+          리뷰를 찾을 수 없습니다.
+        </p>
+      </div>
+    );
+  }
   return (
     <div className="flex gap-6">
       <div className="w-[118px] h-[178px] relative">
@@ -48,7 +119,7 @@ export default function ReviewHeader({
         <div className="flex items-center gap-[12px] pt-[8px]">
           <div
             className="flex items-center cursor-pointer hover:opacity-70 transition-opacity"
-            onClick={onLikeToggle}
+            onClick={toggleLike}
           >
             <Image
               src={
@@ -75,7 +146,8 @@ export default function ReviewHeader({
               className="mr-[2px]"
             />
             <span className="text-body3 font-medium text-gray-500">
-              댓글 {review.commentCount}
+              댓글{" "}
+              {commentCount !== undefined ? commentCount : review.commentCount}
             </span>
           </div>
         </div>

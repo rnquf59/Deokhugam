@@ -52,7 +52,6 @@ export const getReviews = async (
 
   const queryParams = new URLSearchParams();
 
-  // 스웨거 스펙에 맞게 파라미터 설정
   queryParams.append("orderBy", orderBy);
   queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
@@ -69,7 +68,6 @@ export const getReviews = async (
     queryParams.append("keyword", search);
   }
 
-  // requestUserId는 query parameter로도 필요 (스웨거에서 필수로 표시됨)
   if (typeof window !== "undefined") {
     const authState = useAuthStore.getState();
     if (authState.user?.id) {
@@ -83,6 +81,15 @@ export const getReviews = async (
 };
 
 export const getReviewDetail = async (reviewId: string): Promise<Review> => {
-  // apiClient의 요청 인터셉터에서 자동으로 Deokhugam-Request-User-ID 헤더를 추가함
   return await apiClient.get<Review>(`/api/reviews/${reviewId}`);
+};
+
+export const toggleReviewLike = async (
+  reviewId: string
+): Promise<{ reviewId: string; userId: string; liked: boolean }> => {
+  return await apiClient.post<{
+    reviewId: string;
+    userId: string;
+    liked: boolean;
+  }>(`/api/reviews/${reviewId}/like`, {});
 };

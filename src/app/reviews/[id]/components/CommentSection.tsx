@@ -1,69 +1,107 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Textarea from "@/components/ui/Textarea";
 import Button from "@/components/ui/Buttons/Button";
 import CommentList from "./CommentList";
-import { createComment } from "@/api/comments";
-import type { Comment } from "@/types/reviews";
+import { createComment, getComments } from "@/api/comments";
+import { getReviewDetail } from "@/api/reviews";
+import type { Comment, Review } from "@/types/reviews";
 
 interface CommentSectionProps {
   reviewId: string;
-  comments: Comment[];
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
-  isLoadingComments: boolean;
-  commentsError: string | null;
-  onCommentCountUpdate: (count: number) => void;
+  onCommentCountChange?: (count: number) => void;
 }
 
 export default function CommentSection({
   reviewId,
-  comments,
-  setComments,
-  isLoadingComments,
-  commentsError,
-  onCommentCountUpdate
+  onCommentCountChange
 }: CommentSectionProps) {
-  const [commentContent, setCommentContent] = useState("");
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
+  const [commentsError, setCommentsError] = useState<string | null>(null);
+  const [review, setReview] = useState<Review | null>(null);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // 댓글 내용 변경 핸들러
-  const handleCommentContentChange = useCallback((value: string) => {
-    setCommentContent(value);
-  }, []);
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (!reviewId) return;
 
-  // 댓글 작성 함수
-  const handleSubmitComment = useCallback(async () => {
-    if (!commentContent.trim() || !reviewId || isSubmittingComment) return;
+      try {
+        setIsLoadingComments(true);
+        setCommentsError(null);
+
+        const response = await getComments({
+          reviewId,
+          direction: "DESC",
+          limit: 50
+        });
+
+        setComments(response.content);
+      } catch (error) {
+        console.error("댓글 조회 실패:", error);
+        setCommentsError("댓글을 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoadingComments(false);
+      }
+    };
+
+    fetchComments();
+  }, [reviewId]);
+
+  useEffect(() => {
+    const fetchReview = async () => {
+      if (!reviewId) return;
+
+      try {
+        const reviewData = await getReviewDetail(reviewId);
+        setReview(reviewData);
+      } catch (error) {
+        console.error("리뷰 조회 실패:", error);
+      }
+    };
+
+    fetchReview();
+  }, [reviewId]);
+
+  const handleSubmitComment = async () => {
+    const content = textareaRef.current?.value?.trim();
+    if (!content || !reviewId || isSubmittingComment) return;
 
     try {
       setIsSubmittingComment(true);
 
       const newComment = await createComment({
         reviewId,
-        content: commentContent.trim()
+        content
       });
 
-      // 댓글 목록에 새 댓글 추가
       setComments(prev => [newComment, ...prev]);
 
-      // 댓글 개수 업데이트
-      onCommentCountUpdate(comments.length + 1);
+      if (review) {
+        const newCommentCount = review.commentCount + 1;
+        setReview(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            commentCount: newCommentCount
+          };
+        });
 
-      // 입력창 초기화
-      setCommentContent("");
+        onCommentCountChange?.(newCommentCount);
+      }
+
+      if (textareaRef.current) {
+        textareaRef.current.value = "";
+      }
+      setHasContent(false);
     } catch (error) {
       console.error("댓글 작성 실패:", error);
       alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmittingComment(false);
     }
-  }, [
-    commentContent,
-    reviewId,
-    isSubmittingComment,
-    setComments,
-    comments.length,
-    onCommentCountUpdate
-  ]);
+  };
 
   return (
     <div>
@@ -76,20 +114,24 @@ export default function CommentSection({
             </span>
           )}
         </div>
-        <Textarea
-          placeholder="댓글을 입력해주세요..."
-          className="h-[120px]"
-          value={commentContent}
-          onChange={handleCommentContentChange}
-        />
-        <div className="flex justify-end">
-          <Button
-            variant="primary"
-            onClick={handleSubmitComment}
-            disabled={!commentContent.trim() || isSubmittingComment}
-          >
-            {isSubmittingComment ? "작성 중..." : "댓글 작성"}
-          </Button>
+        <div>
+          <Textarea
+            ref={textareaRef}
+            placeholder="댓글을 입력해주세요..."
+            className="h-[120px]"
+            onChange={value => {
+              setHasContent(value.trim().length > 0);
+            }}
+          />
+          <div className="flex justify-end mt-[15px]">
+            <Button
+              variant="primary"
+              onClick={handleSubmitComment}
+              disabled={!hasContent || isSubmittingComment}
+            >
+              {isSubmittingComment ? "등록 중..." : "등록"}
+            </Button>
+          </div>
         </div>
       </div>
 
