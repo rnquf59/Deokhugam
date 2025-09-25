@@ -4,7 +4,8 @@ import type {
   PopularReviewsResponse,
   PopularReviewsParams,
   ReviewsResponse,
-  ReviewsParams
+  ReviewsParams,
+  Review
 } from "@/types/reviews";
 
 export const getPopularReviews = async (
@@ -79,4 +80,9 @@ export const getReviews = async (
   return await apiClient.get<ReviewsResponse>(
     `/api/reviews?${queryParams.toString()}`
   );
+};
+
+export const getReviewDetail = async (reviewId: string): Promise<Review> => {
+  // apiClient의 요청 인터셉터에서 자동으로 Deokhugam-Request-User-ID 헤더를 추가함
+  return await apiClient.get<Review>(`/api/reviews/${reviewId}`);
 };
