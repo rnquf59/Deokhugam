@@ -19,7 +19,7 @@ import {
 import clsx from "clsx";
 import CalendarForm from "./CalendarForm";
 import Input from "@/components/ui/Input";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import { getOcr } from "@/api/books";
 import { BookFormValues } from "@/schemas/bookFormSchema";
 
