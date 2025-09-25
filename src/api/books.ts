@@ -38,6 +38,46 @@ export interface BooksParams extends PopularBooksParams {
   [key: string]: unknown;
 }
 
+// 도서 목록 조회
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  publisher: string;
+  publishedDate: string;
+  isbn: string;
+  thumbnailUrl: string;
+  reviewCount: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BooksResponse {
+  content: Book[];
+  nextCursor: string;
+  nextAfter: string;
+  size: number;
+  totalElements: number;
+  hasNext: boolean;
+}
+
+export interface BookResponse {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  publisher: string;
+  publishedDate: string;
+  isbn: string;
+  thumbnailUrl: string;
+  reviewCount: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // 인기도서 목록 조회
 export const getPopularBooks = async (
   params: PopularBooksParams = {}
@@ -64,46 +104,6 @@ export const getPopularBooks = async (
   );
   return response;
 };
-
-// 도서 목록 조회
-export interface Book {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  publisher: string;
-  publishedDate: string;
-  isbn: string;
-  thumbnailUrl: string;
-  reviewCount: number;
-  rating: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface BooksResponse {
-  content: Book[];
-  nextCursor: string;
-  nextAfter: string;
-  size: number;
-  totalElements: number;
-  hasNext: boolean;
-}
-
-export interface AddBookResponse {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  publisher: string;
-  publisheddate: string;
-  isbn: string;
-  thumbnailUrl: string;
-  reviewCount: number;
-  rating: number;
-  createdAt: string;
-  updatedAt: string;
-}
 
 // 도서 목록 조회
 export const getBooks = async (
@@ -139,11 +139,16 @@ export const getOcr = async (formData: FormData) => {
 
 // 도서 등록
 export const postBook = async (formData: FormData) => {
-  const response = await apiClient.post<AddBookResponse>(
-    "/api/books",
-    formData,
-    { headers: { "Content-Type": "multipart/form-data" } }
-  );
+  const response = await apiClient.post<BookResponse>("/api/books", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return response;
+};
+
+// 도서 상세 조회
+export const getBookDetail = async (id: string) => {
+  const response = await apiClient.get<BookResponse>(`/api/books/${id}`);
 
   return response;
 };

@@ -21,8 +21,12 @@ export default function BookDetailPage() {
   return (
     <>
       <BookOverview id={id}>
-        <BookThumbnail />
-        <BookInfo />
+        {({ data }) => (
+          <>
+            <BookThumbnail data={data} />
+            <BookInfo data={data} />
+          </>
+        )}
       </BookOverview>
     </>
   );
