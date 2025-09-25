@@ -41,8 +41,8 @@ export const getReviews = async (
   params: ReviewsParams = {}
 ): Promise<ReviewsResponse> => {
   const {
-    sortBy = "time",
-    orderBy = "desc",
+    orderBy = "createdAt",
+    direction = "DESC",
     cursor,
     after,
     limit = 10,
@@ -52,8 +52,8 @@ export const getReviews = async (
   const queryParams = new URLSearchParams();
 
   // 스웨거 스펙에 맞게 파라미터 설정
-  queryParams.append("orderBy", sortBy === "time" ? "createdAt" : "rating");
-  queryParams.append("direction", orderBy === "desc" ? "DESC" : "ASC");
+  queryParams.append("orderBy", orderBy);
+  queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
 
   if (cursor) {
