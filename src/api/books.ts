@@ -90,6 +90,26 @@ export interface BooksResponse {
   hasNext: boolean;
 }
 
+export interface AddBookResponse {
+  id: string;
+  title: string;
+  author: string;
+  description: string;
+  publisher: string;
+  publisheddate: string;
+  isbn: string;
+  thumbnailUrl: string;
+  reviewCount: number;
+  rating: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type PostBookPayload = {
+  formData: FormData;
+  thumbnailImage?: string;
+};
+
 // 도서 목록 조회
 export const getBooks = async (
   params: BooksParams = {}
@@ -106,5 +126,29 @@ export const getBooks = async (
   const response = await apiClient.get<BooksResponse>(
     `/api/books?${queryParams.toString()}`
   );
+  return response;
+};
+
+// 이미지 기반 ISBN 인식
+export const getOcr = async (formData: FormData) => {
+  const response = await apiClient.post<string>(
+    `/api/books/isbn/ocr`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return response;
+};
+
+// 도서 등록
+export const postBook = async (formData: FormData) => {
+  const response = await apiClient.post<AddBookResponse>(
+    "/api/books",
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
+
   return response;
 };
