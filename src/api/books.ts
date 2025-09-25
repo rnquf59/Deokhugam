@@ -152,3 +152,16 @@ export const getBookDetail = async (id: string) => {
 
   return response;
 };
+
+// 도서 수정
+export const putBook = async (id: string, formData: FormData) => {
+  const response = await apiClient.patch<BookResponse>(
+    `/api/books/${id}`,
+    formData,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return response;
+};

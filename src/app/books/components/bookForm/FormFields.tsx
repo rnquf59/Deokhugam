@@ -2,13 +2,23 @@ import { useFormContext } from "react-hook-form";
 import FormInputsContainer from "./FormInputsContainer";
 import ImgUploadContainer from "./ImgUploadContainer";
 import ButtonContainer from "./ButtonContainer";
-import { AddBookFormValues } from "@/schemas/addBookSchema";
+import { BookFormValues } from "@/schemas/bookFormSchema";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { postBook } from "@/api/books";
+import { BookResponse, postBook, putBook } from "@/api/books";
 import { useTooltipStore } from "@/store/tooltipStore";
 
-export default function FormFields() {
+interface FormFieldsProps {
+  id?: string;
+  data?: BookResponse;
+  isEdit?: boolean;
+}
+
+export default function FormFields({
+  id,
+  data,
+  isEdit = false,
+}: FormFieldsProps) {
   const {
     register,
     control,
@@ -18,7 +28,7 @@ export default function FormFields() {
     formState,
     watch,
     handleSubmit,
-  } = useFormContext<AddBookFormValues>();
+  } = useFormContext<BookFormValues>();
 
   const formMethods = {
     register,
@@ -33,13 +43,17 @@ export default function FormFields() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fetchIsbnLoading, setFetchIsbnLoading] = useState(false);
 
+  const thumbnailValue = data?.thumbnailUrl ?? "";
+
   const showTooltip = useTooltipStore((state) => state.showTooltip);
-  const { isValid, isSubmitting } = formState;
+  const { isDirty, isValid, isSubmitting } = formState;
+
   const focusDisabled = fetchIsbnLoading || isSubmitting;
-  const submitDisabled = fetchIsbnLoading || !isValid || isSubmitting;
+  const submitDisabled =
+    !isDirty || fetchIsbnLoading || !isValid || isSubmitting;
   const router = useRouter();
 
-  const onSubmit = async (data: AddBookFormValues) => {
+  const onSubmit = async (data: BookFormValues) => {
     const formData = new FormData();
 
     const bookData = {
@@ -61,9 +75,16 @@ export default function FormFields() {
     }
 
     try {
-      await postBook(formData);
-      showTooltip("도서 등록이 완료되었습니다!");
-      router.push("/books");
+      if (id && isEdit) {
+        await putBook(id, formData);
+        showTooltip("도서 수정이 완료되었습니다!");
+        router.push(`/books/${id}`);
+      } else {
+        await postBook(formData);
+        showTooltip("도서 등록이 완료되었습니다!");
+        router.push("/books");
+      }
+      
     } catch (error) {
       setError("isbn", {
         type: "manual",
@@ -85,11 +106,16 @@ export default function FormFields() {
             setFetchIsbnLoading={setFetchIsbnLoading}
             isSubmitting={isSubmitting}
           />
-          <ImgUploadContainer setImageFile={setImageFile} />
+          <ImgUploadContainer
+            setImageFile={setImageFile}
+            thumbnailValue={thumbnailValue}
+            setValue={setValue}
+          />
         </div>
         <ButtonContainer
           disabled={submitDisabled}
           isSubmitting={isSubmitting}
+          isEdit={isEdit}
         />
       </fieldset>
     </form>

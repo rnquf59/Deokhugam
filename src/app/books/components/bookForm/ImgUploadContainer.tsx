@@ -1,10 +1,16 @@
+import { BookFormValues } from "@/schemas/bookFormSchema";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { UseFormSetValue } from "react-hook-form";
 
 export default function ImgUploadContainer({
   setImageFile,
+  thumbnailValue,
+  setValue,
 }: {
   setImageFile: Dispatch<SetStateAction<File | null>>;
+  thumbnailValue: string;
+  setValue: UseFormSetValue<BookFormValues>;
 }) {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -18,6 +24,7 @@ export default function ImgUploadContainer({
     if (!file) return;
 
     setImageFile(file);
+    setValue("thumbnailImage", file, { shouldDirty: false });
     const url = URL.createObjectURL(file);
     setPreview(url);
   };
@@ -30,6 +37,12 @@ export default function ImgUploadContainer({
       fileInputRef.current.value = "";
     }
   };
+
+  useEffect(() => {
+    if (thumbnailValue) {
+      setPreview(thumbnailValue);
+    }
+  }, [thumbnailValue]);
 
   return (
     <div className="relative">

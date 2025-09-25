@@ -6,6 +6,7 @@ import {
   UseFormRegister,
   UseFormSetError,
   UseFormSetValue,
+  UseFormWatch,
 } from "react-hook-form";
 import {
   errorTextStyle,
@@ -14,13 +15,13 @@ import {
   inputStyle,
   labelStyle,
   textareaStyle,
-} from "../styles";
+} from "../../add/styles";
 import clsx from "clsx";
 import CalendarForm from "./CalendarForm";
 import Input from "@/components/ui/Input";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { getOcr } from "@/api/books";
-import { AddBookFormValues } from "@/schemas/addBookSchema";
+import { BookFormValues } from "@/schemas/bookFormSchema";
 
 type FormMethodsSubset<T extends FieldValues> = {
   register: UseFormRegister<T>;
@@ -28,6 +29,7 @@ type FormMethodsSubset<T extends FieldValues> = {
   setValue: UseFormSetValue<T>;
   setError: UseFormSetError<T>;
   formState: FormState<T>;
+  watch: UseFormWatch<T>;
 };
 
 export default function FormInputsContainer({
@@ -36,17 +38,18 @@ export default function FormInputsContainer({
   setFetchIsbnLoading,
   isSubmitting,
 }: {
-  formMethods: FormMethodsSubset<AddBookFormValues>;
+  formMethods: FormMethodsSubset<BookFormValues>;
   focusDisabled: boolean;
   setFetchIsbnLoading: Dispatch<SetStateAction<boolean>>;
   isSubmitting: boolean;
 }) {
-  const { register, control, setValue, setError, formState } = formMethods;
+  const { register, control, setValue, setError, formState, watch } =
+    formMethods;
 
-  const [isbnResult, setIsbnResult] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { errors } = formState;
+  const isbnValue = watch("isbn");
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -63,8 +66,10 @@ export default function FormInputsContainer({
     try {
       const response = await getOcr(formData);
 
-      setIsbnResult(response);
-      setValue("isbn", String(response), { shouldValidate: true });
+      setValue("isbn", String(response), {
+        shouldValidate: true,
+        shouldDirty: true,
+      });
     } catch (error) {
       setError("isbn", {
         type: "manual",
@@ -89,13 +94,14 @@ export default function FormInputsContainer({
           <div
             className={clsx(
               inputContainer,
-              "text-gray-400 font-medium flex-[1] cursor-pointer border-[1.5px] border-gray-100",
+              " font-medium flex-[1] cursor-pointer border-[1.5px] border-gray-100",
+              !isbnValue ? "text-gray-400" : "text-gray-600",
               focusDisabled && "!cursor-default",
               errors.isbn && "border-red-500"
             )}
             onClick={focusDisabled || isSubmitting ? undefined : handleClick}
           >
-            {isbnResult || "ISBN를 입력해주세요"}
+            {isbnValue || "ISBN를 입력해주세요"}
           </div>
           <Input
             ref={fileInputRef}
