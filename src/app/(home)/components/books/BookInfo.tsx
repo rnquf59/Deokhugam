@@ -15,7 +15,7 @@ export default function BookInfo({
   author,
   rating,
   reviewCount,
-  isEmpty = false,
+  isEmpty = false
 }: BookInfoProps) {
   return (
     <>

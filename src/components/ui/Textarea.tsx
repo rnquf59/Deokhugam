@@ -6,7 +6,7 @@ import {
   memo,
   useRef,
   useEffect,
-  useState,
+  useState
 } from "react";
 import clsx from "clsx";
 
@@ -43,8 +43,10 @@ const Textarea = memo(
       }, [onChange, value]);
 
       const hasValue =
-        (isControlledRef.current ? value ?? "" : internalValueRef.current ?? "")
-          .length > 0;
+        (isControlledRef.current
+          ? (value ?? "")
+          : (internalValueRef.current ?? "")
+        ).length > 0;
 
       const handleFocus = () => setIsFocused(true);
       const handleBlur = () => setIsFocused(false);
@@ -80,7 +82,7 @@ const Textarea = memo(
           className={containerStyles}
           style={{
             scrollbarWidth: "thin",
-            scrollbarColor: "#D7D7DB transparent",
+            scrollbarColor: "#D7D7DB transparent"
           }}
           {...props}
         />

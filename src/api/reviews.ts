@@ -4,7 +4,7 @@ import type {
   PopularReviewsResponse,
   PopularReviewsParams,
   ReviewsResponse,
-  ReviewsParams,
+  ReviewsParams
 } from "@/types/reviews";
 
 export const getPopularReviews = async (
@@ -15,7 +15,7 @@ export const getPopularReviews = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 3,
+    limit = 3
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -46,7 +46,7 @@ export const getReviews = async (
     cursor,
     after,
     limit = 10,
-    search,
+    search
   } = params;
 
   const queryParams = new URLSearchParams();

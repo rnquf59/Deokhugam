@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   getPowerUsers,
   type PowerUser,
-  type PowerUsersParams,
+  type PowerUsersParams
 } from "@/api/users";
 
 interface UserRankingItem {
@@ -25,7 +25,7 @@ export default function UserRanking({
   users,
   hasPartialData = false,
   isEmpty = false,
-  period = "ALL_TIME",
+  period = "ALL_TIME"
 }: UserRankingProps) {
   const [powerUsers, setPowerUsers] = useState<PowerUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,7 +47,7 @@ export default function UserRanking({
       const response = await getPowerUsers({
         period,
         direction: "ASC",
-        limit: 10,
+        limit: 10
       });
 
       console.log("API 응답:", response);
@@ -75,11 +75,11 @@ export default function UserRanking({
   }, [period, isEmpty, fetchPowerUsers]);
 
   const convertPowerUsers = (powerUsers: PowerUser[]): UserRankingItem[] => {
-    return powerUsers.map((user) => ({
+    return powerUsers.map(user => ({
       id: user.userId,
       rank: user.rank,
       name: user.nickname,
-      score: Math.round(user.score),
+      score: Math.round(user.score)
     }));
   };
 
@@ -89,7 +89,7 @@ export default function UserRanking({
         id: `empty-${index + 1}`,
         rank: index + 1,
         name: "",
-        score: 0,
+        score: 0
       }));
     } else if (hasPartialData || isPartialData) {
       const apiData =
@@ -98,7 +98,7 @@ export default function UserRanking({
       const result = [];
 
       for (let i = 1; i <= 10; i++) {
-        const existingUser = fullData.find((user) => user.rank === i);
+        const existingUser = fullData.find(user => user.rank === i);
         if (existingUser) {
           result.push(existingUser);
         } else {
@@ -106,7 +106,7 @@ export default function UserRanking({
             id: `empty-${i}`,
             rank: i,
             name: "",
-            score: 0,
+            score: 0
           });
         }
       }
@@ -122,7 +122,7 @@ export default function UserRanking({
           id: `empty-${index + 1}`,
           rank: index + 1,
           name: "",
-          score: 0,
+          score: 0
         }));
       }
     }
@@ -142,7 +142,7 @@ export default function UserRanking({
       const bgClasses = {
         1: "bg-[#FFB310]",
         2: "bg-[#9D9D9D]",
-        3: "bg-[#846548]",
+        3: "bg-[#846548]"
       };
 
       return `${baseClasses} ${
@@ -171,7 +171,7 @@ export default function UserRanking({
         </div>
       ) : (
         <div className="flex flex-col gap-[12px]">
-          {userList.map((user) => (
+          {userList.map(user => (
             <div key={user.id} className="flex items-center justify-between">
               <div className="flex items-center gap-[8px]">
                 <span className={getRankClasses(user.rank, !user.name)}>

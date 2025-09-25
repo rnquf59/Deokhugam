@@ -22,10 +22,10 @@ export default function SignUpPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
-    watch,
+    watch
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
-    mode: "onChange",
+    mode: "onChange"
   });
 
   const emailValue = watch("email") || "";
@@ -74,10 +74,10 @@ export default function SignUpPage() {
               label="이메일"
               placeholder="이메일을 입력해주세요"
               value={emailValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("email").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("email").onBlur(e);
               }}
               name={register("email").name}
@@ -92,10 +92,10 @@ export default function SignUpPage() {
               label="닉네임"
               placeholder="닉네임을 입력해주세요"
               value={nicknameValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("nickname").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("nickname").onBlur(e);
               }}
               name={register("nickname").name}
@@ -113,10 +113,10 @@ export default function SignUpPage() {
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
               value={passwordValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("password").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("password").onBlur(e);
               }}
               name={register("password").name}
@@ -134,10 +134,10 @@ export default function SignUpPage() {
               onTogglePassword={toggleConfirmPasswordVisibility}
               isPasswordVisible={isConfirmPasswordVisible}
               value={confirmPasswordValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("confirmPassword").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("confirmPassword").onBlur(e);
               }}
               name={register("confirmPassword").name}

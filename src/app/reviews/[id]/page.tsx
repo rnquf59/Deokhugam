@@ -24,8 +24,8 @@ export default function ReviewDetailPage() {
       thumbnailUrl: "/images/books/imgError.png",
       rating: 4.5,
       likeCount: 24,
-      commentCount: 8,
-    },
+      commentCount: 8
+    }
   };
 
   return (

@@ -15,14 +15,14 @@ class ApiClient {
     this.axiosInstance = axios.create({
       baseURL,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
-      timeout: 10000,
+      timeout: 10000
     });
 
     // 요청 인터셉터
     this.axiosInstance.interceptors.request.use(
-      (config) => {
+      config => {
         console.log(`API 요청: ${config.method?.toUpperCase()} ${config.url}`);
 
         // 인증된 사용자의 ID를 헤더에 추가
@@ -35,7 +35,7 @@ class ApiClient {
 
         return config;
       },
-      (error) => {
+      error => {
         console.error("API 요청 에러:", error);
         return Promise.reject(error);
       }
@@ -47,7 +47,7 @@ class ApiClient {
         console.log(`API 응답: ${response.status} ${response.config.url}`);
         return response;
       },
-      (error) => {
+      error => {
         console.error("API 응답 에러:", error);
         if (error.response) {
           // 서버에서 응답을 받았지만 에러 상태
@@ -100,20 +100,20 @@ export const API_ENDPOINTS = {
   USERS: {
     SIGNUP: "/api/users",
     LOGIN: "/api/users/login",
-    PROFILE: (userId: string) => `/api/users/${userId}`,
+    PROFILE: (userId: string) => `/api/users/${userId}`
   },
   // 도서 관련
   BOOKS: {
     LIST: "/api/books",
     DETAIL: "/api/books/{id}",
     CREATE: "/api/books",
-    DELETE: "/api/books/{id}",
+    DELETE: "/api/books/{id}"
   },
   // 리뷰 관련
   REVIEWS: {
     LIST: "/api/reviews",
     DETAIL: "/api/reviews/{id}",
     CREATE: "/api/reviews",
-    DELETE: "/api/reviews/{id}",
-  },
+    DELETE: "/api/reviews/{id}"
+  }
 } as const;

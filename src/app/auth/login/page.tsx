@@ -21,10 +21,10 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting, isValid },
-    watch,
+    watch
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-    mode: "onChange",
+    mode: "onChange"
   });
 
   const emailValue = watch("email") || "";
@@ -81,10 +81,10 @@ export default function LoginPage() {
               label="이메일"
               placeholder="이메일을 입력해주세요"
               value={emailValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("email").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("email").onBlur(e);
               }}
               name={register("email").name}
@@ -102,10 +102,10 @@ export default function LoginPage() {
               onTogglePassword={togglePasswordVisibility}
               isPasswordVisible={isPasswordVisible}
               value={passwordValue}
-              onChange={(e) => {
+              onChange={e => {
                 register("password").onChange(e);
               }}
-              onBlur={(e) => {
+              onBlur={e => {
                 register("password").onBlur(e);
               }}
               name={register("password").name}

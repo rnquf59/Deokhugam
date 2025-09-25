@@ -13,7 +13,7 @@ interface ReviewCardProps {
 
 const ReviewCard = memo(function ReviewCard({
   review,
-  maxTitleWidth,
+  maxTitleWidth
 }: ReviewCardProps) {
   const getReviewData = (review: PopularReview | Review) => {
     if ("reviewContent" in review) {
@@ -27,7 +27,7 @@ const ReviewCard = memo(function ReviewCard({
         userNickname: review.userNickname,
         likeCount: review.likeCount,
         commentCount: review.commentCount,
-        createdAt: review.createdAt,
+        createdAt: review.createdAt
       };
     } else {
       // Review 타입
@@ -41,7 +41,7 @@ const ReviewCard = memo(function ReviewCard({
         userNickname: review.userNickname,
         likeCount: review.likeCount,
         commentCount: review.commentCount,
-        createdAt: review.createdAt,
+        createdAt: review.createdAt
       };
     }
   };

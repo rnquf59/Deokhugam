@@ -17,7 +17,7 @@ const ReviewSearchSection = memo(function ReviewSearchSection({
   orderBy,
   onSearch,
   onSortByChange,
-  onOrderByChange,
+  onOrderByChange
 }: ReviewSearchSectionProps) {
   return (
     <div className="flex justify-between items-center mb-[30px]">
@@ -29,7 +29,7 @@ const ReviewSearchSection = memo(function ReviewSearchSection({
         <Selectbox
           options={[
             { value: "time", label: "시간순" },
-            { value: "rating", label: "평점순" },
+            { value: "rating", label: "평점순" }
           ]}
           value={sortBy}
           onChange={onSortByChange}
@@ -37,7 +37,7 @@ const ReviewSearchSection = memo(function ReviewSearchSection({
         <Selectbox
           options={[
             { value: "desc", label: "내림차순" },
-            { value: "asc", label: "오름차순" },
+            { value: "asc", label: "오름차순" }
           ]}
           value={orderBy}
           onChange={onOrderByChange}

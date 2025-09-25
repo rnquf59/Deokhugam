@@ -40,14 +40,14 @@ export interface BooksParams extends PopularBooksParams {
 
 // 인기도서 목록 조회
 export const getPopularBooks = async (
-  params: PopularBooksParams = {},
+  params: PopularBooksParams = {}
 ): Promise<PopularBooksResponse> => {
   const {
     period = "DAILY",
     direction = "ASC",
     cursor,
     after,
-    limit = 4,
+    limit = 4
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -60,7 +60,7 @@ export const getPopularBooks = async (
   if (after) queryParams.append("after", after);
 
   const response = await apiClient.get<PopularBooksResponse>(
-    `/api/books/popular?${queryParams.toString()}`,
+    `/api/books/popular?${queryParams.toString()}`
   );
   return response;
 };
@@ -92,7 +92,7 @@ export interface BooksResponse {
 
 // 도서 목록 조회
 export const getBooks = async (
-  params: BooksParams = {},
+  params: BooksParams = {}
 ): Promise<BooksResponse> => {
   const queryParams = new URLSearchParams();
 
@@ -104,7 +104,7 @@ export const getBooks = async (
   if (params.limit) queryParams.append("limit", params.limit.toString());
 
   const response = await apiClient.get<BooksResponse>(
-    `/api/books?${queryParams.toString()}`,
+    `/api/books?${queryParams.toString()}`
   );
   return response;
 };

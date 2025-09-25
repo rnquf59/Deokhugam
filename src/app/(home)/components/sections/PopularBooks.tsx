@@ -9,7 +9,7 @@ import EmptyState from "../ui/EmptyState";
 import {
   getPopularBooks,
   type PopularBook,
-  type PopularBooksParams,
+  type PopularBooksParams
 } from "@/api/books";
 import BookCard from "../books/BookCard";
 
@@ -21,7 +21,7 @@ export default function PopularBooks() {
   const [hasData, setHasData] = useState(false);
 
   const getPeriodFromFilter = (
-    filter: string,
+    filter: string
   ): PopularBooksParams["period"] => {
     switch (filter) {
       case "일간":
@@ -38,7 +38,7 @@ export default function PopularBooks() {
   };
 
   const fetchPopularBooks = async (
-    period: PopularBooksParams["period"] = "DAILY",
+    period: PopularBooksParams["period"] = "DAILY"
   ) => {
     try {
       setLoading(true);
@@ -46,7 +46,7 @@ export default function PopularBooks() {
       const response = await getPopularBooks({
         period,
         direction: "ASC",
-        limit: 4,
+        limit: 4
       });
 
       const books = response.content;
@@ -108,7 +108,7 @@ export default function PopularBooks() {
       ) : (
         <>
           <div className="flex gap-[24px] mb-[30px] min-h-[400px] w-[908px]">
-            {popularBooks.map((book) => (
+            {popularBooks.map(book => (
               <BookCard key={book.id} book={book} />
             ))}
           </div>

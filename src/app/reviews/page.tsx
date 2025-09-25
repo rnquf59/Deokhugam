@@ -24,7 +24,7 @@ export default function ReviewsPage() {
         sortBy,
         orderBy,
         search: searchKeyword || undefined,
-        limit: 6,
+        limit: 6
       },
       fetcher: getReviews as (params: Record<string, unknown>) => Promise<{
         content: Review[];
@@ -32,7 +32,7 @@ export default function ReviewsPage() {
         nextAfter: string;
         hasNext: boolean;
       }>,
-      setData: setReviews,
+      setData: setReviews
     });
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function ReviewsPage() {
           sortBy,
           orderBy,
           search: searchKeyword || undefined,
-          limit: 6,
+          limit: 6
         });
         setReviews(response.content);
         setCursor(response.nextCursor || undefined);

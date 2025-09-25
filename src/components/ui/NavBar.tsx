@@ -17,7 +17,7 @@ export default function NavBar() {
 
   const router = useRouter();
   const pathname = usePathname();
-  const userId = useAuthStore((state) => state.user?.id);
+  const userId = useAuthStore(state => state.user?.id);
 
   useEffect(() => setMounted(true), []);
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function NavBar() {
     <div
       className={clsx(
         "fixed left-0 right-0 top-0 border-b border-solid border-gray-100 bg-white py-4 z-[10]",
-        "max-[1432px]:px-4",
+        "max-[1432px]:px-4"
       )}
     >
       <div className="flex items-center justify-between max-w-[1400px] mx-auto">
@@ -55,7 +55,7 @@ export default function NavBar() {
               className={clsx(
                 "px-3 cursor-pointer font-bold duration-[.2s]",
                 "hover:text-black",
-                pathname.startsWith("/books") ? "text-black" : "text-gray-500",
+                pathname.startsWith("/books") ? "text-black" : "text-gray-500"
               )}
               onClick={() => router.push("/books")}
             >
@@ -65,9 +65,7 @@ export default function NavBar() {
               className={clsx(
                 "px-3 cursor-pointer font-bold duration-[.2s]",
                 "hover:text-black",
-                pathname.startsWith("/reviews")
-                  ? "text-black"
-                  : "text-gray-500",
+                pathname.startsWith("/reviews") ? "text-black" : "text-gray-500"
               )}
               onClick={() => router.push("/reviews")}
             >
@@ -92,7 +90,7 @@ export default function NavBar() {
             <div className="relative" ref={dropdownRef}>
               <button
                 className="flex items-center gap-1 text-gray-600 font-medium"
-                onClick={() => setOpen((prev) => !prev)}
+                onClick={() => setOpen(prev => !prev)}
               >
                 {userNickname}
                 <Image
@@ -108,7 +106,7 @@ export default function NavBar() {
                   "overflow-hidden transition-all duration-300 ease-in-out",
                   open
                     ? "max-h-[170px] opacity-100 pointer-events-auto"
-                    : "max-h-0 opacity-0 pointer-events-none",
+                    : "max-h-0 opacity-0 pointer-events-none"
                 )}
               >
                 <NavProfile

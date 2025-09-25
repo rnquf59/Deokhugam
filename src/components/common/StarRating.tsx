@@ -12,7 +12,7 @@ const StarRating: React.FC<StarRatingProps> = ({
   rating,
   children,
   className = "",
-  size = 18,
+  size = 18
 }) => {
   const renderStars = () => {
     return [...Array(5)].map((_, index) => {

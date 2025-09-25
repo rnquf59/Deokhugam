@@ -8,7 +8,7 @@ import { useState } from "react";
 
 export default function ContentsList({
   booksData,
-  isLoading,
+  isLoading
 }: {
   booksData: Book[];
   isLoading: boolean;
@@ -23,7 +23,7 @@ export default function ContentsList({
         <InfiniteScrollLoader />
       </DelayedLoader>
       <div className="flex gap-[2%] gap-y-[60px] w-full flex-wrap">
-        {booksData.map((book) => {
+        {booksData.map(book => {
           return (
             <div
               key={book.id}
@@ -38,7 +38,7 @@ export default function ContentsList({
                     fill
                     unoptimized
                     onError={() =>
-                      setImgErrors((prev) => ({ ...prev, [book.id]: true }))
+                      setImgErrors(prev => ({ ...prev, [book.id]: true }))
                     }
                   />
                 )}

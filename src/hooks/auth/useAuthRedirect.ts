@@ -4,7 +4,7 @@ import { useAuthStore } from "@/store/authStore";
 import type { User } from "@/types/auth";
 
 export const useAuthRedirect = (
-  redirectPath: string = "/auth/login",
+  redirectPath: string = "/auth/login"
 ): {
   user: User | null;
   isLoading: boolean;
@@ -22,12 +22,12 @@ export const useAuthRedirect = (
   return {
     user,
     isLoading: !isInitialized || isLoading,
-    isAuthenticated: !!user?.id,
+    isAuthenticated: !!user?.id
   };
 };
 
 export const useAuthGuard = (
-  redirectPath: string = "/auth/login",
+  redirectPath: string = "/auth/login"
 ): {
   user: User | null;
   isLoading: boolean;
@@ -40,6 +40,6 @@ export const useAuthGuard = (
     user,
     isLoading,
     isAuthenticated,
-    shouldShowContent: !isLoading && isAuthenticated,
+    shouldShowContent: !isLoading && isAuthenticated
   };
 };
