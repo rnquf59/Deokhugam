@@ -86,10 +86,15 @@ export default function ReviewHeader({
     <div className="flex gap-6">
       <div className="w-[118px] h-[178px] relative">
         <Image
-          src={review.bookThumbnailUrl}
+          src={review.bookThumbnailUrl || "/images/books/imgError.png"}
           alt={review.bookTitle}
           fill
+          unoptimized
           className="object-cover rounded-lg"
+          onError={e => {
+            const target = e.target as HTMLImageElement;
+            target.src = "/images/books/imgError.png";
+          }}
         />
       </div>
 
