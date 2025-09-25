@@ -1,15 +1,51 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import Image from "next/image";
 import StarRating from "@/components/common/StarRating";
 import Textarea from "@/components/ui/Textarea";
 import CommentList from "./components/CommentList";
+import { getComments } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
 export default function ReviewDetailPage() {
   const { shouldShowContent } = useAuthGuard();
+  const params = useParams();
+  const reviewId = params.id as string;
+
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
+  const [commentsError, setCommentsError] = useState<string | null>(null);
+
+  // 댓글 데이터 로드
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (!reviewId) return;
+
+      try {
+        setIsLoadingComments(true);
+        setCommentsError(null);
+
+        const response = await getComments({
+          reviewId,
+          direction: "DESC",
+          limit: 50
+        });
+
+        setComments(response.content);
+      } catch (error) {
+        console.error("댓글 조회 실패:", error);
+        setCommentsError("댓글을 불러오는데 실패했습니다.");
+      } finally {
+        setIsLoadingComments(false);
+      }
+    };
+
+    fetchComments();
+  }, [reviewId]);
 
   if (!shouldShowContent) {
     return <LoadingScreen />;
@@ -29,38 +65,6 @@ export default function ReviewDetailPage() {
       commentCount: 8
     }
   };
-
-  // 임시 댓글 데이터
-  const comments: Comment[] = [
-    {
-      id: "1",
-      reviewId: "review-1",
-      userId: "user-1",
-      userNickname: "독서왕",
-      content: "정말 좋은 책이네요! 추천합니다.",
-      createdAt: "2024-01-15T10:30:00Z",
-      updatedAt: "2024-01-15T10:30:00Z"
-    },
-    {
-      id: "2",
-      reviewId: "review-1",
-      userId: "user-2",
-      userNickname: "책벌레",
-      content:
-        "저도 이 책을 읽어봤는데 정말 인상적이었어요. 특히 마지막 부분이 인상깊었습니다.",
-      createdAt: "2024-01-14T15:45:00Z",
-      updatedAt: "2024-01-14T15:45:00Z"
-    },
-    {
-      id: "3",
-      reviewId: "review-1",
-      userId: "user-3",
-      userNickname: "독서러버",
-      content: "작가의 문체가 정말 좋네요. 다음 작품도 기대됩니다!",
-      createdAt: "2024-01-13T09:20:00Z",
-      updatedAt: "2024-01-13T09:20:00Z"
-    }
-  ];
 
   return (
     <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex flex-col gap-[40px]">
@@ -136,7 +140,21 @@ export default function ReviewDetailPage() {
           />
         </div>
 
-        <CommentList comments={comments} />
+        {isLoadingComments ? (
+          <div className="pt-10 pb-[79px]">
+            <p className="text-body1 font-semibold text-gray-400 text-center">
+              댓글을 불러오는 중...
+            </p>
+          </div>
+        ) : commentsError ? (
+          <div className="pt-10 pb-[79px]">
+            <p className="text-body1 font-semibold text-red-500 text-center">
+              {commentsError}
+            </p>
+          </div>
+        ) : (
+          <CommentList comments={comments} />
+        )}
       </div>
     </div>
   );

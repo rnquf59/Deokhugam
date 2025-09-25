@@ -93,6 +93,7 @@ export interface CommentsResponse {
 
 export interface CommentsParams {
   reviewId: string;
+  direction?: "ASC" | "DESC";
   cursor?: string;
   after?: string;
   limit?: number;
