@@ -9,7 +9,7 @@ interface DelayedLoaderProps {
 export default function DelayedLoader({
   isLoading,
   delay,
-  children,
+  children
 }: DelayedLoaderProps) {
   const [show, setShow] = useState(false);
 

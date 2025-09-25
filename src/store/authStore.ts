@@ -24,7 +24,7 @@ type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => ({
+    set => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthStore>()(
             user: response,
             isAuthenticated: true,
             isLoading: false,
-            error: null,
+            error: null
           });
         } catch (error) {
           set({
@@ -50,7 +50,7 @@ export const useAuthStore = create<AuthStore>()(
             isAuthenticated: false,
             isLoading: false,
             error:
-              error instanceof Error ? error.message : "로그인에 실패했습니다.",
+              error instanceof Error ? error.message : "로그인에 실패했습니다."
           });
         }
       },
@@ -66,7 +66,7 @@ export const useAuthStore = create<AuthStore>()(
             user: null,
             isAuthenticated: false,
             isLoading: false,
-            error: null,
+            error: null
           });
         } catch (error) {
           set({
@@ -76,7 +76,7 @@ export const useAuthStore = create<AuthStore>()(
             error:
               error instanceof Error
                 ? error.message
-                : "회원가입에 실패했습니다.",
+                : "회원가입에 실패했습니다."
           });
         }
       },
@@ -86,7 +86,7 @@ export const useAuthStore = create<AuthStore>()(
           user: null,
           isAuthenticated: false,
           isLoading: false,
-          error: null,
+          error: null
         });
         if (typeof window !== "undefined") {
           window.location.href = "/auth/login";
@@ -103,19 +103,19 @@ export const useAuthStore = create<AuthStore>()(
 
       setInitialized: (initialized: boolean) => {
         set({ isInitialized: initialized });
-      },
+      }
     }),
     {
       name: "auth-storage",
-      partialize: (state) => ({
+      partialize: state => ({
         user: state.user,
-        isAuthenticated: state.isAuthenticated,
+        isAuthenticated: state.isAuthenticated
       }),
-      onRehydrateStorage: () => (state) => {
+      onRehydrateStorage: () => state => {
         if (state) {
           state.setInitialized(true);
         }
-      },
-    },
-  ),
+      }
+    }
+  )
 );

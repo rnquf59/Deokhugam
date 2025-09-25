@@ -13,7 +13,7 @@ export default function EmptyState({
   title,
   description,
   iconSrc,
-  iconAlt,
+  iconAlt
 }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center gap-[16px] mb-[30px]">
@@ -21,7 +21,7 @@ export default function EmptyState({
         className="p-[12px] bg-gray-0 border border-gray-200 rounded-lg"
         style={{
           boxShadow:
-            "0px 1px 2px 0px #0A0D120D, 0px -2px 0px 0px #0A0D120D inset, 0px 0px 0px 1px #0A0D122E inset",
+            "0px 1px 2px 0px #0A0D120D, 0px -2px 0px 0px #0A0D120D inset, 0px 0px 0px 1px #0A0D122E inset"
         }}
       >
         <Image src={iconSrc} alt={iconAlt} width={24} height={24} />

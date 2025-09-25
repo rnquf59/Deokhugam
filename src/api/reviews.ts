@@ -4,7 +4,7 @@ import type {
   PopularReviewsResponse,
   PopularReviewsParams,
   ReviewsResponse,
-  ReviewsParams,
+  ReviewsParams
 } from "@/types/reviews";
 
 export const getPopularReviews = async (
@@ -15,7 +15,7 @@ export const getPopularReviews = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 3,
+    limit = 3
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -41,19 +41,19 @@ export const getReviews = async (
   params: ReviewsParams = {}
 ): Promise<ReviewsResponse> => {
   const {
-    sortBy = "time",
-    orderBy = "desc",
+    orderBy = "createdAt",
+    direction = "DESC",
     cursor,
     after,
     limit = 10,
-    search,
+    search
   } = params;
 
   const queryParams = new URLSearchParams();
 
   // 스웨거 스펙에 맞게 파라미터 설정
-  queryParams.append("orderBy", sortBy === "time" ? "createdAt" : "rating");
-  queryParams.append("direction", orderBy === "desc" ? "DESC" : "ASC");
+  queryParams.append("orderBy", orderBy);
+  queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
 
   if (cursor) {

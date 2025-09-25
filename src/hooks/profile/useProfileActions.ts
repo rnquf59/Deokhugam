@@ -8,7 +8,7 @@ export const useProfileActions = (
   userId: string,
   setUserNickname: Dispatch<SetStateAction<string>>,
   profileMenuController: Dispatch<SetStateAction<boolean>>,
-  close: () => void,
+  close: () => void
 ) => {
   const [nicknameValue, setNicknameValue] = useState("");
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -17,8 +17,8 @@ export const useProfileActions = (
   >();
 
   const router = useRouter();
-  const logout = useAuthStore((state) => state.logout);
-  const showTooltip = useTooltipStore((state) => state.showTooltip);
+  const logout = useAuthStore(state => state.logout);
+  const showTooltip = useTooltipStore(state => state.showTooltip);
 
   const handleUpdateProfile = async () => {
     setSubmitLoading(true);
@@ -60,6 +60,6 @@ export const useProfileActions = (
     setActionType,
     submitLoading,
     handleUpdateProfile,
-    handleDeleteUser,
+    handleDeleteUser
   };
 };

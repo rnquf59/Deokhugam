@@ -23,7 +23,7 @@ export default function BooksPage() {
     useInfiniteScroll<Book, BooksParams>({
       initialParams: { orderBy, direction, keyword, limit },
       fetcher: getBooks,
-      setData: setBooksData,
+      setData: setBooksData
     });
 
   useEffect(() => {

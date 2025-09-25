@@ -17,7 +17,7 @@ export default function SectionHeader({
   selectedFilter,
   onFilterChange,
   filterOptions = ["전체", "월간", "주간", "일간"],
-  showFilters = true,
+  showFilters = true
 }: SectionHeaderProps) {
   return (
     <>

@@ -23,7 +23,7 @@ export default function ReviewContent({
   commentCount,
   createdAt,
   isEmpty = false,
-  maxTitleWidth,
+  maxTitleWidth
 }: ReviewContentProps) {
   // 별점 렌더링 함수
   const renderStars = (rating: number) => {
@@ -120,7 +120,7 @@ export default function ReviewContent({
             WebkitLineClamp: 3,
             WebkitBoxOrient: "vertical",
             lineHeight: "1.4",
-            maxHeight: "calc(1.4em * 3)",
+            maxHeight: "calc(1.4em * 3)"
           }}
         >
           {isEmpty ? "" : reviewContent || "리뷰 내용이 없습니다."}

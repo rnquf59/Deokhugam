@@ -11,8 +11,8 @@ import ReviewList from "./components/ReviewList";
 import type { Review } from "@/types/reviews";
 
 export default function ReviewsPage() {
-  const [sortBy, setSortBy] = useState<"time" | "rating">("time");
-  const [orderBy, setOrderBy] = useState<"asc" | "desc">("desc");
+  const [orderBy, setOrderBy] = useState<"createdAt" | "rating">("createdAt");
+  const [direction, setDirection] = useState<"ASC" | "DESC">("DESC");
   const [reviews, setReviews] = useState<Review[]>([]);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
 
@@ -21,10 +21,10 @@ export default function ReviewsPage() {
   const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
     useInfiniteScroll<Review, Record<string, unknown>>({
       initialParams: {
-        sortBy,
         orderBy,
+        direction,
         search: searchKeyword || undefined,
-        limit: 6,
+        limit: 6
       },
       fetcher: getReviews as (params: Record<string, unknown>) => Promise<{
         content: Review[];
@@ -32,7 +32,7 @@ export default function ReviewsPage() {
         nextAfter: string;
         hasNext: boolean;
       }>,
-      setData: setReviews,
+      setData: setReviews
     });
 
   useEffect(() => {
@@ -41,10 +41,10 @@ export default function ReviewsPage() {
 
       try {
         const response = await getReviews({
-          sortBy,
           orderBy,
+          direction,
           search: searchKeyword || undefined,
-          limit: 6,
+          limit: 6
         });
         setReviews(response.content);
         setCursor(response.nextCursor || undefined);
@@ -60,18 +60,21 @@ export default function ReviewsPage() {
     setReviews([]);
     fetchInitialData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, orderBy, searchKeyword]);
+  }, [orderBy, direction, searchKeyword]);
 
   const handleSearch = useCallback((value: string) => {
     setSearchKeyword(value);
   }, []);
 
-  const handleSortByChange = useCallback((newSortBy: "time" | "rating") => {
-    setSortBy(newSortBy);
-  }, []);
+  const handleOrderByChange = useCallback(
+    (newOrderBy: "createdAt" | "rating") => {
+      setOrderBy(newOrderBy);
+    },
+    []
+  );
 
-  const handleOrderByChange = useCallback((newOrderBy: "asc" | "desc") => {
-    setOrderBy(newOrderBy);
+  const handleDirectionChange = useCallback((newDirection: "ASC" | "DESC") => {
+    setDirection(newDirection);
   }, []);
 
   if (!shouldShowContent) {
@@ -85,11 +88,11 @@ export default function ReviewsPage() {
       </div>
 
       <ReviewSearchSection
-        sortBy={sortBy}
         orderBy={orderBy}
+        direction={direction}
         onSearch={handleSearch}
-        onSortByChange={handleSortByChange}
         onOrderByChange={handleOrderByChange}
+        onDirectionChange={handleDirectionChange}
       />
 
       {reviews.length === 0 && !isLoading ? (

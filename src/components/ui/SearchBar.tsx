@@ -102,7 +102,7 @@ const SearchBar = memo(
           </div>
 
           <input
-            ref={(node) => {
+            ref={node => {
               inputRef.current = node;
               if (typeof ref === "function") {
                 ref(node);

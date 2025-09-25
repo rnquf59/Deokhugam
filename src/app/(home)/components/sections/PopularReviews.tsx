@@ -18,7 +18,7 @@ export default function PopularReviews() {
   const [hasData, setHasData] = useState(false);
 
   const getPeriodFromFilter = (
-    filter: string,
+    filter: string
   ): PopularReviewsParams["period"] => {
     switch (filter) {
       case "일간":
@@ -35,7 +35,7 @@ export default function PopularReviews() {
   };
 
   const fetchPopularReviews = async (
-    period: PopularReviewsParams["period"] = "DAILY",
+    period: PopularReviewsParams["period"] = "DAILY"
   ) => {
     try {
       setLoading(true);
@@ -44,7 +44,7 @@ export default function PopularReviews() {
       const response = await getPopularReviews({
         period,
         direction: "DESC",
-        limit: 3,
+        limit: 3
       });
 
       const reviews = response.content;
@@ -102,7 +102,7 @@ export default function PopularReviews() {
       ) : (
         <>
           <div className="flex flex-col gap-[30px] mb-[30px]">
-            {popularReviews.map((review) => (
+            {popularReviews.map(review => (
               <ReviewCard key={review.id} review={review} />
             ))}
           </div>

@@ -10,7 +10,7 @@ export default function SearchFilter({
   keyword,
   setOrderBy,
   setDirection,
-  setKeyword,
+  setKeyword
 }: {
   orderBy: string;
   direction: string;
@@ -45,7 +45,7 @@ export default function SearchFilter({
           maxLength={40}
           className={clsx(
             "bg-gray-100 w-full font-medium",
-            "placeholder:font-medium",
+            "placeholder:font-medium"
           )}
         />
         {keyword && (
@@ -66,16 +66,16 @@ export default function SearchFilter({
         <Selectbox
           options={BOOKS_ORDERBY}
           value={orderBy}
-          onChange={(v) =>
+          onChange={v =>
             setOrderBy(
-              v as "title" | "publishedDate" | "rating" | "reviewCount",
+              v as "title" | "publishedDate" | "rating" | "reviewCount"
             )
           }
         />
         <Selectbox
           options={SORT_DIRECTION}
           value={direction}
-          onChange={(v) => setDirection(v as "ASC" | "DESC")}
+          onChange={v => setDirection(v as "ASC" | "DESC")}
         />
       </div>
     </div>

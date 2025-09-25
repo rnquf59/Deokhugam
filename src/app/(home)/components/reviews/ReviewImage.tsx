@@ -11,7 +11,7 @@ interface ReviewImageProps {
 export default function ReviewImage({
   bookThumbnailUrl,
   bookTitle,
-  isEmpty = false,
+  isEmpty = false
 }: ReviewImageProps) {
   if (isEmpty) {
     return (
@@ -36,7 +36,7 @@ export default function ReviewImage({
         height={144.75}
         className="w-[96.5px] h-[144.75px] object-cover rounded-[6px]"
         unoptimized
-        onError={(e) => {
+        onError={e => {
           const target = e.target as HTMLImageElement;
           target.src = "/images/books/imgError.png";
         }}
