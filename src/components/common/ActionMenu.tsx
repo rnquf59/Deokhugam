@@ -1,0 +1,39 @@
+import clsx from "clsx";
+import Image from "next/image";
+
+export default function ActionMenu() {
+  return (
+    <div className="absolute right-0 top-10 bg-white rounded-xl border  overflow-hidden">
+      <button
+        className={clsx(
+          "min-w-max py-[14.5px] px-4 flex items-center gap-[6px] text-gray-600 font-medium duration-[.2s]",
+          "hover:bg-gray-50"
+        )}
+      >
+        <Image
+          src="/images/icon/ic_edit.svg"
+          alt="Edit"
+          width={18}
+          height={18}
+          className="min-w-[18px]"
+        />
+        수정하기
+      </button>
+      <button
+        className={clsx(
+          "min-w-max py-[14.5px] px-4 flex items-center gap-[6px] text-gray-600 font-medium duration-[.2s]",
+          "hover:bg-gray-50"
+        )}
+      >
+        <Image
+          src="/images/icon/ic_trash.svg"
+          alt="Edit"
+          width={18}
+          height={18}
+          className="min-w-[18px]"
+        />
+        삭제하기
+      </button>
+    </div>
+  );
+}
