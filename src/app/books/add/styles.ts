@@ -7,7 +7,7 @@ export const fieldWrap = "flex flex-col";
 export const inputContainer =
   "bg-gray-100 h-[54px] px-5 rounded-full align-center content-center";
 
-export const inputStyle = clsx("border-[1.5px] border-gray-100");
+export const inputStyle = clsx("!text-gray-600 border-[1.5px] border-gray-100");
 
 const inputFocusStyle = clsx(
   "!outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200",
@@ -15,13 +15,13 @@ const inputFocusStyle = clsx(
 );
 
 export const dateStyle = clsx(
-  "bg-gray-100 border-[1.5px] resize-none p-5 rounded-full font-medium w-full h-[54px]",
+  "!text-gray-600 bg-gray-100 border-[1.5px] resize-none p-5 rounded-full font-medium w-full h-[54px]",
   "placeholder:text-gray-400",
   inputFocusStyle
 );
 
 export const textareaStyle = clsx(
-  "bg-gray-100 border-[1.5px] resize-none p-5 rounded-xl font-medium h-[calc(100vh_*_(120/1080))]",
+  "!text-gray-600 bg-gray-100 border-[1.5px] resize-none p-5 rounded-xl font-medium h-[calc(100vh_*_(120/1080))]",
   "placeholder:text-gray-400",
   inputFocusStyle
 );
