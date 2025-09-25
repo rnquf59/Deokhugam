@@ -24,7 +24,7 @@ export default function ImgUploadContainer({
     if (!file) return;
 
     setImageFile(file);
-    setValue("thumbnailImage", file, { shouldDirty: false });
+    setValue("thumbnailImage", file, { shouldDirty: true });
     const url = URL.createObjectURL(file);
     setPreview(url);
   };
@@ -32,6 +32,7 @@ export default function ImgUploadContainer({
   const handleFileRemove = () => {
     setPreview(null);
     setImageFile(null);
+    setValue("thumbnailImage", null, { shouldDirty: true });
 
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
