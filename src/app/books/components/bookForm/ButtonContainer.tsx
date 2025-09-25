@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 export default function ButtonContainer({
   disabled,
   isSubmitting,
+  isEdit,
 }: {
   disabled: boolean;
   isSubmitting: boolean;
+  isEdit: boolean;
 }) {
   const router = useRouter();
 
@@ -30,6 +32,8 @@ export default function ButtonContainer({
       >
         {isSubmitting ? (
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-50 mx-auto" />
+        ) : isEdit ? (
+          "수정"
         ) : (
           "등록"
         )}

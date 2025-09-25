@@ -38,33 +38,6 @@ export interface BooksParams extends PopularBooksParams {
   [key: string]: unknown;
 }
 
-// 인기도서 목록 조회
-export const getPopularBooks = async (
-  params: PopularBooksParams = {}
-): Promise<PopularBooksResponse> => {
-  const {
-    period = "DAILY",
-    direction = "ASC",
-    cursor,
-    after,
-    limit = 4
-  } = params;
-
-  const queryParams = new URLSearchParams();
-
-  queryParams.append("period", period);
-  queryParams.append("direction", direction);
-  queryParams.append("limit", limit.toString());
-
-  if (cursor) queryParams.append("cursor", cursor);
-  if (after) queryParams.append("after", after);
-
-  const response = await apiClient.get<PopularBooksResponse>(
-    `/api/books/popular?${queryParams.toString()}`
-  );
-  return response;
-};
-
 // 도서 목록 조회
 export interface Book {
   id: string;
@@ -90,13 +63,13 @@ export interface BooksResponse {
   hasNext: boolean;
 }
 
-export interface AddBookResponse {
+export interface BookResponse {
   id: string;
   title: string;
   author: string;
   description: string;
   publisher: string;
-  publisheddate: string;
+  publishedDate: string;
   isbn: string;
   thumbnailUrl: string;
   reviewCount: number;
@@ -105,9 +78,31 @@ export interface AddBookResponse {
   updatedAt: string;
 }
 
-export type PostBookPayload = {
-  formData: FormData;
-  thumbnailImage?: string;
+// 인기도서 목록 조회
+export const getPopularBooks = async (
+  params: PopularBooksParams = {}
+): Promise<PopularBooksResponse> => {
+  const {
+    period = "DAILY",
+    direction = "ASC",
+    cursor,
+    after,
+    limit = 4,
+  } = params;
+
+  const queryParams = new URLSearchParams();
+
+  queryParams.append("period", period);
+  queryParams.append("direction", direction);
+  queryParams.append("limit", limit.toString());
+
+  if (cursor) queryParams.append("cursor", cursor);
+  if (after) queryParams.append("after", after);
+
+  const response = await apiClient.get<PopularBooksResponse>(
+    `/api/books/popular?${queryParams.toString()}`
+  );
+  return response;
 };
 
 // 도서 목록 조회
@@ -144,10 +139,28 @@ export const getOcr = async (formData: FormData) => {
 
 // 도서 등록
 export const postBook = async (formData: FormData) => {
-  const response = await apiClient.post<AddBookResponse>(
-    "/api/books",
+  const response = await apiClient.post<BookResponse>("/api/books", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return response;
+};
+
+// 도서 상세 조회
+export const getBookDetail = async (id: string) => {
+  const response = await apiClient.get<BookResponse>(`/api/books/${id}`);
+
+  return response;
+};
+
+// 도서 수정
+export const putBook = async (id: string, formData: FormData) => {
+  const response = await apiClient.patch<BookResponse>(
+    `/api/books/${id}`,
     formData,
-    { headers: { "Content-Type": "multipart/form-data" } }
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
   );
 
   return response;

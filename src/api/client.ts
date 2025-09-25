@@ -83,8 +83,12 @@ class ApiClient {
   }
 
   // PATCH 요청
-  async patch<T, D = unknown>(endpoint: string, data: D): Promise<T> {
-    const response = await this.axiosInstance.patch<T>(endpoint, data);
+  async patch<T, D = unknown>(
+    endpoint: string,
+    data: D,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
+    const response = await this.axiosInstance.patch<T>(endpoint, data, config);
     return response.data;
   }
 

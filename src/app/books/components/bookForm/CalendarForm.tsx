@@ -1,17 +1,17 @@
 import DatePicker, { registerLocale } from "react-datepicker";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { dateStyle, errorTextStyle } from "../styles";
+import { dateStyle, errorTextStyle } from "../../add/styles";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
-import { AddBookFormValues } from "@/schemas/addBookSchema";
+import { BookFormValues } from "@/schemas/bookFormSchema";
 import clsx from "clsx";
 
 export default function CalendarForm({
   control,
   errors,
 }: {
-  control: Control<AddBookFormValues>;
-  errors: FieldErrors<AddBookFormValues>;
+  control: Control<BookFormValues>;
+  errors: FieldErrors<BookFormValues>;
 }) {
   registerLocale("ko", ko);
 
