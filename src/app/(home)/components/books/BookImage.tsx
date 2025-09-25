@@ -13,7 +13,7 @@ export default function BookImage({
   thumbnailUrl,
   title,
   rank,
-  isEmpty,
+  isEmpty
 }: BookImageProps) {
   if (isEmpty) {
     return (
@@ -29,7 +29,7 @@ export default function BookImage({
           className="absolute inset-0 rounded-[6px]"
           style={{
             background:
-              "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)",
+              "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)"
           }}
         />
       </div>
@@ -41,7 +41,7 @@ export default function BookImage({
       className="w-[209px] h-[314px] rounded-[6px] mb-[12px] relative cursor-pointer hover:opacity-90 transition-opacity"
       style={{
         background:
-          "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)",
+          "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)"
       }}
     >
       <Image
@@ -57,7 +57,7 @@ export default function BookImage({
         className="absolute inset-0 rounded-[6px]"
         style={{
           background:
-            "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)",
+            "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)"
         }}
       />
       {/* 순위 표시 */}
@@ -69,7 +69,7 @@ export default function BookImage({
           lineHeight: "100%",
           letterSpacing: "-2%",
           left: "20px",
-          bottom: "11px",
+          bottom: "11px"
         }}
       >
         {rank}

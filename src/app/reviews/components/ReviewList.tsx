@@ -16,7 +16,7 @@ export default function ReviewList({ reviews, isLoading }: ReviewListProps) {
       </DelayedLoader>
 
       <div className="grid grid-cols-2 gap-[30px]">
-        {reviews.map((review) => (
+        {reviews.map(review => (
           <ReviewCard key={review.id} review={review} maxTitleWidth={270} />
         ))}
       </div>

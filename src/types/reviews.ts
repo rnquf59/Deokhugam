@@ -63,8 +63,8 @@ export interface ReviewsResponse {
 }
 
 export interface ReviewsParams {
-  sortBy?: "time" | "rating";
-  orderBy?: "asc" | "desc";
+  orderBy?: "createdAt" | "rating";
+  direction?: "ASC" | "DESC";
   cursor?: string;
   after?: string;
   limit?: number;

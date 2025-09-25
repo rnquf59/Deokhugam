@@ -47,7 +47,7 @@ export const getPopularBooks = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 4,
+    limit = 4
   } = params;
 
   const queryParams = new URLSearchParams();

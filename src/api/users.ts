@@ -30,7 +30,7 @@ export interface PowerUsersParams {
 }
 
 export const getPowerUsers = async (
-  params: PowerUsersParams = {},
+  params: PowerUsersParams = {}
 ): Promise<PowerUsersResponse> => {
   const searchParams = new URLSearchParams();
 
@@ -41,7 +41,7 @@ export const getPowerUsers = async (
   if (params.limit) searchParams.append("limit", params.limit.toString());
 
   const response = await apiClient.get<PowerUsersResponse>(
-    `/api/users/power?${searchParams.toString()}`,
+    `/api/users/power?${searchParams.toString()}`
   );
   return response;
 };

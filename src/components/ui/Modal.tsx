@@ -20,7 +20,7 @@ export default function Modal({
   children,
   disabled,
   action,
-  buttonText,
+  buttonText
 }: ModalProps) {
   return createPortal(
     <AnimatePresence>
@@ -37,7 +37,7 @@ export default function Modal({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             {children}
             <div className="flex justify-end mt-5 gap-3 font-medium">
@@ -50,7 +50,7 @@ export default function Modal({
               <button
                 className={clsx(
                   "h-[46px] px-[18px] rounded-full bg-gray-900 text-white",
-                  "disabled:bg-gray-500",
+                  "disabled:bg-gray-500"
                 )}
                 disabled={disabled}
                 onClick={action}
@@ -63,6 +63,6 @@ export default function Modal({
       )}
     </AnimatePresence>,
 
-    document.body,
+    document.body
   );
 }

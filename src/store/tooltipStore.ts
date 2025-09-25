@@ -10,7 +10,7 @@ interface TooltipState {
 
 export const useTooltipStore = create<TooltipState>()(
   persist(
-    (set) => ({
+    set => ({
       isVisible: false,
       content: "",
       x: 0,
@@ -22,11 +22,11 @@ export const useTooltipStore = create<TooltipState>()(
           set({ isVisible: false });
         }, duration);
       },
-      hideTooltip: () => set({ isVisible: false }),
+      hideTooltip: () => set({ isVisible: false })
     }),
     {
       name: "tooltip-storage",
-      partialize: (state) => ({ isVisible: state.isVisible }),
-    },
-  ),
+      partialize: state => ({ isVisible: state.isVisible })
+    }
+  )
 );

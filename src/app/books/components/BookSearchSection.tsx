@@ -20,7 +20,7 @@ const BookSearchSection = memo(function BookSearchSection({
   direction,
   onSearch,
   onOrderByChange,
-  onDirectionChange,
+  onDirectionChange
 }: BookSearchSectionProps) {
   return (
     <div className="flex justify-between items-center mb-[30px]">
