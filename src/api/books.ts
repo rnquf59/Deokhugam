@@ -105,11 +105,6 @@ export interface AddBookResponse {
   updatedAt: string;
 }
 
-export type PostBookPayload = {
-  formData: FormData;
-  thumbnailImage?: string;
-};
-
 // 도서 목록 조회
 export const getBooks = async (
   params: BooksParams = {}
