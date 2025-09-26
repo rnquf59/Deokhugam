@@ -91,7 +91,7 @@ export default function FormInputsContainer({
   return (
     <div className="flex-[2] flex flex-col gap-y-[30px]">
       <div className={clsx(fieldWrap)}>
-        <label htmlFor="ISBN" className={labelStyle}>
+        <label {...(!isEdit && { htmlFor: "ISBN" })} className={labelStyle}>
           ISBN
         </label>
         <div className="flex items-center">
