@@ -126,6 +126,7 @@ export default function FormFields({
       <fieldset disabled={isSubmitting}>
         <div className="flex gap-10 mt-[30px]">
           <FormInputsContainer
+            isEdit={isEdit}
             formMethods={formMethods}
             isFocusDisabled={isFocusDisabled}
             setIsFetchIsbnLoading={setIsFetchIsbnLoading}
