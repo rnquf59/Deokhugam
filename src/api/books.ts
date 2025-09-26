@@ -167,3 +167,8 @@ export const putBook = async (id: string, formData: FormData) => {
 
   return response;
 };
+
+// 도서 삭제
+export const deleteBook = async (id: string) => {
+  await apiClient.delete(`/api/books/${id}`);
+};
