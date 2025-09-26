@@ -76,8 +76,18 @@ class ApiClient {
   async post<T, D = unknown>(
     endpoint: string,
     data: D,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig & { skipInterceptor?: boolean }
   ): Promise<T> {
+    if (config?.skipInterceptor) {
+      // 인터셉터 우회: AxiosError를 그대로 던짐으로써 Response로 받은 Error Status 값에 따라 원하는 UI를 출력하기 위해 추가함_혜림
+      const response = await axios.patch<T>(
+        this.axiosInstance.defaults.baseURL + endpoint,
+        data,
+        config
+      );
+
+      return response.data;
+    }
     const response = await this.axiosInstance.post<T>(endpoint, data, config);
     return response.data;
   }
@@ -86,8 +96,19 @@ class ApiClient {
   async patch<T, D = unknown>(
     endpoint: string,
     data: D,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig & { skipInterceptor?: boolean }
   ): Promise<T> {
+    if (config?.skipInterceptor) {
+      // 인터셉터 우회: AxiosError를 그대로 던짐으로써 Response로 받은 Error Status 값에 따라 원하는 UI를 출력하기 위해 추가함_혜림
+      const response = await axios.patch<T>(
+        this.axiosInstance.defaults.baseURL + endpoint,
+        data,
+        config
+      );
+
+      return response.data;
+    }
+
     const response = await this.axiosInstance.patch<T>(endpoint, data, config);
     return response.data;
   }

@@ -87,7 +87,7 @@ export const getPopularBooks = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 4,
+    limit = 4
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -130,7 +130,7 @@ export const getOcr = async (formData: FormData) => {
     `/api/books/isbn/ocr`,
     formData,
     {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: { "Content-Type": "multipart/form-data" }
     }
   );
 
@@ -141,6 +141,7 @@ export const getOcr = async (formData: FormData) => {
 export const postBook = async (formData: FormData) => {
   const response = await apiClient.post<BookResponse>("/api/books", formData, {
     headers: { "Content-Type": "multipart/form-data" },
+    skipInterceptor: true
   });
 
   return response;
@@ -160,6 +161,7 @@ export const putBook = async (id: string, formData: FormData) => {
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },
+      skipInterceptor: true
     }
   );
 
