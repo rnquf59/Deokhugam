@@ -148,6 +148,7 @@ export default function FormInputsContainer({
         <Input
           id="title"
           type="text"
+          maxLength={150}
           {...register("title")}
           placeholder="책 제목을 입력해주세요"
           className={clsx(inputStyle, errors.title && "border-red-500")}
@@ -163,6 +164,7 @@ export default function FormInputsContainer({
         <Input
           id="author"
           type="text"
+          maxLength={50}
           {...register("author")}
           placeholder="지은이를 입력해주세요"
           className={clsx(inputStyle, errors.author && "border-red-500")}
@@ -179,6 +181,7 @@ export default function FormInputsContainer({
           <Input
             id="publisher"
             type="text"
+            maxLength={50}
             {...register("publisher")}
             placeholder="출판사를 입력해주세요"
             className={clsx(inputStyle, errors.publisher && "border-red-500")}
@@ -201,6 +204,7 @@ export default function FormInputsContainer({
         <textarea
           id="description"
           placeholder="책에 대한 설명을 입력해주세요"
+          maxLength={1000}
           {...register("description")}
           className={clsx(
             textareaStyle,
