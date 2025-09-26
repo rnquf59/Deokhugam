@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { createPortal } from "react-dom";
 
 interface ModalProps {
+  isDelete?: boolean;
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
@@ -15,6 +16,7 @@ interface ModalProps {
 }
 
 export default function Modal({
+  isDelete,
   isOpen,
   onClose,
   children,
@@ -50,7 +52,8 @@ export default function Modal({
               <button
                 className={clsx(
                   "h-[46px] px-[18px] rounded-full bg-gray-900 text-white",
-                  "disabled:bg-gray-500"
+                  "disabled:bg-gray-500",
+                  isDelete && "bg-red-500"
                 )}
                 disabled={disabled}
                 onClick={action}
