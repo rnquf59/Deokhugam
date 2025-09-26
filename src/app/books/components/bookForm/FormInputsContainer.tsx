@@ -34,13 +34,13 @@ type FormMethodsSubset<T extends FieldValues> = {
 
 export default function FormInputsContainer({
   formMethods,
-  focusDisabled,
-  setFetchIsbnLoading,
+  isFocusDisabled,
+  setIsFetchIsbnLoading,
   isSubmitting,
 }: {
   formMethods: FormMethodsSubset<BookFormValues>;
-  focusDisabled: boolean;
-  setFetchIsbnLoading: Dispatch<SetStateAction<boolean>>;
+  isFocusDisabled: boolean;
+  setIsFetchIsbnLoading: Dispatch<SetStateAction<boolean>>;
   isSubmitting: boolean;
 }) {
   const { register, control, setValue, setError, formState, watch } =
@@ -62,7 +62,7 @@ export default function FormInputsContainer({
     const formData = new FormData();
     formData.append("image", file);
 
-    setFetchIsbnLoading(true);
+    setIsFetchIsbnLoading(true);
     try {
       const response = await getOcr(formData);
 
@@ -80,7 +80,7 @@ export default function FormInputsContainer({
       setValue("isbn", "");
       console.error("ISBN 인식 에러:", error);
     } finally {
-      setFetchIsbnLoading(false);
+      setIsFetchIsbnLoading(false);
     }
   };
 
@@ -96,10 +96,10 @@ export default function FormInputsContainer({
               inputContainer,
               " font-medium flex-[1] cursor-pointer border-[1.5px] border-gray-100",
               !isbnValue ? "text-gray-400" : "text-gray-600",
-              focusDisabled && "!cursor-default",
+              isFocusDisabled && "!cursor-default",
               errors.isbn && "border-red-500"
             )}
-            onClick={focusDisabled || isSubmitting ? undefined : handleClick}
+            onClick={isFocusDisabled || isSubmitting ? undefined : handleClick}
           >
             {isbnValue || "ISBN를 입력해주세요"}
           </div>
@@ -114,16 +114,16 @@ export default function FormInputsContainer({
           <button
             type="button"
             onClick={handleClick}
-            disabled={focusDisabled || isSubmitting}
+            disabled={isFocusDisabled || isSubmitting}
             className={clsx(
               "ml-3 mr-[18px] px-5 rounded-full border border-gray-300 h-[54px] font-medium text-gray-600 min-w-[128px] duration-[.2s]",
-              (!focusDisabled || isSubmitting) && "hover:bg-gray-50",
-              focusDisabled || isSubmitting
+              (!isFocusDisabled || isSubmitting) && "hover:bg-gray-50",
+              isFocusDisabled || isSubmitting
                 ? "bg-gray-200 cursor-default"
                 : "bg-white"
             )}
           >
-            {focusDisabled ? (
+            {isFocusDisabled ? (
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto" />
             ) : (
               "정보 불러오기"

@@ -41,16 +41,16 @@ export default function FormFields({
   };
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [fetchIsbnLoading, setFetchIsbnLoading] = useState(false);
+  const [isFetchIsbnLoading, setIsFetchIsbnLoading] = useState(false);
 
   const thumbnailValue = data?.thumbnailUrl ?? "";
 
   const showTooltip = useTooltipStore((state) => state.showTooltip);
   const { isDirty, isValid, isSubmitting } = formState;
 
-  const focusDisabled = fetchIsbnLoading || isSubmitting;
-  const submitDisabled =
-    !isDirty || fetchIsbnLoading || !isValid || isSubmitting;
+  const isFocusDisabled = isFetchIsbnLoading || isSubmitting;
+  const isSubmitDisabled =
+    !isDirty || isFetchIsbnLoading || !isValid || isSubmitting;
   const router = useRouter();
 
   const onSubmit = async (data: BookFormValues) => {
@@ -102,8 +102,8 @@ export default function FormFields({
         <div className="flex gap-10 mt-[30px]">
           <FormInputsContainer
             formMethods={formMethods}
-            focusDisabled={focusDisabled}
-            setFetchIsbnLoading={setFetchIsbnLoading}
+            isFocusDisabled={isFocusDisabled}
+            setIsFetchIsbnLoading={setIsFetchIsbnLoading}
             isSubmitting={isSubmitting}
           />
           <ImgUploadContainer
@@ -113,7 +113,7 @@ export default function FormFields({
           />
         </div>
         <ButtonContainer
-          disabled={submitDisabled}
+          isSubmitDisabled={isSubmitDisabled}
           isSubmitting={isSubmitting}
           isEdit={isEdit}
         />

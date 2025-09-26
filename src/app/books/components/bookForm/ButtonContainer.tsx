@@ -2,11 +2,11 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
 export default function ButtonContainer({
-  disabled,
+  isSubmitDisabled: disabled,
   isSubmitting,
   isEdit,
 }: {
-  disabled: boolean;
+  isSubmitDisabled: boolean;
   isSubmitting: boolean;
   isEdit: boolean;
 }) {
