@@ -12,17 +12,20 @@ import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
   comment: Comment;
-  onCommentUpdate?: () => void;
+  onCommentUpdate?: (updatedComment: Comment) => void;
+  onCommentDelete?: (deletedCommentId: string) => void;
 }
 
 export default function CommentItem({
   comment,
-  onCommentUpdate
+  onCommentUpdate,
+  onCommentDelete
 }: CommentItemProps) {
   const { user } = useAuthStore();
   const isMyComment = user?.id === comment.userId;
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
@@ -67,17 +70,20 @@ export default function CommentItem({
     const content = editTextareaRef.current?.value?.trim();
     if (!content) return;
 
+    setIsSubmittingEdit(true);
     try {
-      await updateComment({
+      const updatedComment = await updateComment({
         commentId: comment.id,
         content
       });
       setIsEditMode(false);
-      // 댓글 목록 새로고침
-      onCommentUpdate?.();
+      // 수정된 댓글 전달
+      onCommentUpdate?.(updatedComment);
     } catch (error) {
       console.error("댓글 수정 실패:", error);
       // TODO: 에러 처리 (토스트 메시지 등)
+    } finally {
+      setIsSubmittingEdit(false);
     }
   }, [comment.id, onCommentUpdate]);
 
@@ -89,13 +95,13 @@ export default function CommentItem({
     try {
       await deleteComment(comment.id);
       setIsActionMenuOpen(false);
-      // 댓글 목록 새로고침
-      onCommentUpdate?.();
+      // 삭제된 댓글 ID 전달
+      onCommentDelete?.(comment.id);
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
       // TODO: 에러 처리 (토스트 메시지 등)
     }
-  }, [comment.id, onCommentUpdate]);
+  }, [comment.id, onCommentDelete]);
 
   return (
     <div
@@ -142,8 +148,16 @@ export default function CommentItem({
               <Button variant="secondary" onClick={handleCancel}>
                 취소
               </Button>
-              <Button variant="primary" onClick={handleSave}>
-                등록
+              <Button
+                variant="primary"
+                onClick={handleSave}
+                disabled={isSubmittingEdit}
+              >
+                {isSubmittingEdit ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-50 mx-auto" />
+                ) : (
+                  "등록"
+                )}
               </Button>
             </div>
           </div>

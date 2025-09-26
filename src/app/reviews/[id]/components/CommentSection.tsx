@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Textarea from "@/components/ui/Textarea";
 import Button from "@/components/ui/Buttons/Button";
 import CommentList from "./CommentList";
+import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import { createComment, getComments } from "@/api/comments";
 import { getReviewDetail } from "@/api/reviews";
 import type { Comment, Review } from "@/types/reviews";
@@ -16,38 +17,101 @@ export default function CommentSection({
   onCommentCountChange
 }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoadingComments, setIsLoadingComments] = useState(true);
   const [commentsError, setCommentsError] = useState<string | null>(null);
   const [review, setReview] = useState<Review | null>(null);
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [after, setAfter] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   useEffect(() => {
-    const fetchComments = async () => {
+    const loadInitialComments = async () => {
       if (!reviewId) return;
 
       try {
-        setIsLoadingComments(true);
         setCommentsError(null);
-
         const response = await getComments({
           reviewId,
           direction: "DESC",
-          limit: 50
+          limit: 4
         });
-
         setComments(response.content);
+        setCursor(response.nextCursor);
+        setAfter(response.nextAfter);
+        setHasMore(response.hasNext);
       } catch (error) {
-        console.error("댓글 조회 실패:", error);
+        console.error("초기 댓글 조회 실패:", error);
         setCommentsError("댓글을 불러오는데 실패했습니다.");
-      } finally {
-        setIsLoadingComments(false);
       }
     };
 
-    fetchComments();
+    loadInitialComments();
   }, [reviewId]);
+
+  const fetchMoreComments = useCallback(async () => {
+    if (isLoadingMore || !hasMore || !reviewId) return;
+
+    setIsLoadingMore(true);
+    try {
+      setCommentsError(null);
+      const response = await getComments({
+        reviewId,
+        direction: "DESC",
+        limit: 4,
+        cursor: cursor || undefined,
+        after: after || undefined
+      });
+
+      if (response.content.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setComments(prev => {
+        const combined = [...prev, ...response.content];
+        const unique = Array.from(
+          new Map(combined.map(item => [item.id, item])).values()
+        );
+        return unique;
+      });
+      setCursor(response.nextCursor);
+      setAfter(response.nextAfter);
+      setHasMore(response.hasNext);
+    } catch (error) {
+      console.error("댓글 추가 로딩 실패:", error);
+      setCommentsError("댓글을 불러오는데 실패했습니다.");
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [reviewId, cursor, after, hasMore, isLoadingMore]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const windowHeight = window.innerHeight;
+      const docHeight = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      );
+
+      if (scrollTop + windowHeight >= docHeight - 100) {
+        fetchMoreComments();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [fetchMoreComments]);
+
+  const resetInfiniteScroll = useCallback(() => {
+    setCursor(null);
+    setAfter(null);
+    setHasMore(true);
+  }, []);
 
   useEffect(() => {
     const fetchReview = async () => {
@@ -76,7 +140,14 @@ export default function CommentSection({
         content
       });
 
-      setComments(prev => [newComment, ...prev]);
+      setComments(prev => {
+        const combined = [newComment, ...prev];
+        const unique = Array.from(
+          new Map(combined.map(item => [item.id, item])).values()
+        );
+        return unique;
+      });
+      resetInfiniteScroll();
 
       if (review) {
         const newCommentCount = review.commentCount + 1;
@@ -108,9 +179,9 @@ export default function CommentSection({
       <div className="mt-[34px] flex flex-col gap-[15px]">
         <div className="flex items-center gap-[4px]">
           <h2 className="text-body1 font-semibold text-gray-900">댓글</h2>
-          {comments.length > 0 && (
+          {review && review.commentCount > 0 && (
             <span className="text-body1 font-semibold text-gray-500">
-              {comments.length}
+              {review.commentCount}
             </span>
           )}
         </div>
@@ -129,40 +200,58 @@ export default function CommentSection({
               onClick={handleSubmitComment}
               disabled={!hasContent || isSubmittingComment}
             >
-              {isSubmittingComment ? "등록 중..." : "등록"}
+              {isSubmittingComment ? (
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-50 mx-auto" />
+              ) : (
+                "등록"
+              )}
             </Button>
           </div>
         </div>
       </div>
 
-      {isLoadingComments ? (
-        <div className="pt-10 pb-[79px]">
-          <p className="text-body1 font-semibold text-gray-400 text-center">
-            댓글을 불러오는 중...
-          </p>
-        </div>
-      ) : commentsError ? (
+      {commentsError ? (
         <div className="pt-10 pb-[79px]">
           <p className="text-body1 font-semibold text-red-500 text-center">
             {commentsError}
           </p>
         </div>
       ) : (
-        <CommentList
-          comments={comments}
-          reviewId={reviewId}
-          onCommentsRefresh={async updatedComments => {
-            setComments(updatedComments);
+        <>
+          <CommentList
+            comments={comments}
+            reviewId={reviewId}
+            onCommentUpdate={async updatedComment => {
+              try {
+                setComments(prev =>
+                  prev.map(comment =>
+                    comment.id === updatedComment.id ? updatedComment : comment
+                  )
+                );
 
-            try {
-              const updatedReview = await getReviewDetail(reviewId);
-              setReview(updatedReview);
-              onCommentCountChange?.(updatedReview.commentCount);
-            } catch (error) {
-              console.error("리뷰 정보 새로고침 실패:", error);
-            }
-          }}
-        />
+                const updatedReview = await getReviewDetail(reviewId);
+                setReview(updatedReview);
+                onCommentCountChange?.(updatedReview.commentCount);
+              } catch (error) {
+                console.error("댓글 수정 반영 실패:", error);
+              }
+            }}
+            onCommentDelete={async deletedCommentId => {
+              try {
+                setComments(prev =>
+                  prev.filter(comment => comment.id !== deletedCommentId)
+                );
+
+                const updatedReview = await getReviewDetail(reviewId);
+                setReview(updatedReview);
+                onCommentCountChange?.(updatedReview.commentCount);
+              } catch (error) {
+                console.error("댓글 삭제 반영 실패:", error);
+              }
+            }}
+          />
+          {isLoadingMore && <InfiniteScrollLoader />}
+        </>
       )}
     </div>
   );

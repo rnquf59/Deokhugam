@@ -1,49 +1,24 @@
-import { useState, useEffect } from "react";
 import CommentItem from "./CommentItem";
-import { getComments } from "@/api/comments";
-import type { Comment, CommentsParams } from "@/types/reviews";
+import type { Comment } from "@/types/reviews";
 
 interface CommentListProps {
   comments: Comment[];
   reviewId: string;
-  onCommentsRefresh?: (updatedComments: Comment[]) => void;
+  onCommentUpdate?: (updatedComment: Comment) => void;
+  onCommentDelete?: (deletedCommentId: string) => void;
 }
 
 export default function CommentList({
-  comments: initialComments,
-  reviewId,
-  onCommentsRefresh
+  comments,
+  onCommentUpdate,
+  onCommentDelete
 }: CommentListProps) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
-  // 초기 댓글 목록이 변경되면 상태 업데이트
-  useEffect(() => {
-    setComments(initialComments);
-  }, [initialComments]);
-
-  const refreshComments = async () => {
-    if (isRefreshing) return;
-
-    try {
-      setIsRefreshing(true);
-      const commentsParams: CommentsParams = {
-        reviewId,
-        direction: "DESC",
-        limit: 50
-      };
-      const response = await getComments(commentsParams);
-      setComments(response.content);
-      onCommentsRefresh?.(response.content);
-    } catch (error) {
-      console.error("댓글 목록 새로고침 실패:", error);
-    } finally {
-      setIsRefreshing(false);
-    }
+  const handleCommentUpdate = (updatedComment: Comment) => {
+    onCommentUpdate?.(updatedComment);
   };
 
-  const handleCommentUpdate = async () => {
-    await refreshComments();
+  const handleCommentDelete = (deletedCommentId: string) => {
+    onCommentDelete?.(deletedCommentId);
   };
 
   if (comments.length === 0) {
@@ -63,6 +38,7 @@ export default function CommentList({
           key={comment.id}
           comment={comment}
           onCommentUpdate={handleCommentUpdate}
+          onCommentDelete={handleCommentDelete}
         />
       ))}
     </div>
