@@ -4,7 +4,8 @@ import { persist } from "zustand/middleware";
 interface TooltipState {
   isVisible: boolean;
   content: string;
-  showTooltip: (content: string) => void;
+  icon?:string;
+  showTooltip: (content: string, icon?:string) => void;
   hideTooltip: () => void;
 }
 
@@ -13,10 +14,9 @@ export const useTooltipStore = create<TooltipState>()(
     set => ({
       isVisible: false,
       content: "",
-      x: 0,
-      y: 0,
-      showTooltip: (content, duration = 3000) => {
-        set({ isVisible: true, content });
+      icon:undefined,
+      showTooltip: (content, icon, duration = 3000) => {
+        set({ isVisible: true, content, icon });
 
         setTimeout(() => {
           set({ isVisible: false });

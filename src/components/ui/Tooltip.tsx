@@ -5,7 +5,7 @@ import clsx from "clsx";
 import Image from "next/image";
 
 export default function Tooltip() {
-  const { isVisible, content } = useTooltipStore();
+  const { isVisible, content, icon } = useTooltipStore();
 
   return (
     <div
@@ -18,7 +18,7 @@ export default function Tooltip() {
       }}
     >
       <Image
-        src="/images/icon/ic_check.svg"
+        src={icon || "/images/icon/ic_check.svg"}
         alt="Check"
         width={20}
         height={20}
