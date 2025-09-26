@@ -23,8 +23,8 @@ export default function ClientLayout({
     pathname === "/auth/login" ||
     pathname === "/auth/signup" ||
     pathname.startsWith("/books/add") ||
-    pathname.startsWith("/books/[id]") ||
-    pathname.startsWith("/reviews/[id]");
+    pathname.startsWith("/books/") ||
+    pathname.startsWith("/reviews/");
 
   return (
     <>

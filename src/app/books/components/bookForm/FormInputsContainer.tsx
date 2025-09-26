@@ -6,7 +6,7 @@ import {
   UseFormRegister,
   UseFormSetError,
   UseFormSetValue,
-  UseFormWatch,
+  UseFormWatch
 } from "react-hook-form";
 import {
   errorTextStyle,
@@ -14,7 +14,7 @@ import {
   inputContainer,
   inputStyle,
   labelStyle,
-  textareaStyle,
+  textareaStyle
 } from "../../add/styles";
 import clsx from "clsx";
 import CalendarForm from "./CalendarForm";
@@ -33,14 +33,16 @@ type FormMethodsSubset<T extends FieldValues> = {
 };
 
 export default function FormInputsContainer({
+  isEdit,
   formMethods,
-  focusDisabled,
-  setFetchIsbnLoading,
-  isSubmitting,
+  isFocusDisabled,
+  setIsFetchIsbnLoading,
+  isSubmitting
 }: {
+  isEdit: boolean;
   formMethods: FormMethodsSubset<BookFormValues>;
-  focusDisabled: boolean;
-  setFetchIsbnLoading: Dispatch<SetStateAction<boolean>>;
+  isFocusDisabled: boolean;
+  setIsFetchIsbnLoading: Dispatch<SetStateAction<boolean>>;
   isSubmitting: boolean;
 }) {
   const { register, control, setValue, setError, formState, watch } =
@@ -50,6 +52,8 @@ export default function FormInputsContainer({
 
   const { errors } = formState;
   const isbnValue = watch("isbn");
+
+  const isbnDisalbed = isFocusDisabled || isSubmitting || isEdit;
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -62,44 +66,45 @@ export default function FormInputsContainer({
     const formData = new FormData();
     formData.append("image", file);
 
-    setFetchIsbnLoading(true);
+    setIsFetchIsbnLoading(true);
     try {
       const response = await getOcr(formData);
 
       setValue("isbn", String(response), {
         shouldValidate: true,
-        shouldDirty: true,
+        shouldDirty: true
       });
     } catch (error) {
       setError("isbn", {
         type: "manual",
         message:
-          "ISBN 인식에 실패했습니다. 올바른 바코드 이미지를 선택해주세요.",
+          "ISBN 인식에 실패했습니다. 올바른 바코드 이미지를 선택해주세요."
       });
 
       setValue("isbn", "");
       console.error("ISBN 인식 에러:", error);
     } finally {
-      setFetchIsbnLoading(false);
+      setIsFetchIsbnLoading(false);
     }
   };
 
   return (
     <div className="flex-[2] flex flex-col gap-y-[30px]">
       <div className={clsx(fieldWrap)}>
-        <label htmlFor="ISBN" className={labelStyle}>
+        <label {...(!isEdit && { htmlFor: "ISBN" })} className={labelStyle}>
           ISBN
         </label>
         <div className="flex items-center">
           <div
             className={clsx(
+              "max-w-[440px] font-medium flex-[1] border-[1.5px] border-gray-100",
               inputContainer,
-              " font-medium flex-[1] cursor-pointer border-[1.5px] border-gray-100",
               !isbnValue ? "text-gray-400" : "text-gray-600",
-              focusDisabled && "!cursor-default",
+              isbnDisalbed ? "cursor-default" : "cursor-pointer",
+              isEdit && "!text-gray-300",
               errors.isbn && "border-red-500"
             )}
-            onClick={focusDisabled || isSubmitting ? undefined : handleClick}
+            onClick={isbnDisalbed ? undefined : handleClick}
           >
             {isbnValue || "ISBN를 입력해주세요"}
           </div>
@@ -111,33 +116,34 @@ export default function FormInputsContainer({
             accept=".jpg, .jpeg, .png"
             onChange={handleFetchISBN}
           />
-          <button
-            type="button"
-            onClick={handleClick}
-            disabled={focusDisabled || isSubmitting}
-            className={clsx(
-              "ml-3 mr-[18px] px-5 rounded-full border border-gray-300 h-[54px] font-medium text-gray-600 min-w-[128px] duration-[.2s]",
-              (!focusDisabled || isSubmitting) && "hover:bg-gray-50",
-              focusDisabled || isSubmitting
-                ? "bg-gray-200 cursor-default"
-                : "bg-white"
-            )}
-          >
-            {focusDisabled ? (
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto" />
-            ) : (
-              "정보 불러오기"
-            )}
-          </button>
-          <p className="flex items-center gap-2 text-gray-600 font-medium">
-            <Image
-              src="/images/icon/ic_photo.svg"
-              alt="Photo"
-              width={18}
-              height={18}
-            />
-            *이미지로 ISBN 인식
-          </p>
+          {!isEdit && (
+            <>
+              <button
+                type="button"
+                onClick={handleClick}
+                disabled={isbnDisalbed}
+                className={clsx(
+                  "ml-3 mr-[18px] px-5 rounded-full border border-gray-300 h-[54px] font-medium text-gray-600 min-w-[128px] duration-[.2s]",
+                  !isbnDisalbed && "hover:bg-gray-50"
+                )}
+              >
+                {isFocusDisabled ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-500 mx-auto" />
+                ) : (
+                  "정보 불러오기"
+                )}
+              </button>
+              <p className="flex items-center gap-2 text-gray-600 font-medium">
+                <Image
+                  src="/images/icon/ic_photo.svg"
+                  alt="Photo"
+                  width={18}
+                  height={18}
+                />
+                *이미지로 ISBN 인식
+              </p>
+            </>
+          )}
         </div>
         {errors.isbn && <p className={errorTextStyle}>{errors.isbn.message}</p>}
       </div>
@@ -148,6 +154,7 @@ export default function FormInputsContainer({
         <Input
           id="title"
           type="text"
+          maxLength={150}
           {...register("title")}
           placeholder="책 제목을 입력해주세요"
           className={clsx(inputStyle, errors.title && "border-red-500")}
@@ -163,6 +170,7 @@ export default function FormInputsContainer({
         <Input
           id="author"
           type="text"
+          maxLength={50}
           {...register("author")}
           placeholder="지은이를 입력해주세요"
           className={clsx(inputStyle, errors.author && "border-red-500")}
@@ -179,6 +187,7 @@ export default function FormInputsContainer({
           <Input
             id="publisher"
             type="text"
+            maxLength={50}
             {...register("publisher")}
             placeholder="출판사를 입력해주세요"
             className={clsx(inputStyle, errors.publisher && "border-red-500")}
@@ -201,6 +210,7 @@ export default function FormInputsContainer({
         <textarea
           id="description"
           placeholder="책에 대한 설명을 입력해주세요"
+          maxLength={1000}
           {...register("description")}
           className={clsx(
             textareaStyle,
