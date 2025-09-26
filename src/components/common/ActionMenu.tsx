@@ -8,7 +8,7 @@ interface ActionMenuProps {
 
 export default function ActionMenu({ onEdit, onDelete }: ActionMenuProps) {
   return (
-    <div className="absolute right-0 top-10 bg-white rounded-xl border  overflow-hidden">
+    <div className="absolute right-0 top-10 bg-white rounded-xl border overflow-hidden z-10">
       <button
         className={clsx(
           "min-w-max py-[14.5px] px-4 flex items-center gap-[6px] text-gray-600 font-medium duration-[.2s]",

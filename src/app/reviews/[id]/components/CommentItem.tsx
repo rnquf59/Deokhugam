@@ -127,7 +127,7 @@ export default function CommentItem({
                 alt="더보기"
                 width={24}
                 height={24}
-                className="cursor-pointer"
+                className="cursor-pointer relative z-0"
                 onClick={handleMoreClick}
               />
               {isActionMenuOpen && (
