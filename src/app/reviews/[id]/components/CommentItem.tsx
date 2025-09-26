@@ -7,6 +7,7 @@ import Button from "@/components/ui/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";
+import { useTooltipStore } from "@/store/tooltipStore";
 import { updateComment, deleteComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
@@ -27,6 +28,7 @@ export default function CommentItem({
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const showTooltip = useTooltipStore(state => state.showTooltip);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
 
@@ -88,20 +90,19 @@ export default function CommentItem({
   }, [comment.id, onCommentUpdate]);
 
   const handleDelete = useCallback(async () => {
-    if (!confirm("댓글을 삭제하시겠습니까?")) {
-      return;
-    }
-
     try {
       await deleteComment(comment.id);
       setIsActionMenuOpen(false);
       // 삭제된 댓글 ID 전달
       onCommentDelete?.(comment.id);
+
+      // 토스트 메시지 표시 (아이콘 없이)
+      showTooltip("댓글이 삭제되었습니다.", "");
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
       // TODO: 에러 처리 (토스트 메시지 등)
     }
-  }, [comment.id, onCommentDelete]);
+  }, [comment.id, onCommentDelete, showTooltip]);
 
   return (
     <div
