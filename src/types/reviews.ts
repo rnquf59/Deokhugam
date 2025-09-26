@@ -70,3 +70,31 @@ export interface ReviewsParams {
   limit?: number;
   search?: string;
 }
+
+// 댓글 관련 타입 정의
+export interface Comment {
+  id: string;
+  reviewId: string;
+  userId: string;
+  userNickname: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommentsResponse {
+  content: Comment[];
+  nextCursor: string | null;
+  nextAfter: string | null;
+  size: number;
+  totalElements: number;
+  hasNext: boolean;
+}
+
+export interface CommentsParams {
+  reviewId: string;
+  direction?: "ASC" | "DESC";
+  cursor?: string;
+  after?: string;
+  limit?: number;
+}
