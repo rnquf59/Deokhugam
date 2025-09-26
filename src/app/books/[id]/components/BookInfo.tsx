@@ -35,7 +35,12 @@ export default function BookInfo({
       <div className="flex-[1]">
         <div className="pb-6 border-b border-gray-100">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-header1 font-semibold line-clamp-2 leading-snug text-gray-950">
+            <p
+              className="text-header1 font-semibold line-clamp-2 leading-snug text-gray-950"
+              style={{
+                overflowWrap: "anywhere"
+              }}
+            >
               {data.title}
             </p>
             <div className="relative" ref={dropdownRef}>
