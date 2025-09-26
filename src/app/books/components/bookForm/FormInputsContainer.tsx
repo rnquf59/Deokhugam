@@ -101,7 +101,7 @@ export default function FormInputsContainer({
               inputContainer,
               !isbnValue ? "text-gray-400" : "text-gray-600",
               isbnDisalbed ? "cursor-default" : "cursor-pointer",
-              isEdit && "text-gray-300",
+              isEdit && "!text-gray-300",
               errors.isbn && "border-red-500"
             )}
             onClick={isbnDisalbed ? undefined : handleClick}
@@ -123,7 +123,8 @@ export default function FormInputsContainer({
                 onClick={handleClick}
                 disabled={isbnDisalbed}
                 className={clsx(
-                  "ml-3 mr-[18px] px-5 rounded-full border border-gray-300 h-[54px] font-medium text-gray-600 min-w-[128px] duration-[.2s]"
+                  "ml-3 mr-[18px] px-5 rounded-full border border-gray-300 h-[54px] font-medium text-gray-600 min-w-[128px] duration-[.2s]",
+                  !isbnDisalbed && "hover:bg-gray-50"
                 )}
               >
                 {isFocusDisabled ? (
