@@ -34,7 +34,7 @@ export default function ActionMenu({ onEdit, onDelete }: ActionMenuProps) {
       >
         <Image
           src="/images/icon/ic_trash.svg"
-          alt="Edit"
+          alt="Delete"
           width={18}
           height={18}
           className="min-w-[18px]"
