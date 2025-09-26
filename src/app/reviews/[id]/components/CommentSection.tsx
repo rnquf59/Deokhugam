@@ -169,7 +169,6 @@ export default function CommentSection({
       }
       setHasContent(false);
 
-      // 토스트 메시지 표시
       showTooltip("댓글이 등록되었습니다.");
     } catch (error) {
       console.error("댓글 작성 실패:", error);

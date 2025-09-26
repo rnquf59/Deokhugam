@@ -8,7 +8,7 @@ import type { PopularReview, Review } from "@/types/reviews";
 
 interface ReviewCardProps {
   review: PopularReview | Review;
-  maxTitleWidth?: number; // 제목 최대 너비 (px)
+  maxTitleWidth?: number;
 }
 
 const ReviewCard = memo(function ReviewCard({
@@ -30,7 +30,6 @@ const ReviewCard = memo(function ReviewCard({
         createdAt: review.createdAt
       };
     } else {
-      // Review 타입
       return {
         id: review.id,
         reviewId: review.id,
