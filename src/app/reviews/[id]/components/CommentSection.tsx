@@ -152,10 +152,8 @@ export default function CommentSection({
           comments={comments}
           reviewId={reviewId}
           onCommentsRefresh={async updatedComments => {
-            // 댓글 목록이 새로고침되었을 때 실행할 로직
             setComments(updatedComments);
 
-            // 서버에서 리뷰 상세 정보를 다시 가져와서 댓글 수 업데이트
             try {
               const updatedReview = await getReviewDetail(reviewId);
               setReview(updatedReview);

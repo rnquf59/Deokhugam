@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Label from "@/components/ui/Buttons/Label";
 import Button from "@/components/ui/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
@@ -23,8 +23,7 @@ export default function CommentItem({
   const isMyComment = user?.id === comment.userId;
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editContent, setEditContent] = useState(comment.content);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const actionMenuRef = useRef<HTMLDivElement>(null);
 
@@ -42,32 +41,36 @@ export default function CommentItem({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleMoreClick = () => {
+  const handleMoreClick = useCallback(() => {
     if (isMyComment) {
       setIsActionMenuOpen(!isActionMenuOpen);
     }
-  };
+  }, [isMyComment, isActionMenuOpen]);
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditMode(true);
     setIsActionMenuOpen(false);
-    setEditContent(comment.content);
-    // textarea에 포커스
+    // textarea에 포커스 및 내용 설정
     setTimeout(() => {
-      textareaRef.current?.focus();
+      if (editTextareaRef.current) {
+        editTextareaRef.current.value = comment.content;
+        editTextareaRef.current.focus();
+      }
     }, 0);
-  };
+  }, [comment.content]);
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setIsEditMode(false);
-    setEditContent(comment.content);
-  };
+  }, []);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
+    const content = editTextareaRef.current?.value?.trim();
+    if (!content) return;
+
     try {
       await updateComment({
         commentId: comment.id,
-        content: editContent
+        content
       });
       setIsEditMode(false);
       // 댓글 목록 새로고침
@@ -76,9 +79,9 @@ export default function CommentItem({
       console.error("댓글 수정 실패:", error);
       // TODO: 에러 처리 (토스트 메시지 등)
     }
-  };
+  }, [comment.id, onCommentUpdate]);
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     if (!confirm("댓글을 삭제하시겠습니까?")) {
       return;
     }
@@ -92,14 +95,13 @@ export default function CommentItem({
       console.error("댓글 삭제 실패:", error);
       // TODO: 에러 처리 (토스트 메시지 등)
     }
-  };
+  }, [comment.id, onCommentUpdate]);
 
   return (
     <div
       className={`${isEditMode ? "pt-[24px] pb-0 border-b-0" : "py-[24px] border-b border-gray-100"}`}
     >
       <div className="flex flex-col gap-[10px]">
-        {/* 첫 번째 요소: 닉네임, 작성일, 더보기 아이콘 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-[6px]">
             <div className="flex items-center gap-[4px]">
@@ -129,13 +131,10 @@ export default function CommentItem({
           )}
         </div>
 
-        {/* 두 번째 요소: 댓글 내용 또는 수정 모드 */}
         {isEditMode ? (
           <div className="flex flex-col gap-[10px]">
             <Textarea
-              ref={textareaRef}
-              value={editContent}
-              onChange={setEditContent}
+              ref={editTextareaRef}
               placeholder="댓글을 수정해주세요"
               className="h-[120px]"
             />
