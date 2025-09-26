@@ -13,7 +13,6 @@ export const getComments = async (
 
   const queryParams = new URLSearchParams();
 
-  // reviewId는 필수 파라미터
   queryParams.append("reviewId", reviewId);
   queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
@@ -35,7 +34,6 @@ export const createComment = async (data: {
   reviewId: string;
   content: string;
 }): Promise<Comment> => {
-  // 현재 로그인한 사용자의 ID 가져오기
   const authState = useAuthStore.getState();
   if (!authState.user?.id) {
     throw new Error("로그인이 필요합니다.");
@@ -54,7 +52,6 @@ export const updateComment = async (data: {
   commentId: string;
   content: string;
 }): Promise<Comment> => {
-  // 현재 로그인한 사용자의 ID 가져오기
   const authState = useAuthStore.getState();
   if (!authState.user?.id) {
     throw new Error("로그인이 필요합니다.");
@@ -73,4 +70,13 @@ export const updateComment = async (data: {
       }
     }
   );
+};
+
+export const deleteComment = async (commentId: string): Promise<void> => {
+  const authState = useAuthStore.getState();
+  if (!authState.user?.id) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  return await apiClient.delete<void>(`/api/comments/${commentId}`);
 };

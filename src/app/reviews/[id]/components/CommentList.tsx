@@ -6,7 +6,7 @@ import type { Comment, CommentsParams } from "@/types/reviews";
 interface CommentListProps {
   comments: Comment[];
   reviewId: string;
-  onCommentsRefresh?: () => void;
+  onCommentsRefresh?: (updatedComments: Comment[]) => void;
 }
 
 export default function CommentList({
@@ -34,7 +34,7 @@ export default function CommentList({
       };
       const response = await getComments(commentsParams);
       setComments(response.content);
-      onCommentsRefresh?.();
+      onCommentsRefresh?.(response.content);
     } catch (error) {
       console.error("댓글 목록 새로고침 실패:", error);
     } finally {

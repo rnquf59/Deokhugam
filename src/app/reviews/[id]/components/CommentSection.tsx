@@ -151,9 +151,18 @@ export default function CommentSection({
         <CommentList
           comments={comments}
           reviewId={reviewId}
-          onCommentsRefresh={() => {
+          onCommentsRefresh={async updatedComments => {
             // 댓글 목록이 새로고침되었을 때 실행할 로직
-            // 필요시 댓글 수 업데이트 등
+            setComments(updatedComments);
+
+            // 서버에서 리뷰 상세 정보를 다시 가져와서 댓글 수 업데이트
+            try {
+              const updatedReview = await getReviewDetail(reviewId);
+              setReview(updatedReview);
+              onCommentCountChange?.(updatedReview.commentCount);
+            } catch (error) {
+              console.error("리뷰 정보 새로고침 실패:", error);
+            }
           }}
         />
       )}

@@ -7,7 +7,7 @@ import Button from "@/components/ui/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";
-import { updateComment } from "@/api/comments";
+import { updateComment, deleteComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
@@ -78,10 +78,20 @@ export default function CommentItem({
     }
   };
 
-  const handleDelete = () => {
-    // TODO: 댓글 삭제 API 호출
-    console.log("댓글 삭제");
-    setIsActionMenuOpen(false);
+  const handleDelete = async () => {
+    if (!confirm("댓글을 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await deleteComment(comment.id);
+      setIsActionMenuOpen(false);
+      // 댓글 목록 새로고침
+      onCommentUpdate?.();
+    } catch (error) {
+      console.error("댓글 삭제 실패:", error);
+      // TODO: 에러 처리 (토스트 메시지 등)
+    }
   };
 
   return (
