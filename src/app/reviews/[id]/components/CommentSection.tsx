@@ -5,6 +5,7 @@ import CommentList from "./CommentList";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import { createComment, getComments } from "@/api/comments";
 import { getReviewDetail } from "@/api/reviews";
+import { useTooltipStore } from "@/store/tooltipStore";
 import type { Comment, Review } from "@/types/reviews";
 
 interface CommentSectionProps {
@@ -22,6 +23,7 @@ export default function CommentSection({
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const showTooltip = useTooltipStore(state => state.showTooltip);
 
   const [cursor, setCursor] = useState<string | null>(null);
   const [after, setAfter] = useState<string | null>(null);
@@ -166,6 +168,9 @@ export default function CommentSection({
         textareaRef.current.value = "";
       }
       setHasContent(false);
+
+      // 토스트 메시지 표시
+      showTooltip("댓글이 등록되었습니다.");
     } catch (error) {
       console.error("댓글 작성 실패:", error);
       alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");
