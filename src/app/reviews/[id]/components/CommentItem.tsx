@@ -7,13 +7,18 @@ import Button from "@/components/ui/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";
+import { updateComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
   comment: Comment;
+  onCommentUpdate?: () => void;
 }
 
-export default function CommentItem({ comment }: CommentItemProps) {
+export default function CommentItem({
+  comment,
+  onCommentUpdate
+}: CommentItemProps) {
   const { user } = useAuthStore();
   const isMyComment = user?.id === comment.userId;
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
@@ -58,10 +63,19 @@ export default function CommentItem({ comment }: CommentItemProps) {
     setEditContent(comment.content);
   };
 
-  const handleSave = () => {
-    // TODO: 댓글 수정 API 호출
-    console.log("댓글 수정:", editContent);
-    setIsEditMode(false);
+  const handleSave = async () => {
+    try {
+      await updateComment({
+        commentId: comment.id,
+        content: editContent
+      });
+      setIsEditMode(false);
+      // 댓글 목록 새로고침
+      onCommentUpdate?.();
+    } catch (error) {
+      console.error("댓글 수정 실패:", error);
+      // TODO: 에러 처리 (토스트 메시지 등)
+    }
   };
 
   const handleDelete = () => {

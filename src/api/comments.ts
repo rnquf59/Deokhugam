@@ -49,3 +49,28 @@ export const createComment = async (data: {
 
   return await apiClient.post<Comment>("/api/comments", requestData);
 };
+
+export const updateComment = async (data: {
+  commentId: string;
+  content: string;
+}): Promise<Comment> => {
+  // 현재 로그인한 사용자의 ID 가져오기
+  const authState = useAuthStore.getState();
+  if (!authState.user?.id) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  const requestData = {
+    content: data.content
+  };
+
+  return await apiClient.patch<Comment>(
+    `/api/comments/${data.commentId}`,
+    requestData,
+    {
+      headers: {
+        "Deokhugam-Request-User-ID": authState.user.id
+      }
+    }
+  );
+};

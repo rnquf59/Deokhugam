@@ -148,7 +148,14 @@ export default function CommentSection({
           </p>
         </div>
       ) : (
-        <CommentList comments={comments} />
+        <CommentList
+          comments={comments}
+          reviewId={reviewId}
+          onCommentsRefresh={() => {
+            // 댓글 목록이 새로고침되었을 때 실행할 로직
+            // 필요시 댓글 수 업데이트 등
+          }}
+        />
       )}
     </div>
   );
