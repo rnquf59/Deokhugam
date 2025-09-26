@@ -43,11 +43,11 @@ export default function BookDeleteModal({
     >
       <h2 className="text-lg font-semibold mb-5">도서 삭제</h2>
       <p className="font-medium">
-        정말 '
+        정말 &apos;
         <span className="inline-block max-w-[300px] align-bottom truncate">
           {data?.title}
         </span>
-        '를 삭제하시겠습니까?
+        &apos;를 삭제하시겠습니까?
       </p>
     </Modal>
   );
