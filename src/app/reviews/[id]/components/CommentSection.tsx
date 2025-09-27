@@ -169,7 +169,7 @@ export default function CommentSection({
       }
       setHasContent(false);
 
-      showTooltip("댓글이 등록되었습니다.", "/images/icon/ic_check.svg");
+      showTooltip("댓글이 등록되었습니다.");
     } catch (error) {
       console.error("댓글 작성 실패:", error);
       alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");

@@ -7,7 +7,7 @@ import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
-import NavProfile from "./NavProfile";
+import NavProfile from "../common/NavProfile";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
