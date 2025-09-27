@@ -7,12 +7,14 @@ import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
+import { getNotifications } from "@/api/notifications";
 import NavProfile from "./NavProfile";
 import Notification from "./Notification";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
   const [userNickname, setUserNickname] = useState("");
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
 
   const { open, setOpen, dropdownRef } = useClickOutside();
   const {
@@ -34,6 +36,38 @@ export default function NavBar() {
       };
 
       fetchProfile();
+    }
+  }, [userId]);
+
+  // 읽지 않은 알림 확인
+  useEffect(() => {
+    const checkUnreadNotifications = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await getNotifications({
+          userId,
+          direction: "DESC",
+          limit: 10
+        });
+
+        // 읽지 않은 알림이 있는지 확인
+        const hasUnread = response.content.some(
+          notification => !notification.confirmed
+        );
+        setHasUnreadNotifications(hasUnread);
+      } catch (error) {
+        console.error("알림 상태 확인 실패:", error);
+        setHasUnreadNotifications(false);
+      }
+    };
+
+    if (userId) {
+      checkUnreadNotifications();
+
+      const interval = setInterval(checkUnreadNotifications, 30000);
+
+      return () => clearInterval(interval);
     }
   }, [userId]);
 
@@ -92,13 +126,36 @@ export default function NavBar() {
                   width={20}
                   height={20}
                 />
-                {/* 알림 배지 */}
-                <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
+                {/* 알림 배지 - 읽지 않은 알림이 있을 때만 표시 */}
+                {hasUnreadNotifications && (
+                  <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
+                )}
               </button>
 
               {isNotificationOpen && (
                 <div className="absolute top-[58px] right-0 z-20">
-                  <Notification />
+                  <Notification
+                    onNotificationRead={() => {
+                      // 알림 상태 다시 확인
+                      const checkUnreadNotifications = async () => {
+                        if (!userId) return;
+                        try {
+                          const response = await getNotifications({
+                            userId,
+                            direction: "DESC",
+                            limit: 10
+                          });
+                          const hasUnread = response.content.some(
+                            notification => !notification.confirmed
+                          );
+                          setHasUnreadNotifications(hasUnread);
+                        } catch (error) {
+                          console.error("알림 상태 확인 실패:", error);
+                        }
+                      };
+                      checkUnreadNotifications();
+                    }}
+                  />
                 </div>
               )}
             </div>
