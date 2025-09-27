@@ -8,12 +8,18 @@ import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
 import NavProfile from "./NavProfile";
+import Notification from "./Notification";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
   const [userNickname, setUserNickname] = useState("");
 
   const { open, setOpen, dropdownRef } = useClickOutside();
+  const {
+    open: isNotificationOpen,
+    setOpen: setIsNotificationOpen,
+    dropdownRef: notificationRef
+  } = useClickOutside();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -75,8 +81,11 @@ export default function NavBar() {
         </div>
         {!mounted ? null : userId ? (
           <div className="flex items-center gap-6">
-            <div className="relative">
-              <button className="h-4">
+            <div className="relative" ref={notificationRef}>
+              <button
+                className="h-4"
+                onClick={() => setIsNotificationOpen(prev => !prev)}
+              >
                 <Image
                   src="/images/nav/notification.svg"
                   alt="알림"
@@ -86,6 +95,12 @@ export default function NavBar() {
                 {/* 알림 배지 */}
                 <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
               </button>
+
+              {isNotificationOpen && (
+                <div className="absolute top-[58px] right-0 z-20">
+                  <Notification />
+                </div>
+              )}
             </div>
             <div className="relative" ref={dropdownRef}>
               <button
