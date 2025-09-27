@@ -2,10 +2,10 @@
 
 import { useDisclosure } from "@/hooks/common/useDisclosure";
 import clsx from "clsx";
-import Modal from "./Modal";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useProfileActions } from "@/hooks/profile/useProfileActions";
 import { useTooltipStore } from "@/store/tooltipStore";
+import Modal from "../ui/Modal";
 
 export default function NavProfile({
   userId,
