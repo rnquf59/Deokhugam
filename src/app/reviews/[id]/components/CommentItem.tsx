@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback } from "react";
-import Label from "@/components/ui/Buttons/Label";
-import Button from "@/components/ui/Buttons/Button";
+import Label from "@/components/common/Buttons/Label";
+import Button from "@/components/common/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";

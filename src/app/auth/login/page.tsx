@@ -9,7 +9,7 @@ import Image from "next/image";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Buttons/Button";
+import Button from "@/components/common/Buttons/Button";
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);

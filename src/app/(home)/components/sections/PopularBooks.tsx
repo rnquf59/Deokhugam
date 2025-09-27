@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/components/ui/Buttons/Button";
+import Button from "@/components/common/Buttons/Button";
 import SectionHeader from "../ui/SectionHeader";
 import EmptyState from "../ui/EmptyState";
 import {

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
 import { getNotifications } from "@/api/notifications";
 import NavProfile from "./NavProfile";
-import Notification from "./Notification";
+import Notification from "./Notifications/Notification";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
@@ -39,7 +39,6 @@ export default function NavBar() {
     }
   }, [userId]);
 
-  // 읽지 않은 알림 확인
   useEffect(() => {
     const checkUnreadNotifications = async () => {
       if (!userId) return;
@@ -51,7 +50,6 @@ export default function NavBar() {
           limit: 10
         });
 
-        // 읽지 않은 알림이 있는지 확인
         const hasUnread = response.content.some(
           notification => !notification.confirmed
         );
@@ -65,7 +63,7 @@ export default function NavBar() {
     if (userId) {
       checkUnreadNotifications();
 
-      const interval = setInterval(checkUnreadNotifications, 30000);
+      const interval = setInterval(checkUnreadNotifications, 10000);
 
       return () => clearInterval(interval);
     }
@@ -126,17 +124,16 @@ export default function NavBar() {
                   width={20}
                   height={20}
                 />
-                {/* 알림 배지 - 읽지 않은 알림이 있을 때만 표시 */}
                 {hasUnreadNotifications && (
                   <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
                 )}
               </button>
 
               {isNotificationOpen && (
-                <div className="absolute top-[58px] right-0 z-20">
+                <div className="absolute top-[58px] right-[-50px] z-20">
                   <Notification
+                    onClose={() => setIsNotificationOpen(false)}
                     onNotificationRead={() => {
-                      // 알림 상태 다시 확인
                       const checkUnreadNotifications = async () => {
                         if (!userId) return;
                         try {
