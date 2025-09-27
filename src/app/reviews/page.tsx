@@ -82,7 +82,7 @@ export default function ReviewsPage() {
   }
 
   return (
-    <div className="pt-[50px] pb-[80px]">
+    <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex flex-col">
       <div className="flex mb-5 py-[6px] text-header1 font-bold text-[#111827]">
         리뷰 리스트
       </div>

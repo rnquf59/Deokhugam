@@ -34,7 +34,7 @@ export default function ClientLayout({
       <div
         className={clsx(
           !hideNavigation &&
-            "min-h-[calc(100vh-67px)] mt-[67px] px-4 max-w-[1200px] mx-auto"
+            "min-h-[calc(100vh-139px)] mt-[67px] px-4 max-w-[1200px] mx-auto"
         )}
       >
         {children}

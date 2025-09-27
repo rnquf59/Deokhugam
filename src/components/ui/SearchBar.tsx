@@ -57,6 +57,7 @@ const SearchBar = memo(
           inputRef.current.value = "";
         }
         onClear?.();
+        onSearch?.("");
       };
 
       // 엔터키 핸들러
