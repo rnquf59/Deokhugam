@@ -19,7 +19,11 @@ export const useTooltipStore = create<TooltipState>()(
       icon: undefined,
 
       showTooltip: (content, icon, duration = 3000) => {
-        set({ isVisible: true, content, icon });
+        set({
+          isVisible: true,
+          content,
+          icon: icon ?? "/images/icon/ic_check.svg"
+        });
 
         if (tooltipTimeout) clearTimeout(tooltipTimeout);
 
