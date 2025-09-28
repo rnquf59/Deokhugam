@@ -10,7 +10,7 @@ export default function Label({
   ...props
 }: LabelProps) {
   const baseClasses =
-    "inline-flex items-center justify-center bg-blue-100 text-body3 font-medium text-blue-500 px-[6px] py-[4px]";
+    "inline-flex items-center justify-center bg-blue-100 text-body3 font-medium text-blue-500 px-[6px] py-[4px] rounded-[4px]";
 
   return (
     <span className={`${baseClasses} ${className}`} {...props}>

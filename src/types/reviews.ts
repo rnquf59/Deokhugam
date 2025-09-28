@@ -69,6 +69,7 @@ export interface ReviewsParams {
   after?: string;
   limit?: number;
   search?: string;
+  [key: string]: unknown;
 }
 
 // 댓글 관련 타입 정의
