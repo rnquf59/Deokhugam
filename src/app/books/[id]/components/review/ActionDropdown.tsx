@@ -1,13 +1,30 @@
 import ActionMenu from "@/components/common/ActionMenu";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import Image from "next/image";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export default function ActionDropdown({
-  showDeleteModal
+  showModal,
+  reviewId,
+  setReviewId,
+  setIsEdit
 }: {
-  showDeleteModal: () => void;
+  showModal: () => void;
+  reviewId: string;
+  setReviewId: Dispatch<SetStateAction<string>>;
+  setIsEdit: Dispatch<SetStateAction<boolean>>;
 }) {
   const { open: showDropdown, setOpen, dropdownRef } = useClickOutside();
+
+  const showDeleteModal = () => {
+    showModal();
+    setReviewId(reviewId);
+  };
+
+  const handleEdit = () => {
+    setOpen(false);
+    setIsEdit(true);
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -24,7 +41,7 @@ export default function ActionDropdown({
         />
       </button>
       {showDropdown && (
-        <ActionMenu onEdit={showDeleteModal} onDelete={showDeleteModal} />
+        <ActionMenu onEdit={handleEdit} onDelete={showDeleteModal} />
       )}
     </div>
   );

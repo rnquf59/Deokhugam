@@ -1,4 +1,4 @@
-import { getReviews } from "@/api/reviews";
+import { getReviews, putReview } from "@/api/reviews";
 import { textareaStyle } from "@/app/books/styles";
 import Button from "@/components/common/Buttons/Button";
 import { useTooltipStore } from "@/store/tooltipStore";

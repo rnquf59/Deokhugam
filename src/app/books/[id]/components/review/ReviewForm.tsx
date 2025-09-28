@@ -1,4 +1,3 @@
-
 import clsx from "clsx";
 import { useRef, useState } from "react";
 import ReviewRating from "./ReviewRating";
@@ -14,7 +13,7 @@ export default function ReviewForm({
 
   const handleChange = () => {
     const value = textareaRef.current?.value ?? "";
-    setHasText(value.length > 0);
+    setHasText(value.trim() !== "");
   };
 
   return (
@@ -30,7 +29,7 @@ export default function ReviewForm({
         <textarea
           ref={textareaRef}
           className={clsx(textareaStyle, "w-full")}
-          placeholder="리뷰에 대한 댓글을 작성해주세요"
+          placeholder="리뷰를 작성해주세요..."
           onChange={handleChange}
         />
         <div className="flex justify-end mt-[15px]">

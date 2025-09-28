@@ -99,6 +99,13 @@ export const toggleReviewLike = async (
   }>(`/api/reviews/${reviewId}/like`, {});
 };
 
+export const putReview = async (
+  reviewId: string,
+  body: { content: string; rating: number }
+): Promise<Review> => {
+  return await apiClient.patch(`/api/reviews/${reviewId}`, body);
+};
+
 export const deleteReview = async (reviewId: string) => {
   await apiClient.delete(`/api/reviews/${reviewId}`);
 };

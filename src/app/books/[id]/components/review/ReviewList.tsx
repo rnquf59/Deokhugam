@@ -10,6 +10,7 @@ import ReviewDeleteModal from "./ReviewDeleteModal";
 import { useAuthStore } from "@/store/authStore";
 import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
+import EditContainer from "./EditContainer";
 
 export default function ReviewList({
   data,
@@ -24,14 +25,10 @@ export default function ReviewList({
 }) {
   const [reviews, setReviews] = useState<Review[]>(data);
   const [reviewId, setReviewId] = useState("");
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
 
   const { user } = useAuthStore();
   const { isOpen, open: showModal, close } = useDisclosure();
-
-  const showDeleteModal = (reviewId: string) => {
-    showModal();
-    setReviewId(reviewId);
-  };
 
   const toggleLike = async (reviewId: string) => {
     try {
@@ -75,6 +72,8 @@ export default function ReviewList({
       </DelayedLoader>
       <div className="mt-5 flex flex-col gap-5">
         {reviews.map(review => {
+          const isEdit = editingReviewId === review.id;
+
           return (
             <div key={review.id} className="pb-5 border-b border-gray-100">
               <div className="flex items-center jsutify-between mb-[10px]">
@@ -86,19 +85,33 @@ export default function ReviewList({
                 </p>
                 {user?.id === review.userId && (
                   <ActionDropdown
-                    showDeleteModal={() => showDeleteModal(review.id)}
+                    showModal={showModal}
+                    reviewId={review.id}
+                    setReviewId={setReviewId}
+                    setIsEdit={() => setEditingReviewId(review.id)}
                   />
                 )}
               </div>
               <StarRating rating={review.rating} />
-              {review.content.split("\n").map((line, i) => (
-                <p
-                  key={i}
-                  className="mt-2 text-gray-700 text-body3 font-medium"
-                >
-                  {line}
-                </p>
-              ))}
+              {isEdit ? (
+                <EditContainer
+                  reviewId={review.id}
+                  bookId={bookId}
+                  data={data}
+                  setData={setData}
+                  defaultValue={review.content}
+                  setEditingReviewId={setEditingReviewId}
+                />
+              ) : (
+                review.content.split("\n").map((line, i) => (
+                  <p
+                    key={i}
+                    className="mt-2 text-gray-700 text-body3 font-medium"
+                  >
+                    {line}
+                  </p>
+                ))
+              )}
               <div className="flex items-center gap-[12px] pt-[8px]">
                 <div
                   className="flex items-center cursor-pointer hover:opacity-70 transition-opacity"
