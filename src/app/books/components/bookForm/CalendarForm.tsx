@@ -1,6 +1,6 @@
 import DatePicker, { registerLocale } from "react-datepicker";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import { dateStyle, errorTextStyle } from "../../add/styles";
+import { dateStyle, errorTextStyle } from "../../styles";
 import { ko } from "date-fns/locale";
 import Image from "next/image";
 import { BookFormValues } from "@/schemas/bookFormSchema";
@@ -8,7 +8,7 @@ import clsx from "clsx";
 
 export default function CalendarForm({
   control,
-  errors,
+  errors
 }: {
   control: Control<BookFormValues>;
   errors: FieldErrors<BookFormValues>;
@@ -25,7 +25,7 @@ export default function CalendarForm({
             <DatePicker
               {...field}
               selected={field.value ? new Date(field.value) : null}
-              onChange={(date) =>
+              onChange={date =>
                 field.onChange(date ? date.toISOString().split("T")[0] : "")
               }
               dateFormat="yyyy-MM-dd"

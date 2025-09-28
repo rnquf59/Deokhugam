@@ -16,7 +16,7 @@ export const getPopularReviews = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 3
+    limit = 10
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -39,6 +39,7 @@ export const getPopularReviews = async (
 };
 
 export const getReviews = async (
+  bookId?: string,
   params: ReviewsParams = {}
 ): Promise<ReviewsResponse> => {
   const {
@@ -46,7 +47,7 @@ export const getReviews = async (
     direction = "DESC",
     cursor,
     after,
-    limit = 10,
+    limit = 2,
     search
   } = params;
 
@@ -55,6 +56,10 @@ export const getReviews = async (
   queryParams.append("orderBy", orderBy);
   queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
+
+  if (bookId) {
+    queryParams.append("bookId", bookId);
+  }
 
   if (cursor) {
     queryParams.append("cursor", cursor);
@@ -92,4 +97,8 @@ export const toggleReviewLike = async (
     userId: string;
     liked: boolean;
   }>(`/api/reviews/${reviewId}/like`, {});
+};
+
+export const deleteReview = async (reviewId: string) => {
+  await apiClient.delete(`/api/reviews/${reviewId}`);
 };
