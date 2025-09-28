@@ -92,7 +92,7 @@ const SearchBar = memo(
       };
 
       return (
-        <div className={`relative ${className}`}>
+        <div className={`relative min-w-[320px] ${className}`}>
           <div className="absolute left-[22px] top-1/2 transform -translate-y-1/2 z-10">
             <Image
               src="/images/icon/ic_search.svg"
@@ -116,7 +116,7 @@ const SearchBar = memo(
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className={`w-full py-[13px] pl-[50px] pr-[50px] rounded-full text-body2 font-medium placeholder:text-gray-400 !outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200 ${getContainerStyles()} ${getTextStyles()}`}
+            className={`w-full py-[13px] pl-[47px] pr-[47px] rounded-full text-body2 font-medium placeholder:text-gray-400 !outline-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!shadow-none transition-all duration-200 ${getContainerStyles()} ${getTextStyles()}`}
             {...props}
           />
 
