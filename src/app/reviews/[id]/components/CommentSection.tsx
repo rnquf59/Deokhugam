@@ -179,7 +179,7 @@ export default function CommentSection({
   };
 
   return (
-    <div>
+    <div className="border-t border-gray-100">
       <div className="mt-[34px] flex flex-col gap-[15px]">
         <div className="flex items-center gap-[4px]">
           <h2 className="text-body1 font-semibold text-gray-900">댓글</h2>

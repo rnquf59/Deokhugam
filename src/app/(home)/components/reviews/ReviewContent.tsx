@@ -131,7 +131,7 @@ export default function ReviewContent({
               alt="좋아요"
               width={16}
               height={16}
-              className="mr-[2px]"
+              className="mr-[2px] w-4 h-4"
             />
             {isEmpty ? "" : likeCount || 0}
           </div>

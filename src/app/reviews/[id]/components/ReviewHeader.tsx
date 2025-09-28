@@ -135,7 +135,7 @@ export default function ReviewHeader({
               alt="좋아요"
               width={16}
               height={16}
-              className="mr-[2px]"
+              className="mr-[2px] w-4 h-4"
             />
             <span className="text-body3 font-medium text-gray-500">
               좋아요 {review.likeCount}
