@@ -11,6 +11,7 @@ import { useAuthStore } from "@/store/authStore";
 import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import EditContainer from "./EditContainer";
+import ReviewRating from "./ReviewRating";
 
 export default function ReviewList({
   data,
@@ -26,6 +27,7 @@ export default function ReviewList({
   const [reviews, setReviews] = useState<Review[]>(data);
   const [reviewId, setReviewId] = useState("");
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [rating, setRating] = useState(1);
 
   const { user } = useAuthStore();
   const { isOpen, open: showModal, close } = useDisclosure();
@@ -88,19 +90,32 @@ export default function ReviewList({
                     showModal={showModal}
                     reviewId={review.id}
                     setReviewId={setReviewId}
-                    setIsEdit={() => setEditingReviewId(review.id)}
+                    setIsEdit={() => {
+                      setEditingReviewId(review.id);
+                      setRating(review.rating);
+                    }}
                   />
                 )}
               </div>
-              <StarRating rating={review.rating} />
+              {isEdit ? (
+                <ReviewRating
+                  totalStars={5}
+                  rating={rating}
+                  setRating={setRating}
+                />
+              ) : (
+                <StarRating rating={review.rating} />
+              )}
               {isEdit ? (
                 <EditContainer
                   reviewId={review.id}
                   bookId={bookId}
                   data={data}
                   setData={setData}
-                  defaultValue={review.content}
+                  prevValue={review.content}
                   setEditingReviewId={setEditingReviewId}
+                  rating={rating}
+                  prevRating={review.rating}
                 />
               ) : (
                 review.content.split("\n").map((line, i) => (

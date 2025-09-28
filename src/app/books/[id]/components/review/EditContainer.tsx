@@ -4,34 +4,39 @@ import Button from "@/components/common/Buttons/Button";
 import { useTooltipStore } from "@/store/tooltipStore";
 import { Review } from "@/types/reviews";
 import clsx from "clsx";
-import { Dispatch, FormEvent, SetStateAction, useRef, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 
 export default function EditContainer({
   reviewId,
   bookId,
   data,
   setData,
-  defaultValue,
-  setEditingReviewId
+  prevValue,
+  setEditingReviewId,
+  rating,
+  prevRating
 }: {
   reviewId: string;
   bookId: string;
   data: Review[];
   setData: Dispatch<SetStateAction<Review[]>>;
-  defaultValue: string;
+  prevValue: string;
   setEditingReviewId: Dispatch<SetStateAction<string | null>>;
+  rating: number;
+  prevRating: number;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  let selectedRating = 1;
 
   const { showTooltip } = useTooltipStore();
-
-  const handleChange = () => {
-    const value = textareaRef.current?.value ?? "";
-    setIsDirty(value.trim() !== "" && value !== defaultValue);
-  };
 
   const handleCancel = () => {
     setEditingReviewId(null);
@@ -44,7 +49,7 @@ export default function EditContainer({
     const content = textareaRef.current?.value ?? "";
     setIsLoading(true);
     try {
-      await putReview(reviewId, { content, rating: selectedRating });
+      await putReview(reviewId, { content, rating });
 
       const refreshed = await getReviews(bookId, { limit: data.length });
       setData(refreshed.content);
@@ -57,15 +62,28 @@ export default function EditContainer({
     }
   };
 
+  useEffect(() => {
+    const value = textareaRef.current?.value ?? "";
+    setIsDirty(
+      value.trim() !== "" && (value !== prevValue || rating !== prevRating)
+    );
+  }, [rating, prevRating, prevValue]);
+
   return (
     <form onSubmit={e => handleSubmit(e)}>
       <div className="mt-[10px]">
         <textarea
           ref={textareaRef}
-          defaultValue={defaultValue}
+          defaultValue={prevValue}
           className={clsx(textareaStyle, "w-full")}
           placeholder="리뷰를 수정해주세요."
-          onChange={handleChange}
+          onChange={() => {
+            const value = textareaRef.current?.value ?? "";
+            setIsDirty(
+              value.trim() !== "" &&
+                (value !== prevValue || rating !== prevRating)
+            );
+          }}
         />
         <div className="flex justify-end gap-[12px]">
           <Button type="button" variant="secondary" onClick={handleCancel}>
