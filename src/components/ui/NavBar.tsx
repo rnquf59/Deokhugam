@@ -7,13 +7,21 @@ import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useAuthStore } from "@/store/authStore";
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth";
+import { getNotifications } from "@/api/notifications";
+import Notification from "./Notifications/Notification";
 import NavProfile from "../common/NavProfile";
 
 export default function NavBar() {
   const [mounted, setMounted] = useState(false);
   const [userNickname, setUserNickname] = useState("");
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
 
   const { open, setOpen, dropdownRef } = useClickOutside();
+  const {
+    open: isNotificationOpen,
+    setOpen: setIsNotificationOpen,
+    dropdownRef: notificationRef
+  } = useClickOutside();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -28,6 +36,36 @@ export default function NavBar() {
       };
 
       fetchProfile();
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    const checkUnreadNotifications = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await getNotifications({
+          userId,
+          direction: "DESC",
+          limit: 10
+        });
+
+        const hasUnread = response.content.some(
+          notification => !notification.confirmed
+        );
+        setHasUnreadNotifications(hasUnread);
+      } catch (error) {
+        console.error("알림 상태 확인 실패:", error);
+        setHasUnreadNotifications(false);
+      }
+    };
+
+    if (userId) {
+      checkUnreadNotifications();
+
+      const interval = setInterval(checkUnreadNotifications, 10000);
+
+      return () => clearInterval(interval);
     }
   }, [userId]);
 
@@ -75,17 +113,48 @@ export default function NavBar() {
         </div>
         {!mounted ? null : userId ? (
           <div className="flex items-center gap-6">
-            <div className="relative">
-              <button className="h-4">
+            <div className="relative" ref={notificationRef}>
+              <button
+                className="h-4"
+                onClick={() => setIsNotificationOpen(prev => !prev)}
+              >
                 <Image
                   src="/images/nav/notification.svg"
                   alt="알림"
                   width={20}
                   height={20}
                 />
-                {/* 알림 배지 */}
-                <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
+                {hasUnreadNotifications && (
+                  <div className="absolute top-0 right-[-5px] w-1.5 h-1.5 bg-red-500 rounded" />
+                )}
               </button>
+
+              {isNotificationOpen && (
+                <div className="absolute top-[58px] right-[-50px] z-20">
+                  <Notification
+                    onClose={() => setIsNotificationOpen(false)}
+                    onNotificationRead={() => {
+                      const checkUnreadNotifications = async () => {
+                        if (!userId) return;
+                        try {
+                          const response = await getNotifications({
+                            userId,
+                            direction: "DESC",
+                            limit: 10
+                          });
+                          const hasUnread = response.content.some(
+                            notification => !notification.confirmed
+                          );
+                          setHasUnreadNotifications(hasUnread);
+                        } catch (error) {
+                          console.error("알림 상태 확인 실패:", error);
+                        }
+                      };
+                      checkUnreadNotifications();
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <div className="relative" ref={dropdownRef}>
               <button

@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useState, useRef, useEffect, useCallback } from "react";
-import Label from "@/components/ui/Buttons/Label";
-import Button from "@/components/ui/Buttons/Button";
+import Label from "@/components/common/Buttons/Label";
+import Button from "@/components/common/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";
@@ -55,7 +55,6 @@ export default function CommentItem({
   const handleEdit = useCallback(() => {
     setIsEditMode(true);
     setIsActionMenuOpen(false);
-    // textarea에 포커스 및 내용 설정
     setTimeout(() => {
       if (editTextareaRef.current) {
         editTextareaRef.current.value = comment.content;
@@ -79,11 +78,9 @@ export default function CommentItem({
         content
       });
       setIsEditMode(false);
-      // 수정된 댓글 전달
       onCommentUpdate?.(updatedComment);
     } catch (error) {
       console.error("댓글 수정 실패:", error);
-      // TODO: 에러 처리 (토스트 메시지 등)
     } finally {
       setIsSubmittingEdit(false);
     }
@@ -93,14 +90,11 @@ export default function CommentItem({
     try {
       await deleteComment(comment.id);
       setIsActionMenuOpen(false);
-      // 삭제된 댓글 ID 전달
       onCommentDelete?.(comment.id);
 
-      // 토스트 메시지 표시 (아이콘 없이)
       showTooltip("댓글이 삭제되었습니다.", "");
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
-      // TODO: 에러 처리 (토스트 메시지 등)
     }
   }, [comment.id, onCommentDelete, showTooltip]);
 

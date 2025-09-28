@@ -25,13 +25,11 @@ export default function ReviewContent({
   isEmpty = false,
   maxTitleWidth
 }: ReviewContentProps) {
-  // 별점 렌더링 함수
   const renderStars = (rating: number) => {
     return [...Array(5)].map((_, index) => {
       const starIndex = index + 1;
 
       if (starIndex <= Math.floor(rating)) {
-        // 완전한 별 (노란색)
         return (
           <Image
             key={index}
@@ -42,7 +40,6 @@ export default function ReviewContent({
           />
         );
       } else if (starIndex === Math.ceil(rating) && rating % 1 >= 0.5) {
-        // 반별 (노란색 반)
         return (
           <Image
             key={index}
@@ -53,7 +50,6 @@ export default function ReviewContent({
           />
         );
       } else {
-        // 빈 별 (회색)
         return (
           <Image
             key={index}
@@ -67,7 +63,6 @@ export default function ReviewContent({
     });
   };
 
-  // 날짜 포맷팅 함수 (00.00.00 형식)
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -82,7 +77,6 @@ export default function ReviewContent({
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* 닉네임, 도서제목, 평점 */}
       <div className="flex items-center justify-between mt-[8px] mb-[8px]">
         <div className="flex items-center gap-[6px] flex-1 min-w-0">
           <span className="text-body1 font-semibold text-gray-950 flex-shrink-0">
@@ -90,15 +84,18 @@ export default function ReviewContent({
           </span>
           <span
             className="text-body2 font-medium text-gray-500 truncate"
-            style={maxTitleWidth ? { maxWidth: `${maxTitleWidth}px` } : {}}
+            style={
+              maxTitleWidth
+                ? { maxWidth: `${maxTitleWidth}px` }
+                : { maxWidth: "500px" }
+            }
           >
             {isEmpty ? "" : bookTitle || "제목 없음"}
           </span>
         </div>
         <div className="flex flex-shrink-0 ml-2">
           {isEmpty
-            ? // 빈 상태일 때는 빈 별 5개 표시
-              [...Array(5)].map((_, index) => (
+            ? [...Array(5)].map((_, index) => (
                 <Image
                   key={index}
                   src="/images/icon/ic_star_failled.svg"
@@ -111,7 +108,6 @@ export default function ReviewContent({
         </div>
       </div>
 
-      {/* 리뷰 내용 */}
       <div className="flex-1 mb-[12.75px]">
         <p
           className="text-body2 font-medium text-gray-800 overflow-hidden"
@@ -127,7 +123,6 @@ export default function ReviewContent({
         </p>
       </div>
 
-      {/* 하단 정보 */}
       <div className="flex items-center justify-between">
         <div className="flex gap-[12px]">
           <div className="flex items-center text-body3 font-medium text-gray-500">

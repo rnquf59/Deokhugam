@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Textarea from "@/components/ui/Textarea";
-import Button from "@/components/ui/Buttons/Button";
+import Button from "@/components/common/Buttons/Button";
 import CommentList from "./CommentList";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import { createComment, getComments } from "@/api/comments";
