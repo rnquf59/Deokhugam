@@ -16,7 +16,7 @@ export const getPopularReviews = async (
     direction = "ASC",
     cursor,
     after,
-    limit = 3
+    limit = 10
   } = params;
 
   const queryParams = new URLSearchParams();
@@ -47,7 +47,7 @@ export const getReviews = async (
     direction = "DESC",
     cursor,
     after,
-    limit = 10,
+    limit = 2,
     search
   } = params;
 
@@ -85,6 +85,17 @@ export const getReviews = async (
   );
 };
 
+export const postReview = async (body: {
+  bookId: string;
+  userId: string;
+  content: string;
+  rating: number;
+}): Promise<Review> => {
+  return await apiClient.post<Review>(`/api/reviews`, body, {
+    skipInterceptor: true
+  });
+};
+
 export const getReviewDetail = async (reviewId: string): Promise<Review> => {
   return await apiClient.get<Review>(`/api/reviews/${reviewId}`);
 };
@@ -97,4 +108,15 @@ export const toggleReviewLike = async (
     userId: string;
     liked: boolean;
   }>(`/api/reviews/${reviewId}/like`, {});
+};
+
+export const putReview = async (
+  reviewId: string,
+  body: { content: string; rating: number }
+): Promise<Review> => {
+  return await apiClient.patch(`/api/reviews/${reviewId}`, body);
+};
+
+export const deleteReview = async (reviewId: string) => {
+  await apiClient.delete(`/api/reviews/${reviewId}`);
 };

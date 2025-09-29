@@ -6,7 +6,7 @@ type Props = {
   children: (props: { data: BookResponse | null }) => ReactNode;
 };
 
-export default function BookOverview({ children, id }: Props) {
+export default function OverviewContainer({ children, id }: Props) {
   const [data, setData] = useState<BookResponse | null>(null);
 
   useEffect(() => {
