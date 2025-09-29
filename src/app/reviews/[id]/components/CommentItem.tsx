@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import Label from "@/components/common/Buttons/Label";
 import Button from "@/components/common/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
+import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { updateComment, deleteComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
@@ -24,33 +25,22 @@ export default function CommentItem({
 }: CommentItemProps) {
   const { user } = useAuthStore();
   const isMyComment = user?.id === comment.userId;
-  const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
   const showTooltip = useTooltipStore(state => state.showTooltip);
 
-  const actionMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        actionMenuRef.current &&
-        !actionMenuRef.current.contains(e.target as Node)
-      ) {
-        setIsActionMenuOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const {
+    open: isActionMenuOpen,
+    setOpen: setIsActionMenuOpen,
+    dropdownRef: actionMenuRef
+  } = useClickOutside();
 
   const handleMoreClick = useCallback(() => {
     if (isMyComment) {
       setIsActionMenuOpen(!isActionMenuOpen);
     }
-  }, [isMyComment, isActionMenuOpen]);
+  }, [isMyComment, isActionMenuOpen, setIsActionMenuOpen]);
 
   const handleEdit = useCallback(() => {
     setIsEditMode(true);
@@ -61,7 +51,7 @@ export default function CommentItem({
         editTextareaRef.current.focus();
       }
     }, 0);
-  }, [comment.content]);
+  }, [comment.content, setIsActionMenuOpen]);
 
   const handleCancel = useCallback(() => {
     setIsEditMode(false);
@@ -96,7 +86,7 @@ export default function CommentItem({
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
     }
-  }, [comment.id, onCommentDelete, showTooltip]);
+  }, [comment.id, onCommentDelete, showTooltip, setIsActionMenuOpen]);
 
   return (
     <div
