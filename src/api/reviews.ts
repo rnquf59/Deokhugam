@@ -39,6 +39,7 @@ export const getPopularReviews = async (
 };
 
 export const getReviews = async (
+  bookId?: string,
   params: ReviewsParams = {}
 ): Promise<ReviewsResponse> => {
   const {
@@ -55,6 +56,10 @@ export const getReviews = async (
   queryParams.append("orderBy", orderBy);
   queryParams.append("direction", direction);
   queryParams.append("limit", limit.toString());
+
+  if (bookId) {
+    queryParams.append("bookId", bookId);
+  }
 
   if (cursor) {
     queryParams.append("cursor", cursor);

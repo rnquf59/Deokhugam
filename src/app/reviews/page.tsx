@@ -8,7 +8,7 @@ import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
 import EmptyList from "@/components/common/EmptyList";
 import ReviewList from "./components/ReviewList";
-import type { Review } from "@/types/reviews";
+import type { Review, ReviewsParams } from "@/types/reviews";
 
 export default function ReviewsPage() {
   const [orderBy, setOrderBy] = useState<"createdAt" | "rating">("createdAt");
@@ -18,20 +18,25 @@ export default function ReviewsPage() {
 
   const { shouldShowContent } = useAuthGuard();
 
+  const fetcher = async (params: Record<string, unknown>) => {
+    const res = await getReviews(undefined, params as ReviewsParams);
+    return {
+      content: res.content,
+      nextCursor: res.nextCursor ?? "",
+      nextAfter: res.nextAfter ?? "",
+      hasNext: res.hasNext
+    };
+  };
+
   const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
     useInfiniteScroll<Review, Record<string, unknown>>({
       initialParams: {
         orderBy,
         direction,
         search: searchKeyword || undefined,
-        limit: 6
+        limit: 8
       },
-      fetcher: getReviews as (params: Record<string, unknown>) => Promise<{
-        content: Review[];
-        nextCursor: string;
-        nextAfter: string;
-        hasNext: boolean;
-      }>,
+      fetcher,
       setData: setReviews
     });
 
@@ -40,11 +45,11 @@ export default function ReviewsPage() {
       setIsLoading(true);
 
       try {
-        const response = await getReviews({
+        const response = await getReviews(undefined, {
           orderBy,
           direction,
           search: searchKeyword || undefined,
-          limit: 6
+          limit: 8
         });
         setReviews(response.content);
         setCursor(response.nextCursor || undefined);
