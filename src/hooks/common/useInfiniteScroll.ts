@@ -103,7 +103,6 @@ export const useInfiniteScroll = <
     setAfter,
     setHasMore,
     setIsLoading,
-    resetInfiniteScroll,
-    fetchMore
+    resetInfiniteScroll
   };
 };

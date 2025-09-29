@@ -34,27 +34,35 @@ export default function Notification({
   const router = useRouter();
 
   // 무한스크롤 훅 (3개씩)
-  const { isLoading, setCursor, setAfter, resetInfiniteScroll } =
-    useInfiniteScroll<
-      NotificationType,
-      { userId: string; direction: "DESC" | "ASC"; limit: number }
-    >({
-      initialParams: {
-        userId: userId || "",
-        direction: "DESC",
-        limit: 3
-      },
-      fetcher: async params => {
-        const response = await getNotifications(params);
-        return {
-          content: response.content,
-          nextCursor: response.nextCursor || "",
-          nextAfter: response.nextAfter || "",
-          hasNext: response.hasNext
-        };
-      },
-      setData: setNotifications
-    });
+  const {
+    isLoading,
+    cursor,
+    after,
+    hasMore,
+    setCursor,
+    setAfter,
+    setHasMore,
+    resetInfiniteScroll
+  } = useInfiniteScroll<
+    NotificationType,
+    { userId: string; direction: "DESC" | "ASC"; limit: number }
+  >({
+    initialParams: {
+      userId: userId || "",
+      direction: "DESC",
+      limit: 3
+    },
+    fetcher: async params => {
+      const response = await getNotifications(params);
+      return {
+        content: response.content,
+        nextCursor: response.nextCursor || "",
+        nextAfter: response.nextAfter || "",
+        hasNext: response.hasNext
+      };
+    },
+    setData: setNotifications
+  });
 
   // 초기 알림 데이터 로드 (6개)
   useEffect(() => {
@@ -71,6 +79,7 @@ export default function Notification({
         setNotifications(response.content);
         setCursor(response.nextCursor ?? undefined);
         setAfter(response.nextAfter ?? undefined);
+        setHasMore(response.hasNext);
       } catch (error) {
         console.error("알림을 불러오는데 실패했습니다:", error);
       } finally {
@@ -80,9 +89,44 @@ export default function Notification({
 
     resetInfiniteScroll();
     setNotifications([]);
+    setHasMore(true);
     fetchInitialNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
+
+  // 추가 알림 데이터 로드 (3개씩)
+  const fetchMoreNotifications = async () => {
+    if (!userId || isLoading || !hasMore) return;
+
+    try {
+      const response = await getNotifications({
+        userId,
+        direction: "DESC",
+        limit: 3,
+        ...(cursor ? { cursor } : {}),
+        ...(after ? { after } : {})
+      });
+
+      if (response.content.length === 0) {
+        setHasMore(false);
+        return;
+      }
+
+      setNotifications(prev => {
+        const combined = [...prev, ...response.content];
+        const unique = Array.from(
+          new Map(combined.map(item => [item.id, item])).values()
+        );
+        return unique;
+      });
+
+      setCursor(response.nextCursor ?? undefined);
+      setAfter(response.nextAfter ?? undefined);
+      setHasMore(response.hasNext);
+    } catch (error) {
+      console.error("추가 알림을 불러오는데 실패했습니다:", error);
+    }
+  };
 
   const handleMarkAllAsRead = async () => {
     if (!userId) {
@@ -159,7 +203,7 @@ export default function Notification({
 
           // 스크롤이 하단 근처에 도달했을 때 더 많은 데이터 로드
           if (scrollTop + clientHeight >= scrollHeight - 100) {
-            // useInfiniteScroll 훅의 전역 스크롤 이벤트가 자동으로 처리
+            fetchMoreNotifications();
           }
         }}
       >
