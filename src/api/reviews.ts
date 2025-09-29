@@ -85,6 +85,17 @@ export const getReviews = async (
   );
 };
 
+export const postReview = async (body: {
+  bookId: string;
+  userId: string;
+  content: string;
+  rating: number;
+}): Promise<Review> => {
+  return await apiClient.post<Review>(`/api/reviews`, body, {
+    skipInterceptor: true
+  });
+};
+
 export const getReviewDetail = async (reviewId: string): Promise<Review> => {
   return await apiClient.get<Review>(`/api/reviews/${reviewId}`);
 };

@@ -34,7 +34,12 @@ export default function BookDetailPage() {
       <ReviewContainer id={id}>
         {({ data, setData, isLoading, totalElements }) => (
           <>
-            <ReviewForm totalElements={totalElements} />
+            <ReviewForm
+              data={data}
+              setData={setData}
+              totalElements={totalElements}
+              bookId={id}
+            />
             <ReviewList
               data={data}
               setData={setData}

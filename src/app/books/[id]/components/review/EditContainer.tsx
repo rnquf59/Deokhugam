@@ -56,7 +56,7 @@ export default function EditContainer({
       setEditingReviewId(null);
       showTooltip("리뷰 수정이 완료되었습니다!");
     } catch (error) {
-      console.error("리뷰 등록 실패:", error);
+      console.error("리뷰 수정 실패:", error);
     } finally {
       setIsLoading(false);
     }

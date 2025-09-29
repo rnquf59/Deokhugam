@@ -27,8 +27,6 @@ export default function ReviewDeleteModal({
     try {
       await deleteReview(reviewId);
 
-      setData(prev => prev.filter(r => r.id !== reviewId));
-
       const refreshed = await getReviews(bookId, { limit: data.length });
       setData(refreshed.content);
 

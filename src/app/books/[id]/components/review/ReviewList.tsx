@@ -12,6 +12,7 @@ import DelayedLoader from "@/components/common/DelayedLoader";
 import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import EditContainer from "./EditContainer";
 import ReviewRating from "./ReviewRating";
+import Label from "@/components/common/Buttons/Label";
 
 export default function ReviewList({
   data,
@@ -75,17 +76,21 @@ export default function ReviewList({
       <div className="mt-5 flex flex-col gap-5">
         {reviews.map(review => {
           const isEdit = editingReviewId === review.id;
+          const isMyReview = user?.id === review.userId;
 
           return (
             <div key={review.id} className="pb-5 border-b border-gray-100">
               <div className="flex items-center jsutify-between mb-[10px]">
                 <p className="flex flex-[1] gap-2 items-center text-body3 font-semibold text-gray-600">
                   {review.userNickname}
+                  {isMyReview && (
+                    <Label className="bg-red-100 text-red-500">내 리뷰</Label>
+                  )}
                   <span className="font-medium text-gray-400">
                     {formatDate(review.createdAt)}
                   </span>
                 </p>
-                {user?.id === review.userId && (
+                {isMyReview && (
                   <ActionDropdown
                     showModal={showModal}
                     reviewId={review.id}
