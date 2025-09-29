@@ -6,10 +6,10 @@ import Label from "@/components/common/Buttons/Label";
 import Button from "@/components/common/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
+import CommentDeleteModal from "./CommentDeleteModal";
 import { useAuthStore } from "@/store/authStore";
-import { useTooltipStore } from "@/store/tooltipStore";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
-import { updateComment, deleteComment } from "@/api/comments";
+import { updateComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
@@ -27,8 +27,8 @@ export default function CommentItem({
   const isMyComment = user?.id === comment.userId;
   const [isEditMode, setIsEditMode] = useState(false);
   const [isSubmittingEdit, setIsSubmittingEdit] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const showTooltip = useTooltipStore(state => state.showTooltip);
 
   const {
     open: isActionMenuOpen,
@@ -76,17 +76,10 @@ export default function CommentItem({
     }
   }, [comment.id, onCommentUpdate]);
 
-  const handleDelete = useCallback(async () => {
-    try {
-      await deleteComment(comment.id);
-      setIsActionMenuOpen(false);
-      onCommentDelete?.(comment.id);
-
-      showTooltip("댓글이 삭제되었습니다.", "");
-    } catch (error) {
-      console.error("댓글 삭제 실패:", error);
-    }
-  }, [comment.id, onCommentDelete, showTooltip, setIsActionMenuOpen]);
+  const handleDelete = useCallback(() => {
+    setIsActionMenuOpen(false);
+    setIsDeleteModalOpen(true);
+  }, [setIsActionMenuOpen]);
 
   return (
     <div
@@ -152,6 +145,13 @@ export default function CommentItem({
           </div>
         )}
       </div>
+
+      <CommentDeleteModal
+        isOpen={isDeleteModalOpen}
+        close={() => setIsDeleteModalOpen(false)}
+        comment={comment}
+        onCommentDelete={onCommentDelete}
+      />
     </div>
   );
 }
