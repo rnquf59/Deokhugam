@@ -15,7 +15,7 @@ import {
   inputStyle,
   labelStyle,
   textareaStyle
-} from "../../add/styles";
+} from "../../styles";
 import clsx from "clsx";
 import CalendarForm from "./CalendarForm";
 import Input from "@/components/ui/Input";
