@@ -86,6 +86,7 @@ export default function NavProfile({
         </li>
       </ul>
       <Modal
+        isDelete={actionType === "deleteUser"}
         isOpen={isOpen}
         onClose={handleModalClose}
         disabled={
