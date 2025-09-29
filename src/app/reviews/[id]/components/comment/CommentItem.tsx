@@ -6,11 +6,11 @@ import Label from "@/components/common/Buttons/Label";
 import Button from "@/components/common/Buttons/Button";
 import Textarea from "@/components/ui/Textarea";
 import ActionMenu from "@/components/common/ActionMenu";
-import CommentDeleteModal from "./CommentDeleteModal";
 import { useAuthStore } from "@/store/authStore";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { updateComment } from "@/api/comments";
 import type { Comment } from "@/types/reviews";
+import CommentDeleteModal from "./CommentDeleteModal";
 
 interface CommentItemProps {
   comment: Comment;

@@ -9,6 +9,8 @@ import {
 } from "@/api/notifications";
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
+import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
+import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import NotificationHeader from "./NotificationHeader";
 import NotificationItem from "./NotificationItem";
 import NotificationEmptyState from "./NotificationEmptyState";
@@ -25,32 +27,61 @@ export default function Notification({
   onClose
 }: NotificationProps) {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [isMarkingAllRead, setIsMarkingAllRead] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const userId = useAuthStore(state => state.user?.id);
   const showTooltip = useTooltipStore(state => state.showTooltip);
   const router = useRouter();
 
+  // 무한스크롤 훅 (3개씩)
+  const { isLoading, setCursor, setAfter, resetInfiniteScroll } =
+    useInfiniteScroll<
+      NotificationType,
+      { userId: string; direction: "DESC" | "ASC"; limit: number }
+    >({
+      initialParams: {
+        userId: userId || "",
+        direction: "DESC",
+        limit: 3
+      },
+      fetcher: async params => {
+        const response = await getNotifications(params);
+        return {
+          content: response.content,
+          nextCursor: response.nextCursor || "",
+          nextAfter: response.nextAfter || "",
+          hasNext: response.hasNext
+        };
+      },
+      setData: setNotifications
+    });
+
+  // 초기 알림 데이터 로드 (6개)
   useEffect(() => {
-    const fetchNotifications = async () => {
+    const fetchInitialNotifications = async () => {
       if (!userId) return;
 
+      setIsInitialLoading(true);
       try {
-        setIsLoading(true);
         const response = await getNotifications({
           userId,
           direction: "DESC",
-          limit: 10
+          limit: 6
         });
         setNotifications(response.content);
+        setCursor(response.nextCursor ?? undefined);
+        setAfter(response.nextAfter ?? undefined);
       } catch (error) {
         console.error("알림을 불러오는데 실패했습니다:", error);
       } finally {
-        setIsLoading(false);
+        setIsInitialLoading(false);
       }
     };
 
-    fetchNotifications();
+    resetInfiniteScroll();
+    setNotifications([]);
+    fetchInitialNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const handleMarkAllAsRead = async () => {
@@ -107,15 +138,32 @@ export default function Notification({
     <div
       className={`relative w-[370px] h-[630px] p-[20px_24px] rounded-[16px] bg-gray-0 border border-gray-200 shadow-[0px_4px_8px_0px_#18181805] flex flex-col ${className}`}
     >
-      {notifications.length === 0 && !isLoading && <NotificationEmptyState />}
+      {notifications.length === 0 && !isInitialLoading && (
+        <NotificationEmptyState />
+      )}
 
       <NotificationHeader
         isMarkingAllRead={isMarkingAllRead}
         onMarkAllAsRead={handleMarkAllAsRead}
       />
 
-      <div className="relative z-10 flex flex-col flex-1 overflow-y-auto">
-        {isLoading ? (
+      <div
+        className="relative z-10 flex flex-col flex-1 overflow-y-auto"
+        style={{
+          scrollbarWidth: "thin",
+          scrollbarColor: "#D7D7DB transparent"
+        }}
+        onScroll={e => {
+          const target = e.target as HTMLDivElement;
+          const { scrollTop, scrollHeight, clientHeight } = target;
+
+          // 스크롤이 하단 근처에 도달했을 때 더 많은 데이터 로드
+          if (scrollTop + clientHeight >= scrollHeight - 100) {
+            // useInfiniteScroll 훅의 전역 스크롤 이벤트가 자동으로 처리
+          }
+        }}
+      >
+        {isInitialLoading ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
           </div>
@@ -134,13 +182,20 @@ export default function Notification({
             </div>
           </div>
         ) : (
-          notifications.map(notification => (
-            <NotificationItem
-              key={notification.id}
-              notification={notification}
-              onNotificationClick={handleNotificationClick}
-            />
-          ))
+          <>
+            {notifications.map(notification => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+                onNotificationClick={handleNotificationClick}
+              />
+            ))}
+            {isLoading && (
+              <div className="flex justify-center py-4">
+                <InfiniteScrollLoader />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
