@@ -1,6 +1,7 @@
 import Modal from "@/components/ui/Modal";
 import { useTooltipStore } from "@/store/tooltipStore";
-import { deleteComment } from "@/api/comments";
+import { deleteComment, getComments } from "@/api/comments";
+import { getReviewDetail } from "@/api/reviews";
 import { useState } from "react";
 import type { Comment } from "@/types/reviews";
 
@@ -8,12 +9,18 @@ export default function CommentDeleteModal({
   isOpen,
   close,
   comment,
-  onCommentDelete
+  data,
+  setData,
+  reviewId,
+  onCommentCountChange
 }: {
   isOpen: boolean;
   close: () => void;
   comment: Comment | null;
-  onCommentDelete?: (deletedCommentId: string) => void;
+  data: Comment[];
+  setData: React.Dispatch<React.SetStateAction<Comment[]>>;
+  reviewId: string;
+  onCommentCountChange?: (count: number) => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { showTooltip } = useTooltipStore();
@@ -25,9 +32,18 @@ export default function CommentDeleteModal({
     try {
       await deleteComment(comment.id);
 
-      onCommentDelete?.(comment.id);
+      const refreshed = await getComments({
+        reviewId,
+        direction: "DESC",
+        limit: data.length
+      });
+      setData(refreshed.content);
+
+      const updatedReview = await getReviewDetail(reviewId);
+      onCommentCountChange?.(updatedReview.commentCount);
+
       close();
-      showTooltip("댓글을 정상적으로 삭제하였습니다!");
+      showTooltip("댓글이 삭제되었습니다.");
     } catch (error) {
       console.error("댓글 삭제 실패:", error);
     } finally {

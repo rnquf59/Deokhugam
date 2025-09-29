@@ -14,14 +14,20 @@ import type { Comment } from "@/types/reviews";
 
 interface CommentItemProps {
   comment: Comment;
+  data: Comment[];
+  setData: React.Dispatch<React.SetStateAction<Comment[]>>;
+  reviewId: string;
   onCommentUpdate?: (updatedComment: Comment) => void;
-  onCommentDelete?: (deletedCommentId: string) => void;
+  onCommentCountChange?: (count: number) => void;
 }
 
 export default function CommentItem({
   comment,
+  data,
+  setData,
+  reviewId,
   onCommentUpdate,
-  onCommentDelete
+  onCommentCountChange
 }: CommentItemProps) {
   const { user } = useAuthStore();
   const isMyComment = user?.id === comment.userId;
@@ -150,7 +156,10 @@ export default function CommentItem({
         isOpen={isDeleteModalOpen}
         close={() => setIsDeleteModalOpen(false)}
         comment={comment}
-        onCommentDelete={onCommentDelete}
+        data={data}
+        setData={setData}
+        reviewId={reviewId}
+        onCommentCountChange={onCommentCountChange}
       />
     </div>
   );
