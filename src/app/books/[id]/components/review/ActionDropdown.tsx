@@ -1,7 +1,7 @@
 import ActionMenu from "@/components/common/ActionMenu";
 import { useClickOutside } from "@/hooks/common/useClickOutside";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 export default function ActionDropdown({
   showModal,
