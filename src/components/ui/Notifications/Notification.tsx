@@ -7,6 +7,8 @@ import {
   markNotificationAsRead,
   Notification as NotificationType
 } from "@/api/notifications";
+import { getReviewDetail } from "@/api/reviews";
+
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
@@ -33,7 +35,6 @@ export default function Notification({
   const showTooltip = useTooltipStore(state => state.showTooltip);
   const router = useRouter();
 
-  // 무한스크롤 훅 (3개씩)
   const {
     isLoading,
     cursor,
@@ -64,7 +65,6 @@ export default function Notification({
     setData: setNotifications
   });
 
-  // 초기 알림 데이터 로드 (6개)
   useEffect(() => {
     const fetchInitialNotifications = async () => {
       if (!userId) return;
@@ -94,7 +94,6 @@ export default function Notification({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // 추가 알림 데이터 로드 (3개씩)
   const fetchMoreNotifications = async () => {
     if (!userId || isLoading || !hasMore) return;
 
@@ -169,8 +168,28 @@ export default function Notification({
         onNotificationRead?.();
       }
 
-      router.push(`/reviews/${notification.reviewId}`);
+      try {
+        await getReviewDetail(notification.reviewId);
+      } catch (error) {
+        const errorObj = error as {
+          response?: { status?: number };
+          message?: string;
+        };
+        const isNotFound =
+          errorObj?.response?.status === 404 ||
+          errorObj?.response?.status === 500 ||
+          errorObj?.message?.includes("리뷰를 찾을 수 없습니다") ||
+          errorObj?.message?.includes("404") ||
+          errorObj?.message?.includes("500");
 
+        if (isNotFound) {
+          showTooltip("현재 해당 알림은 존재하지 않습니다.", "");
+          onClose?.();
+          return;
+        }
+      }
+
+      router.push(`/reviews/${notification.reviewId}`);
       onClose?.();
     } catch (error) {
       console.error("알림 처리에 실패했습니다:", error);
@@ -201,7 +220,6 @@ export default function Notification({
           const target = e.target as HTMLDivElement;
           const { scrollTop, scrollHeight, clientHeight } = target;
 
-          // 스크롤이 하단 근처에 도달했을 때 더 많은 데이터 로드
           if (scrollTop + clientHeight >= scrollHeight - 100) {
             fetchMoreNotifications();
           }
