@@ -53,3 +53,10 @@
   color: #858593;
   font-weight: 700;
 }
+
+@media (max-width: 768px) {
+  .react-datepicker-popper {
+    left: auto !important;
+    right: 0 !important;
+  }
+}
