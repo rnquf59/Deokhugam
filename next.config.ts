@@ -12,14 +12,17 @@ const nextConfig: NextConfig = {
     ]
   },
   async rewrites() {
-    // 모든 환경에서 rewrites 사용 (SSL 인증서 문제 해결을 위해)
-    return [
-      {
-        source: "/api/:path*",
-        destination:
-          "http://sprint-project-1196140422.ap-northeast-2.elb.amazonaws.com/sb/deokhugam/api/:path*"
-      }
-    ];
+    // 개발환경에서만 rewrites 사용
+    if (process.env.NODE_ENV === "development") {
+      return [
+        {
+          source: "/api/:path*",
+          destination:
+            "http://sprint-project-1196140422.ap-northeast-2.elb.amazonaws.com/sb/deokhugam/api/:path*"
+        }
+      ];
+    }
+    return [];
   }
 };
 
