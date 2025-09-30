@@ -167,7 +167,6 @@ export default function Notification({
         onNotificationRead?.();
       }
 
-      // 리뷰 존재 여부 확인 (Next.js 에러 바운더리로 전파되지 않도록 fetch 사용)
       try {
         const authState = useAuthStore.getState();
         const response = await fetch(`/api/reviews/${notification.reviewId}`, {
@@ -224,7 +223,6 @@ export default function Notification({
           const target = e.target as HTMLDivElement;
           const { scrollTop, scrollHeight, clientHeight } = target;
 
-          // 스크롤이 하단 근처에 도달했을 때 더 많은 데이터 로드
           if (scrollTop + clientHeight >= scrollHeight - 100) {
             fetchMoreNotifications();
           }
