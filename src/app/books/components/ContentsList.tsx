@@ -25,7 +25,7 @@ export default function ContentsList({
       </DelayedLoader>
       <div
         className={clsx(
-          "flex gap-x-[2%] gap-y-[60px] w-full flex-wrap",
+          "flex gap-x-[2%] gap-y-[60px] w-full flex-wrap justify-between",
           "max-lg1050:gap-x-[3%]",
           "max-xs400:gap-x-0"
         )}
