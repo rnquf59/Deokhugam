@@ -26,7 +26,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-[300px]">
+        <div className="w-[228px]">
           <UserRanking />
         </div>
       </div>
