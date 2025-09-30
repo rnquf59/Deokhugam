@@ -7,6 +7,7 @@ import {
   markNotificationAsRead,
   Notification as NotificationType
 } from "@/api/notifications";
+
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
@@ -33,7 +34,6 @@ export default function Notification({
   const showTooltip = useTooltipStore(state => state.showTooltip);
   const router = useRouter();
 
-  // 무한스크롤 훅 (3개씩)
   const {
     isLoading,
     cursor,
@@ -64,7 +64,6 @@ export default function Notification({
     setData: setNotifications
   });
 
-  // 초기 알림 데이터 로드 (6개)
   useEffect(() => {
     const fetchInitialNotifications = async () => {
       if (!userId) return;
@@ -94,7 +93,6 @@ export default function Notification({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
-  // 추가 알림 데이터 로드 (3개씩)
   const fetchMoreNotifications = async () => {
     if (!userId || isLoading || !hasMore) return;
 
@@ -169,8 +167,33 @@ export default function Notification({
         onNotificationRead?.();
       }
 
-      router.push(`/reviews/${notification.reviewId}`);
+      // 리뷰 존재 여부 확인 (Next.js 에러 바운더리로 전파되지 않도록 fetch 사용)
+      try {
+        const authState = useAuthStore.getState();
+        const response = await fetch(`/api/reviews/${notification.reviewId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(authState.user?.id && {
+              "Deokhugam-Request-User-ID": authState.user.id
+            })
+          }
+        });
 
+        if (response.status === 404 || response.status === 500) {
+          showTooltip("현재 해당 알림은 존재하지 않습니다.", "");
+          onClose?.();
+          return;
+        }
+
+        if (!response.ok) {
+          return;
+        }
+      } catch {
+        return;
+      }
+
+      router.push(`/reviews/${notification.reviewId}`);
       onClose?.();
     } catch (error) {
       console.error("알림 처리에 실패했습니다:", error);
