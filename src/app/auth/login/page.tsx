@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, type LoginFormData } from "@/lib/authSchema";
+import { loginSchema, type LoginFormData } from "@/schemas/authSchema";
 import { useAuthStore } from "@/store/authStore";
 import Image from "next/image";
 import Input from "@/components/ui/Input";

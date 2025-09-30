@@ -30,102 +30,53 @@ export default function Notification({
 }: NotificationProps) {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const [isMarkingAllRead, setIsMarkingAllRead] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const userId = useAuthStore(state => state.user?.id);
   const showTooltip = useTooltipStore(state => state.showTooltip);
   const router = useRouter();
 
-  const {
-    isLoading,
-    cursor,
-    after,
-    hasMore,
-    setCursor,
-    setAfter,
-    setHasMore,
-    resetInfiniteScroll
-  } = useInfiniteScroll<
-    NotificationType,
-    { userId: string; direction: "DESC" | "ASC"; limit: number }
-  >({
-    initialParams: {
-      userId: userId || "",
-      direction: "DESC",
-      limit: 3
-    },
-    fetcher: async params => {
-      const response = await getNotifications(params);
-      return {
-        content: response.content,
-        nextCursor: response.nextCursor || "",
-        nextAfter: response.nextAfter || "",
-        hasNext: response.hasNext
-      };
-    },
+  const { isLoading, resetInfiniteScroll, fetchMore } = useInfiniteScroll({
+    initialParams: userId
+      ? {
+          userId,
+          direction: "DESC" as const,
+          limit: 7
+        }
+      : undefined,
+    fetcher: getNotifications,
     setData: setNotifications
   });
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const { scrollTop, scrollHeight, clientHeight } = target;
+
+    // 스크롤이 맨 아래에서 200px 전에 도달하면 무한스크롤 트리거
+    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
+      fetchMore();
+    }
+  };
 
   useEffect(() => {
     const fetchInitialNotifications = async () => {
       if (!userId) return;
 
-      setIsInitialLoading(true);
       try {
         const response = await getNotifications({
           userId,
           direction: "DESC",
-          limit: 6
+          limit: 7
         });
         setNotifications(response.content);
-        setCursor(response.nextCursor ?? undefined);
-        setAfter(response.nextAfter ?? undefined);
-        setHasMore(response.hasNext);
       } catch (error) {
         console.error("알림을 불러오는데 실패했습니다:", error);
-      } finally {
-        setIsInitialLoading(false);
       }
     };
 
-    resetInfiniteScroll();
     setNotifications([]);
-    setHasMore(true);
+    resetInfiniteScroll();
     fetchInitialNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
-
-  const fetchMoreNotifications = async () => {
-    if (!userId || isLoading || !hasMore) return;
-
-    try {
-      const response = await getNotifications({
-        userId,
-        direction: "DESC",
-        limit: 3,
-        ...(cursor ? { cursor } : {}),
-        ...(after ? { after } : {})
-      });
-
-      if (response.content.length === 0) {
-        setHasMore(false);
-        return;
-      }
-
-      setNotifications(prev => {
-        const combined = [...prev, ...response.content];
-        const unique = Array.from(
-          new Map(combined.map(item => [item.id, item])).values()
-        );
-        return unique;
-      });
-
-      setCursor(response.nextCursor ?? undefined);
-      setAfter(response.nextAfter ?? undefined);
-      setHasMore(response.hasNext);
-    } catch (error) {
-      console.error("추가 알림을 불러오는데 실패했습니다:", error);
-    }
-  };
 
   const handleMarkAllAsRead = async () => {
     if (!userId) {
@@ -201,9 +152,7 @@ export default function Notification({
     <div
       className={`relative w-[370px] h-[630px] p-[20px_24px] rounded-[16px] bg-gray-0 border border-gray-200 shadow-[0px_4px_8px_0px_#18181805] flex flex-col ${className}`}
     >
-      {notifications.length === 0 && !isInitialLoading && (
-        <NotificationEmptyState />
-      )}
+      {notifications.length === 0 && !isLoading && <NotificationEmptyState />}
 
       <NotificationHeader
         isMarkingAllRead={isMarkingAllRead}
@@ -216,16 +165,9 @@ export default function Notification({
           scrollbarWidth: "thin",
           scrollbarColor: "#D7D7DB transparent"
         }}
-        onScroll={e => {
-          const target = e.target as HTMLDivElement;
-          const { scrollTop, scrollHeight, clientHeight } = target;
-
-          if (scrollTop + clientHeight >= scrollHeight - 100) {
-            fetchMoreNotifications();
-          }
-        }}
+        onScroll={handleScroll}
       >
-        {isInitialLoading ? (
+        {isLoading && notifications.length === 0 ? (
           <div className="flex items-center justify-center h-32">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-500"></div>
           </div>
