@@ -7,6 +7,7 @@ import { BookResponse, getBookDetail } from "@/api/books";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { useParams } from "next/navigation";
 import FormFields from "../../components/bookForm/FormFields";
+import clsx from "clsx";
 
 export default function EditBookPage() {
   const params = useParams();
@@ -31,7 +32,7 @@ export default function EditBookPage() {
   if (!data) return <LoadingScreen />;
 
   return (
-    <div className="pt-[50px]">
+    <div className={clsx("pt-[50px]", "max-md:pb-[150px]")}>
       <PageHead mode="edit" />
       <FormContainer defaultValues={data}>
         <FormFields id={id} data={data} isEdit />

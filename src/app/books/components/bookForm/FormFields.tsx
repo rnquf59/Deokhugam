@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { BookResponse, postBook, putBook } from "@/api/books";
 import { useTooltipStore } from "@/store/tooltipStore";
 import axios from "axios";
+import clsx from "clsx";
 
 interface FormFieldsProps {
   id?: string;
@@ -124,7 +125,9 @@ export default function FormFields({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={isSubmitting}>
-        <div className="flex gap-10 mt-[30px]">
+        <div
+          className={clsx("flex gap-10 mt-[30px]", "max-md:flex-col-reverse")}
+        >
           <FormInputsContainer
             isEdit={isEdit}
             formMethods={formMethods}

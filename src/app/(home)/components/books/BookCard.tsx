@@ -4,6 +4,7 @@ import Link from "next/link";
 import BookImage from "./BookImage";
 import BookInfo from "./BookInfo";
 import type { PopularBook } from "@/api/books";
+import clsx from "clsx";
 
 interface BookCardProps {
   book: PopularBook;
@@ -12,7 +13,7 @@ interface BookCardProps {
 export default function BookCard({ book }: BookCardProps) {
   if (book.isEmpty) {
     return (
-      <div className="flex-1">
+      <div className={clsx("flex-1", "max-lg:max-w-min")}>
         <BookImage thumbnailUrl="" title="" rank={0} isEmpty={true} />
         <BookInfo
           title=""
@@ -26,7 +27,7 @@ export default function BookCard({ book }: BookCardProps) {
   }
 
   return (
-    <div className="flex-1">
+    <div className={clsx("flex-1", "max-lg:max-w-min")}>
       <Link href={`/books/${book.bookId}`} className="block">
         <BookImage
           thumbnailUrl={book.thumbnailUrl}

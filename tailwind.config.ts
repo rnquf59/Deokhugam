@@ -8,6 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        s: "320px",
+        sm400: "400px",
+        sm: "480px",
+        xs650: "650px",
+        lg900: "900px",
+        lg1050: "1050px",
+        lg: "1199px",
+        xlg: "1920px"
+      },
       fontFamily: {
         sans: [
           "Pretendard",

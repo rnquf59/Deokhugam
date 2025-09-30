@@ -19,7 +19,7 @@ export default function CommentList({
   if (comments.length === 0) {
     return (
       <div>
-        <p className="text-body1 font-semibold text-gray-400 text-center">
+        <p className="text-body2 font-medium text-gray-400 text-center">
           등록된 댓글이 없습니다.
         </p>
       </div>

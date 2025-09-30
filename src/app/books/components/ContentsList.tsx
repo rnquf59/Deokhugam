@@ -5,6 +5,7 @@ import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import clsx from "clsx";
 
 export default function ContentsList({
   booksData,
@@ -22,14 +23,14 @@ export default function ContentsList({
       <DelayedLoader isLoading={isLoading} delay={1000}>
         <InfiniteScrollLoader />
       </DelayedLoader>
-      <div className="flex gap-[2%] gap-y-[60px] w-full flex-wrap">
+      <div
+        className={clsx(
+          "grid w-full gap-x-[2%] gap-y-[60px] grid-cols-5 max-lg1050:grid-cols-4 max-md:grid-cols-3 max-xs650:grid-cols-2 max-sm400:grid-cols-1"
+        )}
+      >
         {booksData.map(book => {
           return (
-            <div
-              key={book.id}
-              className="w-[18%] cursor-pointer"
-              onClick={() => router.push(`/books/${book.id}`)}
-            >
+            <div key={book.id} onClick={() => router.push(`/books/${book.id}`)}>
               <div className="relative h-[calc(100vw_*_(325/1920))] min-h-[325px] rounded overflow-hidden border">
                 {book.thumbnailUrl && !imgErrors[book.id] && (
                   <Image

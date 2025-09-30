@@ -47,7 +47,7 @@ export const getReviews = async (
     direction = "DESC",
     cursor,
     after,
-    limit = 2,
+    limit = 5,
     search
   } = params;
 

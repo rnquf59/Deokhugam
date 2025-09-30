@@ -86,13 +86,13 @@ export default function ReviewHeader({
   }
   return (
     <div className="flex gap-6">
-      <div className="w-[118px] h-[178px] relative">
+      <div className="w-[118px] h-[178px] min-w-[118px] relative border rounded-lg overflow-hidden">
         <Image
           src={review.bookThumbnailUrl || "/images/books/imgError.png"}
           alt={review.bookTitle}
           fill
           unoptimized
-          className="object-cover rounded-lg"
+          className="rounded-lg"
           onError={e => {
             const target = e.target as HTMLImageElement;
             target.src = "/images/books/imgError.png";
@@ -101,7 +101,7 @@ export default function ReviewHeader({
       </div>
 
       <div className="flex flex-col gap-[10px]">
-        <div className="text-body4 font-medium text-gray-500 underline decoration-solid underline-offset-0 decoration-0">
+        <div className="text-body4 font-medium text-gray-500 underline decoration-solid underline-offset-0 decoration-0 line-clamp-2">
           {review.bookTitle}
         </div>
 
@@ -114,11 +114,11 @@ export default function ReviewHeader({
           </span>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col flex-[1]">
           <div className="mb-[8px]">
             <StarRating rating={review.rating} size={18} />
           </div>
-          <div className="text-body2 font-medium text-gray-800 h-[130px] overflow-hidden">
+          <div className="text-body2 font-medium text-gray-800  overflow-hidden">
             {review.content}
           </div>
         </div>

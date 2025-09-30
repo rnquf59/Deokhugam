@@ -49,12 +49,12 @@ export default function BookImage({
         alt={title || "기본 도서 이미지"}
         width={209}
         height={314}
-        className="w-full h-full object-cover rounded-[6px]"
+        className="w-full h-full rounded-[6px]"
         unoptimized
       />
       {/* 그라데이션 오버레이 */}
       <div
-        className="absolute inset-0 rounded-[6px]"
+        className="absolute inset-0 rounded-[6px] border"
         style={{
           background:
             "linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0.25) 83.58%, rgba(0, 0, 0, 0.5) 177.5%)"

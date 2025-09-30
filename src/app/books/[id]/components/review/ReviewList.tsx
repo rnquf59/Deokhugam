@@ -63,8 +63,8 @@ export default function ReviewList({
   if (reviews.length === 0) {
     return (
       <div>
-        <p className="text-body1 font-semibold text-gray-400 text-center">
-          등록된 댓글이 없습니다.
+        <p className="text-body2 font-medium text-gray-400 text-center">
+          등록된 리뷰가 없습니다.
         </p>
       </div>
     );
