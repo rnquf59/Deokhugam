@@ -28,7 +28,7 @@ export default function ReviewImage({
   }
 
   return (
-    <div className="flex-shrink-0">
+    <div className="min-w-max">
       <Image
         src={bookThumbnailUrl || "/images/books/imgError.png"}
         alt={bookTitle || "기본 도서 이미지"}

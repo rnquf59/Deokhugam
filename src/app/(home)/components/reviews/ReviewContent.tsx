@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDate } from "@/app/utils/formatData";
+import clsx from "clsx";
 import Image from "next/image";
 
 interface ReviewContentProps {
@@ -66,23 +67,28 @@ export default function ReviewContent({
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex items-center justify-between mt-[8px] mb-[8px]">
+      <div
+        className={clsx(
+          "flex items-center justify-between my-2",
+          "max-md:flex-col-reverse max-md:items-start max-md:my-0 max-md:mb-2"
+        )}
+      >
         <div className="flex items-center gap-[6px] flex-1 min-w-0">
-          <span className="text-body1 font-semibold text-gray-950 flex-shrink-0">
+          <span className="text-body1 font-semibold text-gray-950 min-w-max">
             {isEmpty ? "" : userNickname || "익명"}
           </span>
           <span
-            className="text-body2 font-medium text-gray-500 truncate"
-            style={
-              maxTitleWidth
-                ? { maxWidth: `${maxTitleWidth}px` }
-                : { maxWidth: "500px" }
-            }
+            className={clsx(
+              "text-body2 font-medium text-gray-500 line-clamp-1",
+              maxTitleWidth ? `max-w-[${maxTitleWidth}px]` : "max-w-[500px]"
+            )}
           >
             {isEmpty ? "" : bookTitle || "제목 없음"}
           </span>
         </div>
-        <div className="flex flex-shrink-0 ml-2">
+        <div
+          className={clsx("flex ml-2", "max-md:ml-0 max-md:mt-1 max-md:mb-2")}
+        >
           {isEmpty
             ? [...Array(5)].map((_, index) => (
                 <Image
