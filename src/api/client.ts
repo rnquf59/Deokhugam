@@ -67,8 +67,19 @@ class ApiClient {
   }
 
   // GET 요청
-  async get<T>(endpoint: string): Promise<T> {
-    const response = await this.axiosInstance.get<T>(endpoint);
+  async get<T>(
+    endpoint: string,
+    config?: AxiosRequestConfig & { skipInterceptor?: boolean }
+  ): Promise<T> {
+    if (config?.skipInterceptor) {
+      // 인터셉터 우회: AxiosError를 그대로 던짐으로써 Response로 받은 Error Status 값에 따라 원하는 UI를 출력하기 위해 추가함_병진
+      const response = await axios.get<T>(
+        this.axiosInstance.defaults.baseURL + endpoint,
+        config
+      );
+      return response.data;
+    }
+    const response = await this.axiosInstance.get<T>(endpoint, config);
     return response.data;
   }
 
