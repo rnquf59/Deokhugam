@@ -4,23 +4,18 @@ import type { Comment } from "@/types/reviews";
 interface CommentListProps {
   comments: Comment[];
   reviewId: string;
+  setData: React.Dispatch<React.SetStateAction<Comment[]>>;
   onCommentUpdate?: (updatedComment: Comment) => void;
-  onCommentDelete?: (deletedCommentId: string) => void;
+  onCommentCountChange?: (count: number) => void;
 }
 
 export default function CommentList({
   comments,
+  reviewId,
+  setData,
   onCommentUpdate,
-  onCommentDelete
+  onCommentCountChange
 }: CommentListProps) {
-  const handleCommentUpdate = (updatedComment: Comment) => {
-    onCommentUpdate?.(updatedComment);
-  };
-
-  const handleCommentDelete = (deletedCommentId: string) => {
-    onCommentDelete?.(deletedCommentId);
-  };
-
   if (comments.length === 0) {
     return (
       <div>
@@ -37,8 +32,11 @@ export default function CommentList({
         <CommentItem
           key={comment.id}
           comment={comment}
-          onCommentUpdate={handleCommentUpdate}
-          onCommentDelete={handleCommentDelete}
+          data={comments}
+          setData={setData}
+          reviewId={reviewId}
+          onCommentUpdate={onCommentUpdate}
+          onCommentCountChange={onCommentCountChange}
         />
       ))}
     </div>

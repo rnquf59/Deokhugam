@@ -3,6 +3,7 @@ import Image from "next/image";
 import StarRating from "@/components/common/StarRating";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import { getReviewDetail, toggleReviewLike } from "@/api/reviews";
+import { useTooltipStore } from "@/store/tooltipStore";
 import type { Review } from "@/types/reviews";
 
 interface ReviewHeaderProps {
@@ -16,6 +17,7 @@ export default function ReviewHeader({
 }: ReviewHeaderProps) {
   const [review, setReview] = useState<Review | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { showTooltip } = useTooltipStore();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function ReviewHeader({
       });
     } catch (error) {
       console.error("좋아요 토글 실패:", error);
-      alert("좋아요 처리에 실패했습니다. 다시 시도해주세요.");
+      showTooltip("좋아요 처리에 실패했습니다.", "error");
     }
   };
 
