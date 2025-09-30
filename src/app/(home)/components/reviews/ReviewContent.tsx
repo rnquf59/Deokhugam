@@ -70,7 +70,7 @@ export default function ReviewContent({
       <div
         className={clsx(
           "flex items-center justify-between my-2",
-          "max-md:flex-col-reverse max-md:items-start max-md:my-0 max-md:mb-2"
+          "max-lg1050:flex-col-reverse max-lg1050:items-start max-lg1050:my-0 max-lg1050:mb-2"
         )}
       >
         <div className="flex items-center gap-[6px] flex-1 min-w-0">
@@ -79,7 +79,7 @@ export default function ReviewContent({
           </span>
           <span
             className={clsx(
-              "text-body2 font-medium text-gray-500 line-clamp-1",
+              "text-body2 font-medium text-gray-500 line-clamp-1 min-w-5",
               maxTitleWidth ? `max-w-[${maxTitleWidth}px]` : "max-w-[500px]"
             )}
           >
@@ -87,7 +87,10 @@ export default function ReviewContent({
           </span>
         </div>
         <div
-          className={clsx("flex ml-2", "max-md:ml-0 max-md:mt-1 max-md:mb-2")}
+          className={clsx(
+            "flex ml-2",
+            "max-lg1050:ml-0 max-lg1050:mt-1 max-md:mb-2"
+          )}
         >
           {isEmpty
             ? [...Array(5)].map((_, index) => (
