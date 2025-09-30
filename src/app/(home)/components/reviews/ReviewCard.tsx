@@ -9,11 +9,17 @@ import type { PopularReview, Review } from "@/types/reviews";
 interface ReviewCardProps {
   review: PopularReview | Review;
   maxTitleWidth?: number;
+  onLikeChange?: (
+    reviewId: string,
+    newLikeCount: number,
+    likedByMe: boolean
+  ) => void;
 }
 
 const ReviewCard = memo(function ReviewCard({
   review,
-  maxTitleWidth
+  maxTitleWidth,
+  onLikeChange
 }: ReviewCardProps) {
   const getReviewData = (review: PopularReview | Review) => {
     if ("reviewContent" in review) {
@@ -87,6 +93,9 @@ const ReviewCard = memo(function ReviewCard({
               commentCount={reviewData.commentCount}
               createdAt={reviewData.createdAt}
               maxTitleWidth={maxTitleWidth}
+              reviewId={reviewData.reviewId}
+              likedByMe={review.likedByMe ?? false}
+              onLikeChange={onLikeChange}
             />
           </div>
         </div>
