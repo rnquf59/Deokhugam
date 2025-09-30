@@ -78,7 +78,7 @@ export default function PopularReviews() {
   return (
     <div>
       <SectionHeader
-        title="인기 리뷰"
+        title="🔥 인기 리뷰"
         description="가장 화제의 리뷰들은 뭐가 있을까?"
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}

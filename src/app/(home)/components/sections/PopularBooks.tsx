@@ -12,6 +12,8 @@ import {
   type PopularBooksParams
 } from "@/api/books";
 import BookCard from "../books/BookCard";
+import clsx from "clsx";
+import useResponsiveLimit from "@/hooks/book/useResponsiveLimit";
 
 export default function PopularBooks() {
   const [selectedFilter, setSelectedFilter] = useState("전체");
@@ -19,6 +21,8 @@ export default function PopularBooks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasData, setHasData] = useState(false);
+
+  const limit = useResponsiveLimit("popularBook");
 
   const getPeriodFromFilter = (
     filter: string
@@ -46,7 +50,7 @@ export default function PopularBooks() {
       const response = await getPopularBooks({
         period,
         direction: "ASC",
-        limit: 4
+        limit
       });
 
       const books = response.content;
@@ -72,7 +76,7 @@ export default function PopularBooks() {
 
   useEffect(() => {
     fetchPopularBooks(getPeriodFromFilter(selectedFilter));
-  }, [selectedFilter]);
+  }, [selectedFilter, limit]);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -82,7 +86,7 @@ export default function PopularBooks() {
   return (
     <div>
       <SectionHeader
-        title="인기도서"
+        title="🏆 인기 도서"
         description="어떤 책이 좋을까? 지금 가장 인기 있는 도서"
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}
@@ -107,7 +111,19 @@ export default function PopularBooks() {
         </div>
       ) : (
         <>
-          <div className="flex gap-[24px] mb-[30px] min-h-[400px] w-[908px]">
+          <div
+            className={clsx(
+              "flex mx-auto gap-[24px] mb-[30px] min-h-[400px] flex-wrap",
+              popularBooks.length === 4
+                ? "w-[908px]"
+                : popularBooks.length === 3
+                  ? "w-[675px]"
+                  : popularBooks.length === 2
+                    ? "w-[442px]"
+                    : "",
+              "max-lg:w-full max-lg:justify-center max-lg:items-center"
+            )}
+          >
             {popularBooks.map(book => (
               <BookCard key={book.id} book={book} />
             ))}

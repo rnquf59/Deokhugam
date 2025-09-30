@@ -18,7 +18,7 @@ export default function BooksPage() {
   const [direction, setDirection] = useState<"ASC" | "DESC">("DESC");
   const [keyword, setKeyword] = useState("");
   const [booksData, setBooksData] = useState<Book[]>([]);
-  const limit = useResponsiveLimit();
+  const limit = useResponsiveLimit("bookList");
 
   const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
     useInfiniteScroll<Book, BooksParams>({

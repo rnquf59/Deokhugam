@@ -80,7 +80,7 @@ export default function ReviewContent({
           <span
             className={clsx(
               "text-body2 font-medium text-gray-500 line-clamp-1 min-w-5",
-              maxTitleWidth ? `max-w-[${maxTitleWidth}px]` : "max-w-[500px]"
+              maxTitleWidth ? `max-w-[${maxTitleWidth}px]` : "max-w-[200px]"
             )}
           >
             {isEmpty ? "" : bookTitle || "제목 없음"}
@@ -89,7 +89,7 @@ export default function ReviewContent({
         <div
           className={clsx(
             "flex ml-2",
-            "max-lg1050:ml-0 max-lg1050:mt-1 max-md:mb-2"
+            "max-lg1050:ml-0 max-lg1050:mt-1 max-lg1050:mb-2"
           )}
         >
           {isEmpty
