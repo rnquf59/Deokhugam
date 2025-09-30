@@ -32,18 +32,20 @@ export default function BookDetailPage() {
         )}
       </OverviewContainer>
       <ReviewContainer id={id}>
-        {({ data, setData, isLoading, totalElements }) => (
+        {({ data, setData, isLoading, totalElements, setTotalElements }) => (
           <>
             <ReviewForm
               data={data}
               setData={setData}
               totalElements={totalElements}
+              setTotalElements={setTotalElements}
               bookId={id}
             />
             <ReviewList
               data={data}
               setData={setData}
               isLoading={isLoading}
+              setTotalElements={setTotalElements}
               bookId={id}
             />
           </>

@@ -16,6 +16,7 @@ type Props = {
     setData: Dispatch<SetStateAction<Review[]>>;
     isLoading: boolean;
     totalElements: number;
+    setTotalElements: Dispatch<SetStateAction<number>>;
   }) => ReactNode;
 };
 
@@ -63,5 +64,10 @@ export default function ReviewContainer({ id, children }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return <> {children({ data, setData, isLoading, totalElements })}</>;
+  return (
+    <>
+      {" "}
+      {children({ data, setData, isLoading, totalElements, setTotalElements })}
+    </>
+  );
 }

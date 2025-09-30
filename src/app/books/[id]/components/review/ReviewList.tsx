@@ -18,11 +18,13 @@ export default function ReviewList({
   data,
   setData,
   isLoading,
+  setTotalElements,
   bookId
 }: {
   data: Review[];
   setData: Dispatch<SetStateAction<Review[]>>;
   isLoading: boolean;
+  setTotalElements: Dispatch<SetStateAction<number>>;
   bookId: string;
 }) {
   const [reviews, setReviews] = useState<Review[]>(data);
@@ -175,6 +177,7 @@ export default function ReviewList({
         reviewId={reviewId}
         data={data}
         setData={setData}
+        setTotalElements={setTotalElements}
         bookId={bookId}
       />
     </>

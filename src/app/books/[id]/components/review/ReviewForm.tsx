@@ -20,11 +20,13 @@ export default function ReviewForm({
   data,
   setData,
   totalElements,
+  setTotalElements,
   bookId
 }: {
   data: Review[];
   setData: Dispatch<SetStateAction<Review[]>>;
   totalElements: number;
+  setTotalElements: Dispatch<SetStateAction<number>>;
   bookId: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +51,7 @@ export default function ReviewForm({
 
       const refreshed = await getReviews(bookId, { limit: data.length + 1 });
       setData(refreshed.content);
+      setTotalElements(refreshed.totalElements)
       showTooltip("리뷰 등록이 완료되었습니다!");
       setRating(0);
 
