@@ -7,6 +7,7 @@ import {
   markNotificationAsRead,
   Notification as NotificationType
 } from "@/api/notifications";
+import { getReviewDetail } from "@/api/reviews";
 
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
@@ -168,28 +169,24 @@ export default function Notification({
       }
 
       try {
-        const authState = useAuthStore.getState();
-        const response = await fetch(`/api/reviews/${notification.reviewId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            ...(authState.user?.id && {
-              "Deokhugam-Request-User-ID": authState.user.id
-            })
-          }
-        });
+        await getReviewDetail(notification.reviewId);
+      } catch (error) {
+        const errorObj = error as {
+          response?: { status?: number };
+          message?: string;
+        };
+        const isNotFound =
+          errorObj?.response?.status === 404 ||
+          errorObj?.response?.status === 500 ||
+          errorObj?.message?.includes("리뷰를 찾을 수 없습니다") ||
+          errorObj?.message?.includes("404") ||
+          errorObj?.message?.includes("500");
 
-        if (response.status === 404 || response.status === 500) {
+        if (isNotFound) {
           showTooltip("현재 해당 알림은 존재하지 않습니다.", "");
           onClose?.();
           return;
         }
-
-        if (!response.ok) {
-          return;
-        }
-      } catch {
-        return;
       }
 
       router.push(`/reviews/${notification.reviewId}`);
