@@ -1,23 +1,31 @@
-interface ReviewDetailPageProps {
-  params: {
-    id: string;
-  };
-}
+"use client";
 
-export default function ReviewDetailPage({ params }: ReviewDetailPageProps) {
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useAuthGuard } from "@/hooks/auth/useAuthRedirect";
+import LoadingScreen from "@/components/common/LoadingScreen";
+import ReviewHeader from "./components/ReviewHeader";
+import CommentSection from "./components/CommentSection";
+
+export default function ReviewDetailPage() {
+  const { shouldShowContent } = useAuthGuard();
+  const params = useParams();
+  const reviewId = params.id as string;
+  const [commentCount, setCommentCount] = useState<number | undefined>(
+    undefined
+  );
+
+  if (!shouldShowContent) {
+    return <LoadingScreen />;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-0 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-header1 font-bold text-gray-900 mb-8">
-          상세 리뷰 페이지
-        </h1>
-        <p className="text-body2 text-gray-600 mb-4">
-          리뷰 ID: {params.id}
-        </p>
-        <p className="text-body2 text-gray-600">
-          여기에 상세 리뷰 내용이 들어갑니다.
-        </p>
-      </div>
+    <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex flex-col gap-[40px]">
+      <ReviewHeader reviewId={reviewId} commentCount={commentCount} />
+      <CommentSection
+        reviewId={reviewId}
+        onCommentCountChange={setCommentCount}
+      />
     </div>
   );
 }
