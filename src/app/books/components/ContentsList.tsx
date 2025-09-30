@@ -25,24 +25,12 @@ export default function ContentsList({
       </DelayedLoader>
       <div
         className={clsx(
-          "flex gap-x-[2%] gap-y-[60px] w-full flex-wrap justify-between",
-          "max-lg1050:gap-x-[3%]",
-          "max-sm400:gap-x-0"
+          "grid w-full gap-x-[2%] gap-y-[60px] grid-cols-5 max-lg1050:grid-cols-4 max-md:grid-cols-3 max-xs650:grid-cols-2 max-sm400:grid-cols-1"
         )}
       >
         {booksData.map(book => {
           return (
-            <div
-              key={book.id}
-              className={clsx(
-                "w-[18%] cursor-pointer",
-                "max-lg:w-[23%]",
-                "max-lg1050:w-[31%]",
-                "max-xs650:w-[48%]",
-                "max-sm400:w-full"
-              )}
-              onClick={() => router.push(`/books/${book.id}`)}
-            >
+            <div key={book.id} onClick={() => router.push(`/books/${book.id}`)}>
               <div className="relative h-[calc(100vw_*_(325/1920))] min-h-[325px] rounded overflow-hidden border">
                 {book.thumbnailUrl && !imgErrors[book.id] && (
                   <Image
