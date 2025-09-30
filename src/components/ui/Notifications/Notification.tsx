@@ -12,7 +12,7 @@ import { apiClient } from "@/api/client";
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
-import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
+import NotificationInfiniteScrollLoader from "./NotificationInfiniteScrollLoader";
 import NotificationHeader from "./NotificationHeader";
 import NotificationItem from "./NotificationItem";
 import NotificationEmptyState from "./NotificationEmptyState";
@@ -50,7 +50,6 @@ export default function Notification({
     const target = e.target as HTMLDivElement;
     const { scrollTop, scrollHeight, clientHeight } = target;
 
-    // 스크롤이 맨 아래에서 200px 전에 도달하면 무한스크롤 트리거
     if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
       fetchMore();
     }
@@ -196,7 +195,7 @@ export default function Notification({
             ))}
             {isLoading && (
               <div className="flex justify-center py-4">
-                <InfiniteScrollLoader />
+                <NotificationInfiniteScrollLoader />
               </div>
             )}
           </>
