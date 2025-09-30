@@ -7,7 +7,7 @@ import {
   markNotificationAsRead,
   Notification as NotificationType
 } from "@/api/notifications";
-import { getReviewDetail } from "@/api/reviews";
+import { apiClient } from "@/api/client";
 
 import { useAuthStore } from "@/store/authStore";
 import { useTooltipStore } from "@/store/tooltipStore";
@@ -169,20 +169,20 @@ export default function Notification({
       }
 
       try {
-        await getReviewDetail(notification.reviewId);
+        const authState = useAuthStore.getState();
+        await apiClient.get(`/api/reviews/${notification.reviewId}`, {
+          skipInterceptor: true,
+          headers: {
+            ...(authState.user?.id && {
+              "Deokhugam-Request-User-ID": authState.user.id
+            })
+          }
+        });
       } catch (error) {
-        const errorObj = error as {
-          response?: { status?: number };
-          message?: string;
-        };
-        const isNotFound =
-          errorObj?.response?.status === 404 ||
-          errorObj?.response?.status === 500 ||
-          errorObj?.message?.includes("리뷰를 찾을 수 없습니다") ||
-          errorObj?.message?.includes("404") ||
-          errorObj?.message?.includes("500");
+        const axiosError = error as { response?: { status?: number } };
+        const status = axiosError?.response?.status;
 
-        if (isNotFound) {
+        if (status === 404 || status === 500) {
           showTooltip("현재 해당 알림은 존재하지 않습니다.", "");
           onClose?.();
           return;
