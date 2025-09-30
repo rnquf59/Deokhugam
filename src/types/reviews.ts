@@ -16,6 +16,7 @@ export interface PopularReview {
   score: number;
   likeCount: number;
   commentCount: number;
+  likedByMe: boolean;
   isEmpty?: boolean;
 }
 

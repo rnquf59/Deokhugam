@@ -3,6 +3,9 @@
 import { formatDate } from "@/app/utils/formatData";
 import clsx from "clsx";
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { toggleReviewLike, getReviewDetail } from "@/api/reviews";
+import { useTooltipStore } from "@/store/tooltipStore";
 
 interface ReviewContentProps {
   userNickname?: string;
@@ -14,6 +17,13 @@ interface ReviewContentProps {
   createdAt: string;
   isEmpty?: boolean;
   maxTitleWidth?: number;
+  reviewId?: string;
+  likedByMe?: boolean;
+  onLikeChange?: (
+    reviewId: string,
+    newLikeCount: number,
+    likedByMe: boolean
+  ) => void;
 }
 
 export default function ReviewContent({
@@ -25,8 +35,42 @@ export default function ReviewContent({
   commentCount,
   createdAt,
   isEmpty = false,
-  maxTitleWidth
+  maxTitleWidth,
+  reviewId,
+  likedByMe = false,
+  onLikeChange
 }: ReviewContentProps) {
+  const [isLiked, setIsLiked] = useState(likedByMe);
+  const [currentLikeCount, setCurrentLikeCount] = useState(likeCount);
+  const { showTooltip } = useTooltipStore();
+
+  useEffect(() => {
+    setIsLiked(likedByMe);
+  }, [likedByMe]);
+
+  const handleLikeClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!reviewId || isEmpty || !onLikeChange) return;
+
+    try {
+      await toggleReviewLike(reviewId);
+
+      // 서버에서 최신 데이터 가져오기
+      const reviewDetail = await getReviewDetail(reviewId);
+      const newLikeCount = reviewDetail.likeCount;
+      const newLikedByMe = reviewDetail.likedByMe;
+
+      setCurrentLikeCount(newLikeCount);
+      setIsLiked(newLikedByMe);
+      onLikeChange(reviewId, newLikeCount, newLikedByMe);
+    } catch (error) {
+      console.error("좋아요 처리 실패:", error);
+      showTooltip("좋아요 처리에 실패했습니다.", "");
+    }
+  };
+
   const renderStars = (rating: number) => {
     return [...Array(5)].map((_, index) => {
       const starIndex = index + 1;
@@ -123,15 +167,22 @@ export default function ReviewContent({
 
       <div className="flex items-center justify-between">
         <div className="flex gap-[12px]">
-          <div className="flex items-center text-body3 font-medium text-gray-500">
+          <div
+            className={`flex items-center text-body3 font-medium text-gray-500 ${onLikeChange ? "cursor-pointer hover:opacity-70 transition-opacity" : ""}`}
+            onClick={onLikeChange ? handleLikeClick : undefined}
+          >
             <Image
-              src="/images/icon/ic_heart.svg"
+              src={
+                isLiked
+                  ? "/images/icon/ic_heart_black.svg"
+                  : "/images/icon/ic_heart.svg"
+              }
               alt="좋아요"
               width={16}
               height={16}
               className="mr-[2px] w-4 h-4"
             />
-            {isEmpty ? "" : likeCount || 0}
+            {isEmpty ? "" : currentLikeCount || 0}
           </div>
           <div className="flex items-center text-body3 font-medium text-gray-500">
             <Image

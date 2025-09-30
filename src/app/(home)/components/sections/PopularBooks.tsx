@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/common/Buttons/Button";
@@ -41,42 +41,43 @@ export default function PopularBooks() {
     }
   };
 
-  const fetchPopularBooks = async (
-    period: PopularBooksParams["period"] = "DAILY"
-  ) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getPopularBooks({
-        period,
-        direction: "ASC",
-        limit
-      });
+  const fetchPopularBooks = useCallback(
+    async (period: PopularBooksParams["period"] = "DAILY") => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getPopularBooks({
+          period,
+          direction: "ASC",
+          limit
+        });
 
-      const books = response.content;
+        const books = response.content;
 
-      if (books.length === 0) {
+        if (books.length === 0) {
+          setHasData(false);
+          setPopularBooks([]);
+        } else {
+          setHasData(true);
+          // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
+          books.sort((a, b) => a.rank - b.rank);
+          setPopularBooks(books);
+        }
+      } catch (err) {
+        console.error("인기도서 조회 실패:", err);
+        setError("인기도서를 불러오는데 실패했습니다.");
         setHasData(false);
         setPopularBooks([]);
-      } else {
-        setHasData(true);
-        // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
-        books.sort((a, b) => a.rank - b.rank);
-        setPopularBooks(books);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("인기도서 조회 실패:", err);
-      setError("인기도서를 불러오는데 실패했습니다.");
-      setHasData(false);
-      setPopularBooks([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [limit]
+  );
 
   useEffect(() => {
     fetchPopularBooks(getPeriodFromFilter(selectedFilter));
-  }, [selectedFilter, limit]);
+  }, [selectedFilter, fetchPopularBooks]);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
