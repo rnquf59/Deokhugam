@@ -1,11 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { useAuthStore } from "@/store/authStore";
 
-// API 기본 설정 - 환경에 따라 다른 방식 사용
-const API_BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "" // 개발환경: Next.js 프록시 사용
-    : process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/"; // 프로덕션환경: 직접 API 호출
+// API 기본 설정 - 모든 환경에서 Next.js 프록시 사용
+const API_BASE_URL = "";
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
