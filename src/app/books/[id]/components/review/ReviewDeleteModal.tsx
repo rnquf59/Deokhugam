@@ -10,6 +10,7 @@ export default function ReviewDeleteModal({
   reviewId,
   data,
   setData,
+  setTotalElements,
   bookId
 }: {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export default function ReviewDeleteModal({
   reviewId: string;
   data: Review[];
   setData: Dispatch<SetStateAction<Review[]>>;
+  setTotalElements: Dispatch<SetStateAction<number>>;
   bookId: string;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +31,7 @@ export default function ReviewDeleteModal({
 
       const refreshed = await getReviews(bookId, { limit: data.length });
       setData(refreshed.content);
+      setTotalElements(refreshed.totalElements);
 
       close();
       showTooltip("리뷰를 정상적으로 삭제하였습니다!");
