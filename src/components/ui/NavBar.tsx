@@ -77,7 +77,13 @@ export default function NavBar() {
       )}
     >
       <div className="flex items-center justify-between max-w-[1400px] mx-auto">
-        <div className="flex items-center gap-10">
+        <div
+          className={clsx(
+            "flex items-center gap-10",
+            "max-xs650:gap-5",
+            "max-sm400:gap-0"
+          )}
+        >
           <Image
             src="/images/nav/deokhugam.svg"
             alt="Deokhugam"
@@ -112,7 +118,7 @@ export default function NavBar() {
           </ul>
         </div>
         {!mounted ? null : userId ? (
-          <div className="flex items-center gap-6">
+          <div className={clsx("flex items-center gap-6", "max-sm400:gap-3")}>
             <div className="relative" ref={notificationRef}>
               <button
                 className="h-4"

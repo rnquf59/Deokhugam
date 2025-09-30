@@ -28,13 +28,13 @@ export default function ReviewImage({
   }
 
   return (
-    <div className="flex-shrink-0">
+    <div className="min-w-max">
       <Image
         src={bookThumbnailUrl || "/images/books/imgError.png"}
         alt={bookTitle || "기본 도서 이미지"}
         width={96.5}
         height={144.75}
-        className="w-[96.5px] h-[144.75px] object-cover rounded-[6px]"
+        className="w-[96.5px] h-[144.75px] rounded-[6px] border"
         unoptimized
         onError={e => {
           const target = e.target as HTMLImageElement;

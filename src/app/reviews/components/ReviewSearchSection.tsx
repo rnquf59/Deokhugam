@@ -4,6 +4,7 @@ import { memo } from "react";
 import Selectbox from "@/components/ui/Selectbox";
 import SearchBar from "@/components/ui/SearchBar";
 import { REVEWS_ORDERBY, SORT_DIRECTION } from "@/constants/selectOptions";
+import clsx from "clsx";
 
 interface ReviewSearchSectionProps {
   orderBy: "createdAt" | "rating";
@@ -21,8 +22,13 @@ const ReviewSearchSection = memo(function ReviewSearchSection({
   onDirectionChange
 }: ReviewSearchSectionProps) {
   return (
-    <div className="flex justify-between items-center mb-[30px]">
-      <div>
+    <div
+      className={clsx(
+        "flex justify-between items-center mb-[30px]",
+        "max-md:flex-col max-md:items-start gap-y-4"
+      )}
+    >
+      <div className="max-md:flex-[1] max-md:w-full">
         <SearchBar onSearch={onSearch} />
       </div>
 

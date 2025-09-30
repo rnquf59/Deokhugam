@@ -1,4 +1,5 @@
 import { BookResponse, getBookDetail } from "@/api/books";
+import clsx from "clsx";
 import { ReactNode, useEffect, useState } from "react";
 
 type Props = {
@@ -23,7 +24,12 @@ export default function OverviewContainer({ children, id }: Props) {
   }, [id]);
 
   return (
-    <div className="flex gap-[34px] pt-[50px] pb-[60px] border-b border-gray-100">
+    <div
+      className={clsx(
+        "flex gap-[34px] pt-[50px] pb-[60px] border-b border-gray-100",
+        "max-sm:flex-col max-sm:pb-[40px]"
+      )}
+    >
       {children({ data })}
     </div>
   );

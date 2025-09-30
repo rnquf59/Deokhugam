@@ -51,7 +51,7 @@ export default function ReviewForm({
 
       const refreshed = await getReviews(bookId, { limit: data.length + 1 });
       setData(refreshed.content);
-      setTotalElements(refreshed.totalElements)
+      setTotalElements(refreshed.totalElements);
       showTooltip("리뷰 등록이 완료되었습니다!");
       setRating(0);
 
@@ -91,7 +91,7 @@ export default function ReviewForm({
   }, [rating]);
 
   return (
-    <div className="mt-[34px]">
+    <div className={clsx("mt-[34px]", "max-sm:mt-0")}>
       <div className="flex items-center gap-[4px] mb-[15px]">
         <h2 className="text-body1 font-semibold text-gray-900">리뷰</h2>
         <span className="text-body1 font-semibold text-gray-500">

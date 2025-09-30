@@ -9,6 +9,7 @@ import ContentsList from "./components/ContentsList";
 import { Book, BooksParams, getBooks } from "@/api/books";
 import { useInfiniteScroll } from "@/hooks/common/useInfiniteScroll";
 import EmptyList from "@/components/common/EmptyList";
+import useResponsiveLimit from "@/hooks/book/useResponsiveLimit";
 
 export default function BooksPage() {
   const [orderBy, setOrderBy] = useState<
@@ -17,7 +18,7 @@ export default function BooksPage() {
   const [direction, setDirection] = useState<"ASC" | "DESC">("DESC");
   const [keyword, setKeyword] = useState("");
   const [booksData, setBooksData] = useState<Book[]>([]);
-  const limit = 10;
+  const limit = useResponsiveLimit("bookList");
 
   const { isLoading, setCursor, setAfter, setIsLoading, resetInfiniteScroll } =
     useInfiniteScroll<Book, BooksParams>({

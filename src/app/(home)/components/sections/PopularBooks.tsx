@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/common/Buttons/Button";
@@ -12,6 +12,8 @@ import {
   type PopularBooksParams
 } from "@/api/books";
 import BookCard from "../books/BookCard";
+import clsx from "clsx";
+import useResponsiveLimit from "@/hooks/book/useResponsiveLimit";
 
 export default function PopularBooks() {
   const [selectedFilter, setSelectedFilter] = useState("전체");
@@ -19,6 +21,8 @@ export default function PopularBooks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasData, setHasData] = useState(false);
+
+  const limit = useResponsiveLimit("popularBook");
 
   const getPeriodFromFilter = (
     filter: string
@@ -37,42 +41,43 @@ export default function PopularBooks() {
     }
   };
 
-  const fetchPopularBooks = async (
-    period: PopularBooksParams["period"] = "DAILY"
-  ) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await getPopularBooks({
-        period,
-        direction: "ASC",
-        limit: 4
-      });
+  const fetchPopularBooks = useCallback(
+    async (period: PopularBooksParams["period"] = "DAILY") => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getPopularBooks({
+          period,
+          direction: "ASC",
+          limit
+        });
 
-      const books = response.content;
+        const books = response.content;
 
-      if (books.length === 0) {
+        if (books.length === 0) {
+          setHasData(false);
+          setPopularBooks([]);
+        } else {
+          setHasData(true);
+          // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
+          books.sort((a, b) => a.rank - b.rank);
+          setPopularBooks(books);
+        }
+      } catch (err) {
+        console.error("인기도서 조회 실패:", err);
+        setError("인기도서를 불러오는데 실패했습니다.");
         setHasData(false);
         setPopularBooks([]);
-      } else {
-        setHasData(true);
-        // rank 기준으로 정렬 (낮은 순위가 더 높은 인기)
-        books.sort((a, b) => a.rank - b.rank);
-        setPopularBooks(books);
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      console.error("인기도서 조회 실패:", err);
-      setError("인기도서를 불러오는데 실패했습니다.");
-      setHasData(false);
-      setPopularBooks([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [limit]
+  );
 
   useEffect(() => {
     fetchPopularBooks(getPeriodFromFilter(selectedFilter));
-  }, [selectedFilter]);
+  }, [selectedFilter, fetchPopularBooks]);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -82,7 +87,7 @@ export default function PopularBooks() {
   return (
     <div>
       <SectionHeader
-        title="인기도서"
+        title="🏆 인기 도서"
         description="어떤 책이 좋을까? 지금 가장 인기 있는 도서"
         selectedFilter={selectedFilter}
         onFilterChange={handleFilterChange}
@@ -107,7 +112,19 @@ export default function PopularBooks() {
         </div>
       ) : (
         <>
-          <div className="flex gap-[24px] mb-[30px] min-h-[400px] w-[908px]">
+          <div
+            className={clsx(
+              "flex mx-auto gap-[24px] mb-[30px] min-h-[400px] flex-wrap",
+              popularBooks.length === 4
+                ? "w-[908px]"
+                : popularBooks.length === 3
+                  ? "w-[675px]"
+                  : popularBooks.length === 2
+                    ? "w-[442px]"
+                    : "",
+              "max-lg:w-full max-lg:justify-center max-lg:items-center"
+            )}
+          >
             {popularBooks.map(book => (
               <BookCard key={book.id} book={book} />
             ))}

@@ -3,6 +3,7 @@ import InfiniteScrollLoader from "@/components/common/InfiniteScrollLoader";
 import ReviewCard from "@/app/(home)/components/reviews/ReviewCard";
 import type { Review } from "@/types/reviews";
 import { useState, useEffect } from "react";
+import clsx from "clsx";
 
 interface ReviewListProps {
   reviews: Review[];
@@ -36,7 +37,9 @@ export default function ReviewList({ reviews, isLoading }: ReviewListProps) {
         <InfiniteScrollLoader />
       </DelayedLoader>
 
-      <div className="grid grid-cols-2 gap-[30px]">
+      <div
+        className={clsx("grid grid-cols-2 gap-[30px]", "max-md:grid-cols-1")}
+      >
         {reviewsData.map(review => (
           <ReviewCard
             key={review.id}

@@ -2,6 +2,7 @@
 
 import { useState, forwardRef, InputHTMLAttributes, memo, useRef } from "react";
 import Image from "next/image";
+import clsx from "clsx";
 
 interface SearchBarProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> {
@@ -92,7 +93,12 @@ const SearchBar = memo(
       };
 
       return (
-        <div className={`relative min-w-[320px] ${className}`}>
+        <div
+          className={clsx(
+            `relative min-w-[320px] ${className}`,
+            "max-xs650:max-w-full"
+          )}
+        >
           <div className="absolute left-[22px] top-1/2 transform -translate-y-1/2 z-10">
             <Image
               src="/images/icon/ic_search.svg"
