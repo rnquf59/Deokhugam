@@ -10,7 +10,8 @@ const config: Config = {
     extend: {
       screens: {
         s: "320px",
-        xs400: "400px",
+        sm400: "400px",
+        sm: "480px",
         xs650: "650px",
         lg900: "900px",
         lg1050: "1050px",

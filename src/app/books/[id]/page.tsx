@@ -9,6 +9,7 @@ import OverviewContainer from "./components/overview/OverviewContainer";
 import ReviewContainer from "./components/review/ReviewContainer";
 import ReviewForm from "./components/review/ReviewForm";
 import ReviewList from "./components/review/ReviewList";
+import clsx from "clsx";
 
 export default function BookDetailPage() {
   const params = useParams();
@@ -22,7 +23,12 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="pt-[50px] pb-[150px] h-[inherit] min-h-[inherit] flex flex-col gap-[40px]">
+    <div
+      className={clsx(
+        "pt-[50px] pb-[150px] h-[inherit] min-h-[inherit] flex flex-col gap-[40px]",
+        "max-lg900:pt-0"
+      )}
+    >
       <OverviewContainer id={id}>
         {({ data }) => (
           <>

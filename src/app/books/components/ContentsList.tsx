@@ -27,7 +27,7 @@ export default function ContentsList({
         className={clsx(
           "flex gap-x-[2%] gap-y-[60px] w-full flex-wrap justify-between",
           "max-lg1050:gap-x-[3%]",
-          "max-xs400:gap-x-0"
+          "max-sm400:gap-x-0"
         )}
       >
         {booksData.map(book => {
@@ -39,7 +39,7 @@ export default function ContentsList({
                 "max-lg:w-[23%]",
                 "max-lg1050:w-[31%]",
                 "max-xs650:w-[48%]",
-                "max-xs400:w-full"
+                "max-sm400:w-full"
               )}
               onClick={() => router.push(`/books/${book.id}`)}
             >

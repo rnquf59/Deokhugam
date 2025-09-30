@@ -81,7 +81,7 @@ export default function NavBar() {
           className={clsx(
             "flex items-center gap-10",
             "max-xs650:gap-5",
-            "max-xs400:gap-0"
+            "max-sm400:gap-0"
           )}
         >
           <Image
@@ -118,7 +118,7 @@ export default function NavBar() {
           </ul>
         </div>
         {!mounted ? null : userId ? (
-          <div className={clsx("flex items-center gap-6", "max-xs400:gap-3")}>
+          <div className={clsx("flex items-center gap-6", "max-sm400:gap-3")}>
             <div className="relative" ref={notificationRef}>
               <button
                 className="h-4"
