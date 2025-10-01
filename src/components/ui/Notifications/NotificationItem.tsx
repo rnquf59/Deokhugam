@@ -53,10 +53,10 @@ export default function NotificationItem({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <p className="text-body2 font-medium text-gray-800">
+            <p className="text-body2 font-medium text-gray-800 break-words overflow-wrap-anywhere">
               {notification.content.split("\n")[0]}
             </p>
-            <p className="text-body3 font-medium text-gray-500">
+            <p className="text-body3 font-medium text-gray-500 break-all">
               {notification.content.includes("\n")
                 ? notification.content.split("\n")[1]
                 : notification.reviewTitle}
