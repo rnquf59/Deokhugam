@@ -50,16 +50,15 @@ export default function SignUpPage() {
     } catch (error) {
       console.error("회원가입 실패:", error);
 
-      if (
-        error instanceof Error &&
-        error.message.includes("이미 존재하는 이메일")
-      ) {
-        showTooltip(
-          "이미 존재하는 이메일입니다.",
-          "/images/icon/ic_exclamation-circle.svg"
-        );
-      } else if (error instanceof Error) {
-        showTooltip(error.message, "/images/icon/ic_exclamation-circle.svg");
+      if (error instanceof Error) {
+        if (error.message.includes("이미 존재하는 이메일")) {
+          showTooltip(
+            "이미 존재하는 이메일입니다.",
+            "/images/icon/ic_exclamation-circle.svg"
+          );
+        } else {
+          showTooltip(error.message, "/images/icon/ic_exclamation-circle.svg");
+        }
       } else {
         showTooltip(
           "회원가입에 실패했습니다.",

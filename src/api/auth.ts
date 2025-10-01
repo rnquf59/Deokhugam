@@ -22,10 +22,7 @@ export const authApi = {
       console.error("회원가입 API 에러:", error);
 
       if (error instanceof Error) {
-        if (
-          error.message.includes("status: 409") ||
-          error.message.includes("409")
-        ) {
+        if (error.message.includes("이미 존재하는 이메일")) {
           throw new Error("이미 존재하는 이메일입니다.");
         } else if (
           error.message.includes("status: 400") ||
