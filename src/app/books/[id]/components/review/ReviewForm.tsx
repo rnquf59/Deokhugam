@@ -34,6 +34,8 @@ export default function ReviewForm({
   const [rating, setRating] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  const MAX_REVIEW_LENGTH = 500;
+
   const { user } = useAuthStore();
   const userId = user?.id;
   const { showTooltip } = useTooltipStore();
@@ -106,6 +108,7 @@ export default function ReviewForm({
           ref={textareaRef}
           className={clsx(textareaStyle, "w-full")}
           placeholder="리뷰를 작성해주세요..."
+          maxLength={MAX_REVIEW_LENGTH}
           onChange={() => {
             const value = textareaRef.current?.value ?? "";
             setIsDirty(value.trim() !== "" && value.length > 0 && rating > 0);

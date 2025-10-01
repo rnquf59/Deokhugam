@@ -36,6 +36,8 @@ export default function EditContainer({
   const [isDirty, setIsDirty] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  const MAX_REVIEW_LENGTH = 500;
+
   const { showTooltip } = useTooltipStore();
 
   const handleCancel = () => {
@@ -77,6 +79,7 @@ export default function EditContainer({
           defaultValue={prevValue}
           className={clsx(textareaStyle, "w-full")}
           placeholder="리뷰를 수정해주세요."
+          maxLength={MAX_REVIEW_LENGTH}
           onChange={() => {
             const value = textareaRef.current?.value ?? "";
             setIsDirty(
