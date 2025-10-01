@@ -149,7 +149,7 @@ export default function CommentItem({
             </div>
           </div>
         ) : (
-          <div className="text-body2 font-medium text-gray-800">
+          <div className="text-body2 font-medium text-gray-800 break-words overflow-wrap-anywhere">
             {comment.content}
           </div>
         )}
