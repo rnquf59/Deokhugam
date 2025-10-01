@@ -64,32 +64,12 @@ export default function ReviewHeader({
   if (isLoading) {
     return <LoadingScreen />;
   }
-
-  if (error) {
-    return (
-      <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex items-center justify-center">
-        <p className="text-body1 font-semibold text-red-500 text-center">
-          {error}
-        </p>
-      </div>
-    );
-  }
-
-  if (!review) {
-    return (
-      <div className="pt-[50px] pb-[80px] h-[inherit] min-h-[inherit] flex items-center justify-center">
-        <p className="text-body1 font-semibold text-gray-400 text-center">
-          리뷰를 찾을 수 없습니다.
-        </p>
-      </div>
-    );
-  }
   return (
     <div className="flex gap-6">
       <div className="w-[118px] h-[178px] min-w-[118px] relative border rounded-lg overflow-hidden">
         <Image
-          src={review.bookThumbnailUrl || "/images/books/imgError.png"}
-          alt={review.bookTitle}
+          src={review?.bookThumbnailUrl || "/images/books/imgError.png"}
+          alt={review?.bookTitle || "도서 이미지"}
           fill
           unoptimized
           className="rounded-lg"
@@ -102,35 +82,40 @@ export default function ReviewHeader({
 
       <div className="flex flex-col gap-[10px]">
         <div className="text-body4 font-medium text-gray-500 underline decoration-solid underline-offset-0 decoration-0 line-clamp-2">
-          {review.bookTitle}
+          {review?.bookTitle ||
+            (error
+              ? "리뷰를 불러오는데 실패했습니다."
+              : "리뷰를 찾을 수 없습니다.")}
         </div>
 
         <div className="flex items-center gap-[6px] py-[3.5px]">
           <span className="text-body3 font-semibold text-gray-600">
-            {review.userNickname}
+            {review?.userNickname || "-"}
           </span>
           <span className="text-body3 font-medium text-gray-400">
-            {new Date(review.createdAt).toLocaleDateString()}
+            {review?.createdAt
+              ? new Date(review.createdAt).toLocaleDateString()
+              : "-"}
           </span>
         </div>
 
         <div className="flex flex-col flex-[1]">
           <div className="mb-[8px]">
-            <StarRating rating={review.rating} size={18} />
+            <StarRating rating={review?.rating || 0} size={18} />
           </div>
-          <div className="text-body2 font-medium text-gray-800  overflow-hidden">
-            {review.content}
+          <div className="text-body2 font-medium text-gray-800 overflow-hidden">
+            {review?.content || "-"}
           </div>
         </div>
 
         <div className="flex items-center gap-[12px] pt-[8px]">
           <div
             className="flex items-center cursor-pointer hover:opacity-70 transition-opacity"
-            onClick={toggleLike}
+            onClick={review ? toggleLike : undefined}
           >
             <Image
               src={
-                review.likedByMe
+                review?.likedByMe
                   ? "/images/icon/ic_heart_black.svg"
                   : "/images/icon/ic_heart.svg"
               }
@@ -140,7 +125,7 @@ export default function ReviewHeader({
               className="mr-[2px] w-4 h-4"
             />
             <span className="text-body3 font-medium text-gray-500">
-              좋아요 {review.likeCount}
+              좋아요 {review?.likeCount || 0}
             </span>
           </div>
 
@@ -154,7 +139,9 @@ export default function ReviewHeader({
             />
             <span className="text-body3 font-medium text-gray-500">
               댓글{" "}
-              {commentCount !== undefined ? commentCount : review.commentCount}
+              {commentCount !== undefined
+                ? commentCount
+                : review?.commentCount || 0}
             </span>
           </div>
         </div>
