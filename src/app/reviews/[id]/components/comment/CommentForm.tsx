@@ -23,9 +23,17 @@ export default function CommentForm({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const showTooltip = useTooltipStore(state => state.showTooltip);
 
+  const MAX_COMMENT_LENGTH = 500;
+
   const handleSubmitComment = async () => {
     const content = textareaRef.current?.value?.trim();
-    if (!content || !reviewId || isSubmittingComment) return;
+    if (
+      !content ||
+      !reviewId ||
+      isSubmittingComment ||
+      content.length > MAX_COMMENT_LENGTH
+    )
+      return;
 
     try {
       setIsSubmittingComment(true);
@@ -84,6 +92,7 @@ export default function CommentForm({
         ref={textareaRef}
         placeholder="댓글을 입력해주세요..."
         className="h-[120px]"
+        maxLength={MAX_COMMENT_LENGTH}
         onChange={value => {
           setHasContent(value.trim().length > 0);
         }}

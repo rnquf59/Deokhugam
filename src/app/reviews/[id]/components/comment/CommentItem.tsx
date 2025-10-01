@@ -36,6 +36,8 @@ export default function CommentItem({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const editTextareaRef = useRef<HTMLTextAreaElement>(null);
 
+  const MAX_COMMENT_LENGTH = 500;
+
   const {
     open: isActionMenuOpen,
     setOpen: setIsActionMenuOpen,
@@ -65,7 +67,7 @@ export default function CommentItem({
 
   const handleSave = useCallback(async () => {
     const content = editTextareaRef.current?.value?.trim();
-    if (!content) return;
+    if (!content || content.length > MAX_COMMENT_LENGTH) return;
 
     setIsSubmittingEdit(true);
     try {
@@ -127,6 +129,7 @@ export default function CommentItem({
               ref={editTextareaRef}
               placeholder="댓글을 수정해주세요"
               className="h-[120px]"
+              maxLength={MAX_COMMENT_LENGTH}
             />
             <div className="flex justify-end gap-[12px]">
               <Button variant="secondary" onClick={handleCancel}>
