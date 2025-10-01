@@ -134,7 +134,7 @@ export const API_ENDPOINTS = {
 - `docs`: 문서 수정
 - `style`: 코드 스타일 변경 (포매팅 등)
 ```bash
-feat(auth): 로그인 API 연동 및 상태 관리 추가
+feature/auth: 로그인 API 연동 및 상태 관리 추가
 ```
 
 ---
