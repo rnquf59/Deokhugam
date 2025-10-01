@@ -30,7 +30,11 @@ export default function ContentsList({
       >
         {booksData.map(book => {
           return (
-            <div key={book.id} onClick={() => router.push(`/books/${book.id}`)}>
+            <div
+              key={book.id}
+              onClick={() => router.push(`/books/${book.id}`)}
+              className="cursor-pointer"
+            >
               <div className="relative h-[calc(100vw_*_(325/1920))] min-h-[325px] rounded overflow-hidden border">
                 {book.thumbnailUrl && !imgErrors[book.id] && (
                   <Image
