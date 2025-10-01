@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "@/schemas/authSchema";
 import { useAuthStore } from "@/store/authStore";
+import { useTooltipStore } from "@/store/tooltipStore";
 import Image from "next/image";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
@@ -14,7 +15,8 @@ import Button from "@/components/common/Buttons/Button";
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const { login, isLoading, error, user, clearError } = useAuthStore();
+  const { login, isLoading, user, clearError } = useAuthStore();
+  const { showTooltip } = useTooltipStore();
   const router = useRouter();
 
   const {
@@ -49,6 +51,32 @@ export default function LoginPage() {
       await login(data.email, data.password);
     } catch (error) {
       console.error("로그인 실패:", error);
+
+      if (error instanceof Error) {
+        if (error.message.includes("이메일 또는 비밀번호가 불일치")) {
+          showTooltip(
+            "이메일 또는 비밀번호가 불일치합니다.",
+            "/images/icon/ic_exclamation-circle.svg"
+          );
+        } else if (error.message.includes("이메일 또는 비밀번호를 확인")) {
+          showTooltip(
+            "이메일 또는 비밀번호를 확인해주세요.",
+            "/images/icon/ic_exclamation-circle.svg"
+          );
+        } else if (error.message.includes("서버 오류")) {
+          showTooltip(
+            "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+            "/images/icon/ic_exclamation-circle.svg"
+          );
+        } else {
+          showTooltip(error.message, "/images/icon/ic_exclamation-circle.svg");
+        }
+      } else {
+        showTooltip(
+          "로그인에 실패했습니다.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      }
     }
   };
 
@@ -127,14 +155,6 @@ export default function LoginPage() {
             {isSubmitting || isLoading ? "로그인 중..." : "로그인"}
           </Button>
         </form>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-body3 font-medium text-red-600 text-center">
-              {error}
-            </p>
-          </div>
-        )}
 
         <div className="flex items-center justify-center gap-1">
           <span className="text-body3 font-medium text-gray-500">

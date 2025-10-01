@@ -52,6 +52,7 @@ export const useAuthStore = create<AuthStore>()(
             error:
               error instanceof Error ? error.message : "로그인에 실패했습니다."
           });
+          throw error;
         }
       },
 
