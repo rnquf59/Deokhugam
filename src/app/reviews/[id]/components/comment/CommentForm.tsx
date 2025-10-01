@@ -48,9 +48,31 @@ export default function CommentForm({
       setHasContent(false);
 
       showTooltip("댓글이 등록되었습니다.");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("댓글 작성 실패:", error);
-      alert("댓글 작성에 실패했습니다. 다시 시도해주세요.");
+
+      const isAxiosError =
+        error && typeof error === "object" && "response" in error;
+      const status = isAxiosError
+        ? (error as { response?: { status?: number } }).response?.status
+        : null;
+
+      if (status === 400) {
+        showTooltip(
+          "입력값이 올바르지 않습니다. 다시 확인해주세요.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      } else if (status === 500) {
+        showTooltip(
+          "서버 응답이 없습니다. 네트워크 상태를 확인해주세요.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      } else {
+        showTooltip(
+          "댓글 작성에 실패했습니다. 다시 시도해주세요.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      }
     } finally {
       setIsSubmittingComment(false);
     }
