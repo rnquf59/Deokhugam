@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupFormData } from "@/schemas/authSchema";
 import { useAuthStore } from "@/store/authStore";
+import { useTooltipStore } from "@/store/tooltipStore";
 import Input from "@/components/ui/Input";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,8 @@ export default function SignUpPage() {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
-  const { signup, isLoading, error } = useAuthStore();
+  const { signup, isLoading } = useAuthStore();
+  const { showTooltip } = useTooltipStore();
   const router = useRouter();
 
   const {
@@ -47,13 +49,29 @@ export default function SignUpPage() {
       router.push("/auth/login");
     } catch (error) {
       console.error("회원가입 실패:", error);
+
+      if (
+        error instanceof Error &&
+        error.message.includes("이미 존재하는 이메일")
+      ) {
+        showTooltip(
+          "이미 존재하는 이메일입니다.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      } else if (error instanceof Error) {
+        showTooltip(error.message, "/images/icon/ic_exclamation-circle.svg");
+      } else {
+        showTooltip(
+          "회원가입에 실패했습니다.",
+          "/images/icon/ic_exclamation-circle.svg"
+        );
+      }
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-0 flex items-center justify-center p-4">
       <div className="w-full max-w-[400px]">
-        {/* 제목 섹션 */}
         <div className="mb-8 text-center">
           <h1 className="text-header1 font-bold text-[#181D27] mb-[10px]">
             만나서 반갑습니다!
@@ -63,7 +81,6 @@ export default function SignUpPage() {
           </p>
         </div>
 
-        {/* 폼 섹션 */}
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-5 mb-6"
@@ -155,15 +172,6 @@ export default function SignUpPage() {
             {isSubmitting || isLoading ? "가입 중..." : "가입하기"}
           </Button>
         </form>
-
-        {/* 에러 메시지 */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-body3 font-medium text-red-600 text-center">
-              {error}
-            </p>
-          </div>
-        )}
 
         <div className="flex items-center justify-center gap-1">
           <span className="text-body3 font-medium text-gray-500">

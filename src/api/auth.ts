@@ -21,10 +21,9 @@ export const authApi = {
     } catch (error) {
       console.error("회원가입 API 에러:", error);
 
-      // 에러 메시지 처리
       if (error instanceof Error) {
         if (error.message.includes("409")) {
-          throw new Error("이미 사용 중인 이메일입니다.");
+          throw new Error("이미 존재하는 이메일입니다.");
         } else if (error.message.includes("400")) {
           throw new Error("입력값을 확인해주세요.");
         } else if (error.message.includes("500")) {

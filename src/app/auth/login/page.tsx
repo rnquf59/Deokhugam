@@ -14,7 +14,7 @@ import Button from "@/components/common/Buttons/Button";
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  const { login, isLoading, error, user } = useAuthStore();
+  const { login, isLoading, error, user, clearError } = useAuthStore();
   const router = useRouter();
 
   const {
@@ -40,6 +40,10 @@ export default function LoginPage() {
     }
   }, [user?.id, router]);
 
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
+
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
@@ -53,7 +57,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[400px]">
         <div className="mb-[14px] text-center">
           <Image
-            src="/images/logo/logo_symbol.svg"
+            src="/images/logo/logo_symbol.png"
             alt="로고"
             width={136}
             height={98}
@@ -64,10 +68,10 @@ export default function LoginPage() {
 
         <div className="mb-8 text-center">
           <h1 className="text-header1 font-bold text-[#181D27] mb-[10px]">
-            만나서 반갑습니다!
+            다시 만나서 반갑습니다!
           </h1>
           <p className="text-body2 font-medium text-gray-500">
-            로그인을 위해 정보를 입력해주세요
+            덕후감에 로그인해주세요
           </p>
         </div>
 

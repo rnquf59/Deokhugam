@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isAuthenticated: false,
       isLoading: false,
-      isInitialized: false, // 초기값 false
+      isInitialized: false,
       error: null,
 
       login: async (email: string, password: string) => {
@@ -78,6 +78,7 @@ export const useAuthStore = create<AuthStore>()(
                 ? error.message
                 : "회원가입에 실패했습니다."
           });
+          throw error;
         }
       },
 
