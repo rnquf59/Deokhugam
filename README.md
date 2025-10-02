@@ -35,9 +35,9 @@ React / Next.js 기반으로 API 연동을 통해 로그인, 도서 등록, 리�
 NEXT_PUBLIC_API_URL=http://sprint-project-1196140422.ap-northeast-2.elb.amazonaws.com/sb/deokhugam/api
 ```
 ⚠️ `NEXT_PUBLIC_` prefix가 붙은 환경 변수는 클라이언트 사이드에서 사용됩니다.
+⚠️ 배포 상황에서는 프로토콜 "https://"로 해야합니다.
 
 💡 현재 rewrites 설정으로 모든 환경에서 정상 작동하며, 결과물 제출 후 검수 과정에서 리버스 프록시로 처리될 예정입니다.
-- 배포 상황에서는 프로토콜 "https://"로 해야합니다.
 
 ---
 
