@@ -2,10 +2,12 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 
 export default function ButtonContainer({
+  id,
   isSubmitDisabled: disabled,
   isSubmitting,
-  isEdit,
+  isEdit
 }: {
+  id?: string;
   isSubmitDisabled: boolean;
   isSubmitting: boolean;
   isEdit: boolean;
@@ -17,7 +19,9 @@ export default function ButtonContainer({
       <button
         type="button"
         className="border border-gray-300 bg-white h-[46px] px-[18px] rounded-full text-gray-600 font-medium"
-        onClick={() => router.push("/books")}
+        onClick={() =>
+          isEdit ? router.push(`/books/${id}`) : router.push("/books")
+        }
       >
         취소
       </button>
